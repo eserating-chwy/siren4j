@@ -209,7 +209,7 @@ public class EntityBuilder extends BaseBuilder<Entity> {
 		}
 	    }
 	}
-	if (noSelfLink) {
+	if (noSelfLink && !obj.isReference()) {
 	    throw new BuilderValidationException("links", obj.getClass(),
 		    missingSelfLink);
 	}

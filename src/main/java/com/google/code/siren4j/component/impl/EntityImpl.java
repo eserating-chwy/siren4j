@@ -120,7 +120,7 @@ public class EntityImpl implements Entity {
 		return reference;
 	}
 
-	public void setReference(boolean reference) {
+	public void setReference(Boolean reference) {
 		this.reference = reference;
 	}
 

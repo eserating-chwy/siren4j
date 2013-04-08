@@ -26,6 +26,13 @@ package com.google.code.siren4j.component;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonInclude(Include.NON_NULL)
+@JsonPropertyOrder({"class", "rel", "href", "properties", "entities", "actions", "links"})
 public interface Entity {
 
 	public abstract String[] getEntityClass();
@@ -42,6 +49,7 @@ public interface Entity {
 
 	public abstract String[] getRel();
 	
+	@JsonIgnore
 	public abstract boolean isReference();
 
 }

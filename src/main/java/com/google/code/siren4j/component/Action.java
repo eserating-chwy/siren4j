@@ -25,8 +25,11 @@ package com.google.code.siren4j.component;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
+@JsonInclude(Include.NON_NULL)
 public interface Action {
 
 	public abstract String getName();

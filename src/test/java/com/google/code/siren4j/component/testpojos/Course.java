@@ -5,7 +5,7 @@ import java.util.Date;
 import com.google.code.siren4j.annotations.SirenEntity;
 
 @SirenEntity(name = "course")
-public class Course {
+public class Course extends BasePojo{
     
     
     public Course() {

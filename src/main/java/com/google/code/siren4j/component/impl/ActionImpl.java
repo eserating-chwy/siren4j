@@ -25,11 +25,13 @@ package com.google.code.siren4j.component.impl;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Field;
 
-
+@JsonInclude(Include.NON_NULL)
 public class ActionImpl implements Action {
 	
 	private String name;

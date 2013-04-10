@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,9 +23,6 @@ import com.google.code.siren4j.meta.FieldType;
 
 public class EntitySerializationTest {
 
-    @Mock
-    private UriInfo uriInfo;
-    
     @Before
     public void setUp() throws Exception {
 	MockitoAnnotations.initMocks(this);
@@ -115,13 +109,13 @@ public class EntitySerializationTest {
     }
     
     private Entity createEmbeddedEntity(String href, String... rel) {
-	EntityBuilder builder = EntityBuilder.newInstance(uriInfo);
+	EntityBuilder builder = EntityBuilder.newInstance();
 	return builder.setRelationship(rel).setHref(href).build();
     }
     
     private Entity createEntity(String[] entityClass, String[] rel, Map<String, Object> props,
 	    List<Entity> entities, List<Link> links, List<Action> actions) {
-	EntityBuilder builder = EntityBuilder.newInstance(uriInfo);
+	EntityBuilder builder = EntityBuilder.newInstance();
 	if(!ArrayUtils.isEmpty(entityClass)) {
 	    builder.setEntityClass(entityClass);
 	}

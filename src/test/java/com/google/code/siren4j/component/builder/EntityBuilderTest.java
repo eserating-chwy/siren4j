@@ -37,15 +37,12 @@ import com.google.code.siren4j.component.Link;
 
 public class EntityBuilderTest {
 
-	@Mock
-	private UriInfo uriInfo;
-	
 	private EntityBuilder builder;
 	
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		builder = EntityBuilder.newInstance(uriInfo);
+		builder = EntityBuilder.newInstance();
 	}
 	
 	@Test
@@ -65,18 +62,6 @@ public class EntityBuilderTest {
 		assertTrue(result.getProperties().containsKey("number"));
 	}
 	
-	@Test
-	public void testRequiredSelfRelationship() throws Exception {
-	        try {
-		    Entity result = builder
-		    	.setEntityClass("test")
-		    	.addProperty("foo", "hello")
-		    	.addProperty("number", 1)
-		    	.build();
-		    fail("Expected validation exception.");
-		} catch (Exception e) {
-		    
-		}
-	}
+	
 	
 }

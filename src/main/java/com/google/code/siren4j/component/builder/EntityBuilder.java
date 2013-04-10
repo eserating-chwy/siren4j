@@ -29,8 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -46,8 +44,6 @@ import com.google.code.siren4j.error.BuilderValidationException;
 
 public class EntityBuilder extends BaseBuilder<Entity> {
 
-    private UriInfo uriInfo;
-
     private List<Entity> subEntities = new ArrayList<Entity>();
 
     private List<Link> links = new ArrayList<Link>();
@@ -56,12 +52,11 @@ public class EntityBuilder extends BaseBuilder<Entity> {
 
     private Map<String, Object> properties = new LinkedHashMap<String, Object>();
 
-    private EntityBuilder(UriInfo uriInfo) {
-	this.uriInfo = uriInfo;
+    private EntityBuilder() {
     }
 
-    public static EntityBuilder newInstance(UriInfo uriInfo) {
-	return new EntityBuilder(uriInfo);
+    public static EntityBuilder newInstance() {
+	return new EntityBuilder();
     }
 
     public EntityBuilder setEntityClass(String... entityClass) {
@@ -190,30 +185,9 @@ public class EntityBuilder extends BaseBuilder<Entity> {
 
     @Override
     protected void validate(Entity obj) {
-	validateLinks(obj);
 	validateSubEntities(obj);
     }
-
-    private void validateLinks(Entity obj) {
-	// Validate that a self link exists
-	String missingSelfLink = "A 'self' link is required for an entity.";
-	boolean noSelfLink = true;
-	if (!CollectionUtils.isEmpty(obj.getLinks())) {
-	    for (Link l : obj.getLinks()) {
-		if (l.getRel() != null
-			&& ArrayUtils.contains(l.getRel(),
-				Link.RELATIONSHIP_SELF)
-			&& StringUtils.isNotBlank(l.getHref())) {
-		    noSelfLink = false;
-		    break;
-		}
-	    }
-	}
-	if (noSelfLink && !obj.isReference()) {
-	    throw new BuilderValidationException("links", obj.getClass(),
-		    missingSelfLink);
-	}
-    }
+    
 
     private void validateSubEntities(Entity obj) {
 	// Validate that all sub entities have a "rel" set.

@@ -23,8 +23,11 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.impl;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Link;
 
+@JsonInclude(Include.NON_NULL)
 public class LinkImpl implements Link {
     
 	private String[] rel;

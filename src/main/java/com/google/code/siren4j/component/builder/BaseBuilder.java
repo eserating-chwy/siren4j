@@ -122,7 +122,7 @@ public abstract class BaseBuilder<T> {
 	Class clazz = obj.getClass();
 	Method method = clazz.getDeclaredMethod(step.getMethodName(),
 		getTypes(step.getArguments()));
-	method.invoke(obj, step.getArguments());
+	method.invoke(obj, step.getArguments());	
     }
 
     @SuppressWarnings("rawtypes")

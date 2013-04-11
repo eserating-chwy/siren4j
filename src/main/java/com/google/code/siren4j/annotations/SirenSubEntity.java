@@ -5,11 +5,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SirenEntity {
-   String name();
+public @interface SirenSubEntity {
+   String name() default "";
+   String[] rel();
    String uri() default "";
+   boolean link() default false;
    boolean collection() default false;
    
 }

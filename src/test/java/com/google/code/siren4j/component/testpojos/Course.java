@@ -1,10 +1,12 @@
 package com.google.code.siren4j.component.testpojos;
 
+import java.util.Collection;
 import java.util.Date;
 
 import com.google.code.siren4j.annotations.SirenEntity;
+import com.google.code.siren4j.annotations.SirenSubEntity;
 
-@SirenEntity(name = "course")
+@SirenEntity(name = "course", uri = "/courses/{courseid}")
 public class Course extends BasePojo{
     
     
@@ -17,6 +19,9 @@ public class Course extends BasePojo{
     private String description;
     private String type;
     private Date createdate;
+    
+    @SirenSubEntity(rel = "authors", uri = "/authors?courseid={this.courseid}")
+    private Collection<Author> authors;
 
     public String getCourseid() {
 	return courseid;
@@ -57,5 +62,15 @@ public class Course extends BasePojo{
     public void setCreatedate(Date createdate) {
 	this.createdate = createdate;
     }
+
+    public Collection<Author> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(Collection<Author> authors) {
+        this.authors = authors;
+    }
+    
+    
 
 }

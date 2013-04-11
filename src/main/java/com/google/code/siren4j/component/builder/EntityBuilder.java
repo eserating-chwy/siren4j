@@ -134,6 +134,10 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     void _addAction(ActionImpl action) {
 	actions.add(action);
     }
+    
+    void _addProperty(String name, Object value) {
+	properties.put(name, value);
+    }
 
     void _addProperty(String name, String value) {
 	properties.put(name, value);

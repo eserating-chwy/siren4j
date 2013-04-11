@@ -132,7 +132,7 @@ public abstract class BaseBuilder<T> {
 	}
 	List<Class> classList = new ArrayList<Class>();
 	for (Object obj : args) {
-	    classList.add(obj.getClass());
+	    classList.add(obj == null ? Object.class : obj.getClass());
 	}
 	return classList.toArray(new Class[] {});
     }

@@ -1,7 +1,10 @@
 package com.google.code.siren4j.converter;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,8 +18,14 @@ public class ReflectingConverterTest {
 	
 	    Entity ent = ReflectingConverter.toEntity(getTestCourse());
 	    ObjectMapper mapper = new ObjectMapper();
-		System.out.println(mapper.writeValueAsString(ent));
+	    System.out.println(mapper.writeValueAsString(ent));
 	
+    }
+    
+    @Test
+    @Ignore
+    public void testReplaceFieldTokens() throws Exception {
+	//ReflectingConverter.replaceFieldTokens("/somepath/{courseid}", new ArrayList<Field>(), false);
     }
     
 	private Course getTestCourse() {

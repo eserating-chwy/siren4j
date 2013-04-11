@@ -5,12 +5,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.annotations.SirenEntity;
 import com.google.code.siren4j.annotations.SirenPropertyIgnore;
+import com.google.code.siren4j.annotations.SirenSubEntity;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.builder.EntityBuilder;
 
@@ -19,17 +27,51 @@ public class ReflectingConverter {
 	private static final String GETTER_PREFIX = "get";
 	private static final String GETTER_PREFIX_BOOLEAN = "is";
 	private static final String SETTER_PREFIX = "set";
+	
+	public static final Class[] propertyTypes = new Class[]{
+	    int.class, Integer.class,
+	    long.class, Long.class,
+	    double.class, Double.class,
+	    float.class, Float.class,
+	    short.class, Short.class,
+	    byte.class, Byte.class,
+	    boolean.class, Boolean.class,
+	    String.class,
+	    Date.class
+	};
 
 	public ReflectingConverter() {
 
 	}
 
 	public static Entity toEntity(Object obj) throws Exception {
-
-		EntityBuilder builder = EntityBuilder.newInstance();
+             return toEntity(obj, null);		
+	}
+	
+	private static Entity toEntity(Object obj, Map<String, Object> meta) throws Exception{
+	    EntityBuilder builder = EntityBuilder.newInstance();
 		Class clazz = obj.getClass();
 		List<ReflectedInfo> fieldInfo = getExposedFieldInfo(clazz);
-        builder.setEntityClass(getEntityClass(clazz));
+            builder.setEntityClass(getEntityClass(clazz));
+            for(ReflectedInfo info : fieldInfo) {
+               Field currentField = info.getField();
+               currentField.setAccessible(true); 
+               if(ArrayUtils.contains(propertyTypes, currentField.getType())) {
+                   // Property
+                   builder.addProperty(currentField.getName(), currentField.get(obj));
+               } else {
+                   // Entity
+                   SirenSubEntity subEntityAnno = 
+            	       currentField.getAnnotation(SirenSubEntity.class);
+                   if(subEntityAnno != null) {
+            	       if(isCollection(currentField)) {
+            		   
+            	       } else {
+            		   
+            	       }
+                   }
+               }
+            }
 		return builder.build();
 	}
 
@@ -130,6 +172,15 @@ public class ReflectingConverter {
 				&& Modifier.isPublic(method.getModifiers())
 				&& splitname[0].equals(SETTER_PREFIX);
 	}
+	
+	/**
+	 * Determine if the field is a Collection class.
+	 * @param field
+	 * @return
+	 */
+	public static boolean isCollection(Field field) {
+	    return ArrayUtils.contains(field.getType().getInterfaces(), Collection.class);
+	}
 
 	/**
 	 * Find the field for the getter method based on the get methods name. It
@@ -186,5 +237,43 @@ public class ReflectingConverter {
 	public static boolean isIgnored(AccessibleObject obj) {
 		return obj.isAnnotationPresent(SirenPropertyIgnore.class);
 	}
+	
+	public static String replaceFieldTokens(Object obj, String str, List<Field> fields, boolean subMode) throws IllegalArgumentException, IllegalAccessException {
+	    Map<String, Field> index = new HashMap<String, Field>();
+	    for(Field f : fields) {
+		index.put(f.getName(), f);
+	    }
+	    for(String key : getTokenKeys(str)) {
+		if(!subMode || (subMode && key.startsWith("this."))) {
+		    String fieldname = key.startsWith("this.") ? key.substring(5) : key;
+		    if(index.containsKey(fieldname)) {
+			Field f = index.get(fieldname);
+			if(ArrayUtils.contains(propertyTypes, f.getType())) {
+			    str = str.replaceAll("{" + key + "}", "" + f.get(obj));
+			}
+		    }
+		}
+	    }
+	    return str;
+	    
+	}
+	
+	public static Set<String> getTokenKeys(String str) {
+	    int start = -1;
+	    int end = 0;
+	    Set<String> results = new HashSet<String>();
+	    do {
+		start = str.indexOf("{", end);
+		if(start != -1) {
+		    end = str.indexOf("}", start);
+		    if(end != -1) {
+			results.add(str.substring(start + 1, end));			
+		    }
+		}
+	    } while (start != -1 && end != -1);
+	    return results;
+	}
+	
+	
 
 }

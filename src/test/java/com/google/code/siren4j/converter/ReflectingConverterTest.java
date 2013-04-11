@@ -22,11 +22,7 @@ public class ReflectingConverterTest {
 	
     }
     
-    @Test
-    @Ignore
-    public void testReplaceFieldTokens() throws Exception {
-	//ReflectingConverter.replaceFieldTokens("/somepath/{courseid}", new ArrayList<Field>(), false);
-    }
+    
     
 	private Course getTestCourse() {
 		Course course = new Course();

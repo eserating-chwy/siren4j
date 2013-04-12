@@ -1,8 +1,8 @@
 package com.google.code.siren4j.component.testpojos;
 
-import com.google.code.siren4j.annotations.SirenPropertyIgnore;
+import com.google.code.siren4j.resource.BaseResource;
 
-public class BasePojo {
+public class BasePojo extends BaseResource{
 	
 	
 	private String id;

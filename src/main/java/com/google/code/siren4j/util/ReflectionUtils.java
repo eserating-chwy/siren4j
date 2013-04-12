@@ -165,21 +165,26 @@ public class ReflectionUtils {
 	 * Replaces field tokens with the actual value in the fields. The field types must be
 	 * simple property types
 	 * @param str
-	 * @param fields
-	 * @param subMode
+	 * @param fields info
+	 * @param parentMode
 	 * @param obj
 	 * @return
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	public static String replaceFieldTokens(Object obj, String str, List<Field> fields, boolean subMode) throws IllegalArgumentException, IllegalAccessException {
+	public static String replaceFieldTokens(Object obj, String str, List<ReflectedInfo> fields, boolean parentMode) throws IllegalArgumentException, IllegalAccessException {
 	    Map<String, Field> index = new HashMap<String, Field>();
-	    for(Field f : fields) {
-		index.put(f.getName(), f);
+	if (fields != null) {
+	    for (ReflectedInfo info : fields) {
+		Field f = info.getField();
+		if (f != null) {
+		    index.put(f.getName(), f);
+		}
 	    }
+	}
 	    for(String key : ReflectionUtils.getTokenKeys(str, null, null)) {
-		if(!subMode || (subMode && key.startsWith("this."))) {
-		    String fieldname = key.startsWith("this.") ? key.substring(5) : key;
+		if((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
+		    String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
 		    if(index.containsKey(fieldname)) {
 			Field f = index.get(fieldname);
 			if(ArrayUtils.contains(propertyTypes, f.getType())) {

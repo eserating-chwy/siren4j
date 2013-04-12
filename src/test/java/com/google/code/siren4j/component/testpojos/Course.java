@@ -1,10 +1,10 @@
 package com.google.code.siren4j.component.testpojos;
 
-import java.util.Collection;
 import java.util.Date;
 
 import com.google.code.siren4j.annotations.SirenEntity;
 import com.google.code.siren4j.annotations.SirenSubEntity;
+import com.google.code.siren4j.resource.CollectionResource;
 
 @SirenEntity(name = "course", uri = "/courses/{courseid}")
 public class Course extends BasePojo{
@@ -20,8 +20,8 @@ public class Course extends BasePojo{
     private String type;
     private Date createdate;
     
-    @SirenSubEntity(rel = "authors", uri = "/authors?courseid={this.courseid}")
-    private Collection<Author> authors;
+    @SirenSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
+    private CollectionResource<Author> authors;
 
     public String getCourseid() {
 	return courseid;
@@ -63,11 +63,11 @@ public class Course extends BasePojo{
 	this.createdate = createdate;
     }
 
-    public Collection<Author> getAuthors() {
+    public CollectionResource<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(Collection<Author> authors) {
+    public void setAuthors(CollectionResource<Author> authors) {
         this.authors = authors;
     }
     

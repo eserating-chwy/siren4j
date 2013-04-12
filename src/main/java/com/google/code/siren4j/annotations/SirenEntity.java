@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 public @interface SirenEntity {
    String name();
    String uri() default "";
-   boolean collection() default false;
    
 }

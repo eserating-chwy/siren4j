@@ -26,20 +26,18 @@ public class ReflectionUtilsTest {
 	@Test
     public void testReplaceFieldTokens() throws Exception {
 	    
-		List<Field> fields = new ArrayList<Field>();
-		for(ReflectedInfo info : ReflectionUtils.getExposedFieldInfo(Course.class)) {
-			fields.add(info.getField());
-		}
+		List<ReflectedInfo> fields = ReflectionUtils.getExposedFieldInfo(Course.class);
+		
 		
 		Course course = new Course();
 		course.setCourseid("course1");
 		
 		//In subMode only this. prefixed fields should be replaced.
 		assertEquals("/somepath/course1/{courseid}", 
-				ReflectionUtils.replaceFieldTokens(course, "/somepath/{this.courseid}/{courseid}", fields, true));
+				ReflectionUtils.replaceFieldTokens(course, "/somepath/{parent.courseid}/{courseid}", fields, true));
 		//Both tokens should be replaced
-		assertEquals("/somepath/course1/course1", 
-				ReflectionUtils.replaceFieldTokens(course, "/somepath/{this.courseid}/{courseid}", fields, false));
+		assertEquals("/somepath/{parent.courseid}/course1", 
+				ReflectionUtils.replaceFieldTokens(course, "/somepath/{parent.courseid}/{courseid}", fields, false));
 		//Unknown field name foo should not get replaced 
 		assertEquals("/somepath/course1/{foo}", 
 				ReflectionUtils.replaceFieldTokens(course, "/somepath/{courseid}/{foo}", fields, false));

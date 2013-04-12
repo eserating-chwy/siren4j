@@ -37,6 +37,18 @@ public class FieldImpl implements Field {
 	
 	private String value;	
 	
+	private boolean required;
+	
+	private String pattern;
+	
+	private int max = -1;
+	
+	private int min = -1;
+	
+	private int maxLength = -1;
+	
+	private int step = -1;
+	
 	
 	
 	/* (non-Javadoc)
@@ -46,15 +58,9 @@ public class FieldImpl implements Field {
 		return name;
 	}
 
-
-
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-
 
 	/* (non-Javadoc)
 	 * @see com.google.code.siren4j.component.impl.Field#getType()
@@ -63,15 +69,9 @@ public class FieldImpl implements Field {
 		return type;
 	}
 
-
-
-
 	public void setType(FieldType type) {
 		this.type = type;
 	}
-
-
-
 
 	/* (non-Javadoc)
 	 * @see com.google.code.siren4j.component.impl.Field#getValue()
@@ -80,16 +80,59 @@ public class FieldImpl implements Field {
 		return value;
 	}
 
-
-
-
 	public void setValue(String value) {
 		this.value = value;
 	}
 
+	public boolean isRequired() {
+		return required;
+	}
 
+	public void setRequired(boolean required) {
+		this.required = required;
+	}
 
+	public String getPattern() {
+		return pattern;
+	}
 
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
+
+	public int getMax() {
+		return max;
+	}
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+	public int getMin() {
+		return min;
+	}
+
+	public void setMin(int min) {
+		this.min = min;
+	}
+
+	public int getMaxLength() {
+		return maxLength;
+	}
+
+	public void setMaxLength(int maxLength) {
+		this.maxLength = maxLength;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public void setStep(int step) {
+		this.step = step;
+	}
+	
+	
 	
 
 }

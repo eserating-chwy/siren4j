@@ -9,8 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SirenSubEntity {
    String name() default "";
-   String[] rel() default "";
+   String[] rel() default {};
    String uri() default "";
-   boolean link() default false;
-   
+   boolean embeddedLink() default false;
+   SirenLink[] links() default {};
+   SirenAction[] actions() default {};   
 }

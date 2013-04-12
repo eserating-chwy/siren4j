@@ -23,6 +23,8 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.impl;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Link;
@@ -53,6 +55,9 @@ public class LinkImpl implements Link {
 	}
 
 	public void setHref(String href) {
+		if(StringUtils.isBlank(href)) {
+			throw new IllegalArgumentException("href cannot be null or empty.");
+		}
 		this.href = href;
 	}
 	

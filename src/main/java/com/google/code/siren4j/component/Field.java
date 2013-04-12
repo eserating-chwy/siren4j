@@ -27,12 +27,22 @@ import com.google.code.siren4j.meta.FieldType;
 
 public interface Field {
 
-	public abstract String getName();
+	public String getName();
 
-	public abstract FieldType getType();
+	public FieldType getType();
 
-	public abstract String getValue();
+	public String getValue();
 	
+	public String getPattern();
 	
+	public boolean isRequired();
+	
+	public int getMin();
+	
+	public int getMax();
+	
+	public int getMaxLength();
+	
+	public int getStep();
 
 }

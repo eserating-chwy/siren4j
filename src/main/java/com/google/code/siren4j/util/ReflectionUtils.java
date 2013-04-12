@@ -24,8 +24,7 @@ public class ReflectionUtils {
 	public static final String GETTER_PREFIX_BOOLEAN = "is";
 	public static final String SETTER_PREFIX = "set";
 	
-	@SuppressWarnings("rawtypes")
-	public static final Class[] propertyTypes = new Class[]{
+	public static final Class<?>[] propertyTypes = new Class<?>[]{
 	    int.class, Integer.class,
 	    long.class, Long.class,
 	    double.class, Double.class,
@@ -70,12 +69,11 @@ public class ReflectionUtils {
 	 *            cannot be <code>null</code>.
 	 * @return the field or <code>null</code> if not found.
 	 */
-	@SuppressWarnings("rawtypes")
 	public static Field getGetterField(Method method) {
 		if (method == null) {
 			throw new IllegalArgumentException("method cannot be null.");
 		}
-		Class clazz = method.getDeclaringClass();
+		Class<?> clazz = method.getDeclaringClass();
 		String fName = stripGetterPrefix(method.getName());
 		Field field = null;
 		try {
@@ -91,12 +89,10 @@ public class ReflectionUtils {
 	 * Retrieve all fields deemed as Exposed, i.e. they are public or have a
 	 * public accessor method or are marked by an annotation to be exposed.
 	 * 
-	 * @param obj
-	 *            cannot be <code>null</code>.
+	 * @param obj cannot be <code>null</code>.
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
-	public static List<ReflectedInfo> getExposedFieldInfo(Class clazz) {
+	public static List<ReflectedInfo> getExposedFieldInfo(Class<?> clazz) {
 		List<ReflectedInfo> exposed = new ArrayList<ReflectedInfo>();
 		for (Method m : clazz.getMethods()) {
 			if (ReflectionUtils.isGetter(m) && !ReflectingConverter.isIgnored(m)) {
@@ -117,8 +113,7 @@ public class ReflectionUtils {
 	 * @param f
 	 * @return
 	 */
-	@SuppressWarnings("rawtypes")
-	public static Method getSetter(Class clazz, Field f) {
+	public static Method getSetter(Class<?> clazz, Field f) {
 		Method setter = null;
 		for (Method m : clazz.getMethods()) {
 			if (ReflectionUtils.isSetter(m)
@@ -174,7 +169,10 @@ public class ReflectionUtils {
 	 */
 	public static String replaceFieldTokens(Object obj, String str, List<ReflectedInfo> fields, boolean parentMode) throws IllegalArgumentException, IllegalAccessException {
 	    Map<String, Field> index = new HashMap<String, Field>();
-	if (fields != null) {
+	    if(StringUtils.isBlank(str)) {
+	    	return str;
+	    }
+	    if (fields != null) {
 	    for (ReflectedInfo info : fields) {
 		Field f = info.getField();
 		if (f != null) {
@@ -182,7 +180,7 @@ public class ReflectionUtils {
 		}
 	    }
 	}
-	    for(String key : ReflectionUtils.getTokenKeys(str, null, null)) {
+	    for(String key : ReflectionUtils.getTokenKeys(str)) {
 		if((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
 		    String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
 		    if(index.containsKey(fieldname)) {
@@ -196,21 +194,31 @@ public class ReflectionUtils {
 	    return str;
 	    
 	}
+	
+	/**
+	 * Removes the square brackets that signify reserved from inside the tokens in the string.
+	 * @param str
+	 * @return
+	 */
+	public static String flattenReservedTokens(String str) {
+		if(StringUtils.isBlank(str)) {
+			return str;
+		}
+		return str.replaceAll("\\{\\[", "{").replaceAll("\\]\\}", "}");
+	}
 
 	/**
 	 * Retrieve all token keys from a string. A token is found by its
-	 * its start and end delimiters which are open and close curly braces by default.
+	 * its start and end delimiters which are open and close curly braces.
 	 * 
 	 * @param str the string to parse, may be <code>null</code> or empty.
-	 * @param startDelim may be <code>null</code>, defaults to '{'.
-	 * @param startDelim may be <code>null</code>, defaults to '}'.
 	 * @return the set of unique token keys. Never <code>null</code>.May be empty.
 	 */
-	public static Set<String> getTokenKeys(String str, String startDelim, String endDelim) {
+	public static Set<String> getTokenKeys(String str) {
 	    
 		Set<String> results = new HashSet<String>();
-		String sDelim = StringUtils.defaultString(startDelim, "{");
-		String eDelim = StringUtils.defaultString(endDelim, "}");
+		String sDelim =  "{";
+		String eDelim =  "}";
 		if(StringUtils.isBlank(str)) {
 	    	return results;
 	    }

@@ -1,9 +1,8 @@
 package com.google.code.siren4j.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,16 +46,13 @@ public class ReflectionUtilsTest {
 	@Test
 	public void testGetTokenKeys() {
 		
-		Set<String> keys = ReflectionUtils.getTokenKeys("/path/{foo}/hello/{bar}/yo/{world}", null, null);
+		Set<String> keys = ReflectionUtils.getTokenKeys("/path/{foo}/hello/{[bar]}/yo/{world}");
 		assertEquals(3, keys.size());
 		assertTrue(keys.contains("foo"));
-		assertTrue(keys.contains("bar"));
+		assertTrue(keys.contains("[bar]"));
 		assertTrue(keys.contains("world"));
 		
-		keys = ReflectionUtils.getTokenKeys("/path/${foo}/hello/{bar}/yo/${world}", "${", null);
-		assertEquals(2, keys.size());
-		assertTrue(keys.contains("foo"));
-		assertTrue(keys.contains("world"));
+		
 	}
 
 }

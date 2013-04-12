@@ -9,5 +9,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SirenProperty {
    String name();
-   SirenPropertyType type() default SirenPropertyType.SIMPLE; 
+   Type type() default Type.SIMPLE; 
+   
+   public enum Type {
+	    EMBEDDED_ENTITY,
+	    ENTITY_LINK,
+	    SIMPLE
+	}
+   
+   
 }

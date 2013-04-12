@@ -1,12 +1,34 @@
 package com.google.code.siren4j.component.testpojos;
 
+import java.util.Collection;
 import java.util.Date;
 
+import com.google.code.siren4j.annotations.SirenAction;
+import com.google.code.siren4j.annotations.SirenActionField;
 import com.google.code.siren4j.annotations.SirenEntity;
+import com.google.code.siren4j.annotations.SirenInclude;
+import com.google.code.siren4j.annotations.SirenInclude.Include;
+import com.google.code.siren4j.annotations.SirenLink;
 import com.google.code.siren4j.annotations.SirenSubEntity;
-import com.google.code.siren4j.resource.CollectionResource;
+import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
-@SirenEntity(name = "course", uri = "/courses/{courseid}")
+@SirenInclude(Include.NON_NULL)
+@SirenEntity(name = "course", uri = "/courses/{courseid}",
+   links = {
+       @SirenLink(rel = "reviews", href="/courseReviews/course/{courseid}")
+   },
+   actions = {
+       @SirenAction(
+           name = "addReview",
+           method = Method.POST,
+           href = "/courseReviews/course/{courseid}",
+           fields = {
+        	    @SirenActionField(name = "userid", type = "text", required = true ),
+        	    @SirenActionField(name = "body", type = "text", required = true )
+           }
+       )
+   }
+)
 public class Course extends BasePojo{
     
     
@@ -21,7 +43,7 @@ public class Course extends BasePojo{
     private Date createdate;
     
     @SirenSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
-    private CollectionResource<Author> authors;
+    private Collection<Author> authors;
 
     public String getCourseid() {
 	return courseid;
@@ -63,11 +85,11 @@ public class Course extends BasePojo{
 	this.createdate = createdate;
     }
 
-    public CollectionResource<Author> getAuthors() {
+    public Collection<Author> getAuthors() {
         return authors;
     }
 
-    public void setAuthors(CollectionResource<Author> authors) {
+    public void setAuthors(Collection<Author> authors) {
         this.authors = authors;
     }
     

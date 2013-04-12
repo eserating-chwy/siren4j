@@ -30,8 +30,14 @@ public interface Link {
 	public static final String RELATIONSHIP_NEXT = "next";
 	public static final String RELATIONSHIP_PREVIOUS = "previous";
 
-	public abstract String[] getRel();
+	public String[] getRel();
 
-	public abstract String getHref();
+	public String getHref();
+	
+	/**
+	 * Set the href for the link.
+	 * @param href cannot be <code>null</code> or empty.
+	 */
+	public void setHref(String href);
 
 }

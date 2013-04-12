@@ -32,45 +32,75 @@ import com.google.code.siren4j.meta.FieldType;
 
 public class FieldBuilder extends BaseBuilder<Field> {
 
-    private FieldBuilder() {
+	private FieldBuilder() {
 
-    }
-
-    public static FieldBuilder newInstance() {
-	return new FieldBuilder();
-    }
-
-    public FieldBuilder setName(String name) {
-	addStep("setName", new Object[] { name });
-	return this;
-    }
-
-    public FieldBuilder setType(FieldType type) {
-	addStep("setType", new Object[] { type });
-	return this;
-    }
-
-    public FieldBuilder setValue(String value) {
-	addStep("setValue", new Object[] { value });
-	return this;
-    }
-
-    @Override
-    protected void validate(Field obj) {
-	String requiredMsg = "Required property.";
-	if (StringUtils.isBlank(obj.getName())) {
-	    throw new BuilderValidationException("name", obj.getClass(),
-		    requiredMsg);
 	}
-	if (obj.getType() == null) {
-	    throw new BuilderValidationException("type", obj.getClass(),
-		    requiredMsg);
-	}
-    }
 
-    @Override
-    protected Field createInstance() {
-	return new FieldImpl();
-    }
+	public static FieldBuilder newInstance() {
+		return new FieldBuilder();
+	}
+
+	public FieldBuilder setName(String name) {
+		addStep("setName", new Object[] { name });
+		return this;
+	}
+
+	public FieldBuilder setType(FieldType type) {
+		addStep("setType", new Object[] { type });
+		return this;
+	}
+
+	public FieldBuilder setValue(String value) {
+		addStep("setValue", new Object[] { value });
+		return this;
+	}
+	
+	public FieldBuilder setPattern(String pattern) {
+		addStep("setPattern", new Object[] {pattern});
+		return this;
+	}
+	
+	public FieldBuilder setRequired(boolean required) {
+		addStep("setRequired", new Object[] {required});
+		return this;
+	}
+	
+	public FieldBuilder setMax(int max) {
+		addStep("setMax", new Object[] {max});
+		return this;
+	}
+	
+	public FieldBuilder setMin(int min) {
+		addStep("setMin", new Object[] {min});
+		return this;
+	}
+	
+	public FieldBuilder setMaxLength(int maxLength) {
+		addStep("setMaxLength", new Object[] {maxLength});
+		return this;
+	}
+	
+	public FieldBuilder setStep(int step) {
+		addStep("setStep", new Object[] {step});
+		return this;
+	}
+
+	@Override
+	protected void validate(Field obj) {
+		String requiredMsg = "Required property.";
+		if (StringUtils.isBlank(obj.getName())) {
+			throw new BuilderValidationException("name", obj.getClass(),
+					requiredMsg);
+		}
+		if (obj.getType() == null) {
+			throw new BuilderValidationException("type", obj.getClass(),
+					requiredMsg);
+		}
+	}
+
+	@Override
+	protected Field createInstance() {
+		return new FieldImpl();
+	}
 
 }

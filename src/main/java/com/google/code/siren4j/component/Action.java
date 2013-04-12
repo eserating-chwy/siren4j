@@ -29,18 +29,20 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
 public interface Action {
 
-	public abstract String getName();
+	public String getName();
 
-	public abstract List<String> getActionClass();
+	public List<String> getActionClass();
 
-	public abstract Method getMethod();
+	public Method getMethod();
 
-	public abstract String getHref();
+	public String getHref();
+	
+	public void setHref(String href);
 
-	public abstract String getTitle();
+	public String getTitle();
 
-	public abstract String getType();
+	public String getType();
 
-	public abstract List<Field> getFields();
+	public List<Field> getFields();
 
 }

@@ -1,14 +1,11 @@
 package com.google.code.siren4j.converter;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Course;
@@ -21,6 +18,7 @@ public class ReflectingConverterTest {
 	
 	    Entity ent = ReflectingConverter.toEntity(getTestCourse());
 	    ObjectMapper mapper = new ObjectMapper();
+	    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	    System.out.println(mapper.writeValueAsString(ent));
 	
     }

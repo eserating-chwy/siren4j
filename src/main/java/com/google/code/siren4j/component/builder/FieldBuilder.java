@@ -61,27 +61,27 @@ public class FieldBuilder extends BaseBuilder<Field> {
 	}
 	
 	public FieldBuilder setRequired(boolean required) {
-		addStep("setRequired", new Object[] {required});
+		addStep("setRequired", new Object[] {required}, new Class[]{boolean.class});
 		return this;
 	}
 	
 	public FieldBuilder setMax(int max) {
-		addStep("setMax", new Object[] {max});
+		addStep("setMax", new Object[] {max}, new Class[]{int.class});
 		return this;
 	}
 	
 	public FieldBuilder setMin(int min) {
-		addStep("setMin", new Object[] {min});
+		addStep("setMin", new Object[] {min}, new Class[]{int.class});
 		return this;
 	}
 	
 	public FieldBuilder setMaxLength(int maxLength) {
-		addStep("setMaxLength", new Object[] {maxLength});
+		addStep("setMaxLength", new Object[] {maxLength}, new Class[]{int.class});
 		return this;
 	}
 	
 	public FieldBuilder setStep(int step) {
-		addStep("setStep", new Object[] {step});
+		addStep("setStep", new Object[] {step}, new Class[]{int.class});
 		return this;
 	}
 
@@ -91,11 +91,7 @@ public class FieldBuilder extends BaseBuilder<Field> {
 		if (StringUtils.isBlank(obj.getName())) {
 			throw new BuilderValidationException("name", obj.getClass(),
 					requiredMsg);
-		}
-		if (obj.getType() == null) {
-			throw new BuilderValidationException("type", obj.getClass(),
-					requiredMsg);
-		}
+		}		
 	}
 
 	@Override

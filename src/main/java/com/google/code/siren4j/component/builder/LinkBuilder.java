@@ -40,7 +40,7 @@ public class LinkBuilder extends BaseBuilder<Link> {
     }
 
     public LinkBuilder setRelationship(String... rel) {
-	addStep("setRel", new Object[] { rel });
+	addStep("setRel", new Object[] { rel }, new Class[]{String[].class});
 	return this;
     }
 

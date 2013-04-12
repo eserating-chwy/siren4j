@@ -41,12 +41,16 @@ public class FieldImpl implements Field {
 	
 	private String pattern;
 	
+	@JsonInclude(Include.NON_DEFAULT)
 	private int max = -1;
 	
+	@JsonInclude(Include.NON_DEFAULT)
 	private int min = -1;
 	
+	@JsonInclude(Include.NON_DEFAULT)
 	private int maxLength = -1;
 	
+	@JsonInclude(Include.NON_DEFAULT)
 	private int step = -1;
 	
 	

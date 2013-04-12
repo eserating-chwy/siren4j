@@ -98,8 +98,8 @@ public abstract class BaseBuilder<T> {
      * @param methodName
      * @param args
      */
-    protected void addStep(String methodName, Object[] args) {
-	steps.add(new Step(methodName, args, false));
+    protected void addStep(String methodName, Object[] args, Class[] argTypes) {
+	addStep(methodName, args, argTypes, false);
     }
 
     /**
@@ -110,9 +110,33 @@ public abstract class BaseBuilder<T> {
      * @param args
      * @param builderMethod
      */
-    protected void addStep(String methodName, Object[] args,
+    protected void addStep(String methodName, Object[] args, Class[] argTypes,
 	    boolean builderMethod) {
-	steps.add(new Step(methodName, args, builderMethod));
+	steps.add(new Step(methodName, args, argTypes, builderMethod));
+    }
+    
+    /**
+     * Adds a builder step for this builder, upon build these steps will be
+     * called in the same order they came in on.
+     * 
+     * @param methodName
+     * @param args
+     */
+    protected void addStep(String methodName, Object[] args) {
+	addStep(methodName, args, false);
+    }
+    
+    /**
+     * Adds a builder step for this builder, upon build these steps will be
+     * called in the same order they came in on.
+     * 
+     * @param methodName
+     * @param args
+     * @param builderMethod
+     */
+    protected void addStep(String methodName, Object[] args, 
+	    boolean builderMethod) {
+	steps.add(new Step(methodName, args, getTypes(args), builderMethod));
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -121,9 +145,9 @@ public abstract class BaseBuilder<T> {
 	    IllegalAccessException, InvocationTargetException {
 	Class clazz = obj.getClass();
 	Method method = clazz.getDeclaredMethod(step.getMethodName(),
-		getTypes(step.getArguments()));
+		step.getArgTypes());
 	method.invoke(obj, step.getArguments());	
-    }
+    }    
 
     @SuppressWarnings("rawtypes")
     private Class[] getTypes(Object[] args) {
@@ -145,13 +169,16 @@ public abstract class BaseBuilder<T> {
 	private String methodName;
 
 	private Object[] arguments;
+	
+	private Class[] argTypes;
 
 	private boolean builderMethodCall;
 
-	Step(String methodName, Object[] arguments, boolean builderMethod) {
+	Step(String methodName, Object[] arguments, Class[] argTypes, boolean builderMethod) {
 	    this.methodName = methodName;
 	    this.arguments = arguments;
 	    this.builderMethodCall = builderMethod;
+	    this.argTypes = argTypes;
 	}
 
 	public String getMethodName() {
@@ -160,6 +187,10 @@ public abstract class BaseBuilder<T> {
 
 	public Object[] getArguments() {
 	    return arguments;
+	}
+	
+	public Class[] getArgTypes() {
+	    return argTypes;
 	}
 
 	public boolean isBuilderMethodCall() {

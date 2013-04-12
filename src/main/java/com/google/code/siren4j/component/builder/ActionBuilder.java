@@ -97,7 +97,7 @@ public class ActionBuilder extends BaseBuilder<Action> {
 	@Override
 	protected void postProcess(Action obj) {
 		ActionImpl action = (ActionImpl)obj;
-		if(CollectionUtils.isEmpty(fields)) {
+		if(!CollectionUtils.isEmpty(fields)) {
 		    action.setFields(fields);
 		}
 	}

@@ -24,7 +24,7 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
            href = "/courseReviews/course/{courseid}",
            fields = {
         	    @SirenActionField(name = "userid", type = "text", required = true ),
-        	    @SirenActionField(name = "body", type = "text", required = true )
+        	    @SirenActionField(name = "body", type = "text", required = true, maxLength = 250)
            }
        )
    }

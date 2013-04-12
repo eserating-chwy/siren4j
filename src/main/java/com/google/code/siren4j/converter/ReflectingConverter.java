@@ -235,7 +235,33 @@ public class ReflectingConverter {
     
     private static void handleEntityActions(EntityBuilder builder, Object obj,
     		List<ReflectedInfo> fieldInfo, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Exception {
-    	
+	Class<?> clazz = obj.getClass();
+	Map<String, Action> actions = new HashMap<String, Action>();
+	/* Caution!! Order matters when adding to the links map */
+	
+	SirenEntity entity = clazz.getAnnotation(SirenEntity.class);
+	if(entity != null && ArrayUtils.isNotEmpty(entity.actions())) {
+		for(SirenAction a : entity.actions()) {
+			actions.put(a.name(), annotationToAction(a));
+		}
+	}
+	SirenSubEntity subentity = clazz.getAnnotation(SirenSubEntity.class);
+	if(subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
+		for(SirenAction a : subentity.actions()) {
+			actions.put(a.name(), annotationToAction(a));
+		}
+	}
+	Collection<Action> resourceLinks = obj instanceof Resource ? ((Resource) obj)
+			.getEntityActions() : null;
+	if (resourceLinks != null) {
+		for (Action a : resourceLinks) {
+			actions.put(a.getName(), a);
+		}
+	}
+	for(Action a : actions.values()) {
+		a.setHref(resolveUri(a.getHref(), obj, fieldInfo, parentField, parentObj, parentFieldInfo));
+		builder.addAction(a);
+	}
     }
     
     /**
@@ -306,7 +332,7 @@ public class ReflectingConverter {
     		builder.setPattern(fieldAnno.pattern());
     	}
     	if(StringUtils.isNotBlank(fieldAnno.type())) {
-    		builder.setType(FieldType.valueOf(fieldAnno.type()));
+    		builder.setType(FieldType.valueOf(fieldAnno.type().toUpperCase()));
     	}
     	if(StringUtils.isNotBlank(fieldAnno.value())) {
     		builder.setValue(fieldAnno.value());

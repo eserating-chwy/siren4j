@@ -23,21 +23,22 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component;
 
-
 public interface Link {
 
-	public static final String RELATIONSHIP_SELF = "self";
-	public static final String RELATIONSHIP_NEXT = "next";
-	public static final String RELATIONSHIP_PREVIOUS = "previous";
+    public static final String RELATIONSHIP_SELF = "self";
+    public static final String RELATIONSHIP_NEXT = "next";
+    public static final String RELATIONSHIP_PREVIOUS = "previous";
 
-	public String[] getRel();
+    public String[] getRel();
 
-	public String getHref();
-	
-	/**
-	 * Set the href for the link.
-	 * @param href cannot be <code>null</code> or empty.
-	 */
-	public void setHref(String href);
+    public String getHref();
+
+    /**
+     * Set the href for the link.
+     * 
+     * @param href
+     * cannot be <code>null</code> or empty.
+     */
+    public void setHref(String href);
 
 }

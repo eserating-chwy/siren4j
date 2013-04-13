@@ -25,48 +25,24 @@ package com.google.code.siren4j.meta;
 
 public enum FieldType {
 
-	BUTTON,
-	CHECKBOX,
-	COLOR,
-	DATE,
-	DATETIME,
-	DATETIMELOCAL("datetime-local"),
-	EMAIL,
-	FILE,
-	HIDDEN,
-	IMAGE,
-	MONTH,
-	NUMBER,
-	PASSWORD,
-	RADIO,
-	RANGE,
-	RESET,
-	SEARCH,
-	SUBMIT,
-	TEL,
-	TEXT,
-	TIME,
-	URL,
-	WEEK;
-	
-	private String value;
-	
-	private FieldType(String value) {
-		this.value = value;
-	}
-	
-	private FieldType() {
-		
-	}
+    BUTTON, CHECKBOX, COLOR, DATE, DATETIME, DATETIMELOCAL("datetime-local"), EMAIL, FILE, HIDDEN, IMAGE, MONTH, NUMBER, PASSWORD, RADIO, RANGE, RESET, SEARCH, SUBMIT, TEL, TEXT, TIME, URL, WEEK;
 
-	@Override
-	public String toString() {
-		if(value != null && value.length() > 0) {
-			return value;
-		}
-		return super.toString().toLowerCase();
-	}
-	
-	
-	
+    private String value;
+
+    private FieldType(String value) {
+        this.value = value;
+    }
+
+    private FieldType() {
+
+    }
+
+    @Override
+    public String toString() {
+        if (value != null && value.length() > 0) {
+            return value;
+        }
+        return super.toString().toLowerCase();
+    }
+
 }

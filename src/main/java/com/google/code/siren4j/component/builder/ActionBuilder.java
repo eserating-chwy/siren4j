@@ -34,88 +34,88 @@ import com.google.code.siren4j.component.Field;
 import com.google.code.siren4j.component.impl.ActionImpl;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 import com.google.code.siren4j.component.impl.FieldImpl;
-import com.google.code.siren4j.error.BuilderValidationException;
+import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 
 public class ActionBuilder extends BaseBuilder<Action> {
-    
-	private List<Field> fields = new ArrayList<Field>();
-	
-	private ActionBuilder() {
-		
-	}
-	
-	public static ActionBuilder newInstance() {
-		return new ActionBuilder();
-	}
-	
-	public ActionBuilder setName(String name) {
-		addStep("setName", new Object[]{name});
-		return this;
-	}
-	
-	public ActionBuilder setActionClass(String... actionClass) {
-		addStep("setActionClass", new Object[]{actionClass});
-		return this;
-	}
-	
-	public ActionBuilder setMethod(Method method) {
-		addStep("setMethod", new Object[]{method});
-		return this;
-	}
-	
-	public ActionBuilder setHref(String href) {
-		addStep("setHref", new Object[]{href});
-		return this;
-	}
-	
-	public ActionBuilder setTitle(String title) {
-		addStep("setTitle", new Object[]{title});
-		return this;
-	}
-	
-	public ActionBuilder setType(String type) {
-		addStep("setType", new Object[]{type});
-		return this;
-	}
-	
-	public ActionBuilder addField(Field field) {
-		addStep("_addField", new Object[]{field}, true);
-		return this;
-	}
-	
-	public ActionBuilder addFields(List<Field> fields) {
-		for(Field f : fields) {
-			addField(f);
-		}
-		return this;
-	}
-	
-	protected void _addField(FieldImpl field) {
-		fields.add(field);
-	}	
-	
-	@Override
-	protected void postProcess(Action obj) {
-		ActionImpl action = (ActionImpl)obj;
-		if(!CollectionUtils.isEmpty(fields)) {
-		    action.setFields(fields);
-		}
-	}
 
-	@Override
-	protected void validate(Action obj) {
-		String requiredMsg = "Required property.";
-		if(StringUtils.isBlank(obj.getName())) {
-			throw new BuilderValidationException("name", obj.getClass(), requiredMsg);
-		}
-		if(obj.getHref() == null) {
-			throw new BuilderValidationException("href", obj.getClass(), requiredMsg);
-		}
-	}
+    private List<Field> fields = new ArrayList<Field>();
 
-	@Override
-	protected Action createInstance() {
-		return new ActionImpl();
-	}
+    private ActionBuilder() {
+
+    }
+
+    public static ActionBuilder newInstance() {
+        return new ActionBuilder();
+    }
+
+    public ActionBuilder setName(String name) {
+        addStep("setName", new Object[] { name });
+        return this;
+    }
+
+    public ActionBuilder setActionClass(String... actionClass) {
+        addStep("setActionClass", new Object[] { actionClass });
+        return this;
+    }
+
+    public ActionBuilder setMethod(Method method) {
+        addStep("setMethod", new Object[] { method });
+        return this;
+    }
+
+    public ActionBuilder setHref(String href) {
+        addStep("setHref", new Object[] { href });
+        return this;
+    }
+
+    public ActionBuilder setTitle(String title) {
+        addStep("setTitle", new Object[] { title });
+        return this;
+    }
+
+    public ActionBuilder setType(String type) {
+        addStep("setType", new Object[] { type });
+        return this;
+    }
+
+    public ActionBuilder addField(Field field) {
+        addStep("_addField", new Object[] { field }, true);
+        return this;
+    }
+
+    public ActionBuilder addFields(List<Field> fields) {
+        for (Field f : fields) {
+            addField(f);
+        }
+        return this;
+    }
+
+    protected void _addField(FieldImpl field) {
+        fields.add(field);
+    }
+
+    @Override
+    protected void postProcess(Action obj) {
+        ActionImpl action = (ActionImpl) obj;
+        if (!CollectionUtils.isEmpty(fields)) {
+            action.setFields(fields);
+        }
+    }
+
+    @Override
+    protected void validate(Action obj) {
+        String requiredMsg = "Required property.";
+        if (StringUtils.isBlank(obj.getName())) {
+            throw new Siren4JBuilderValidationException("name", obj.getClass(), requiredMsg);
+        }
+        if (obj.getHref() == null) {
+            throw new Siren4JBuilderValidationException("href", obj.getClass(), requiredMsg);
+        }
+    }
+
+    @Override
+    protected Action createInstance() {
+        return new ActionImpl();
+    }
 
 }

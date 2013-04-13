@@ -16,44 +16,17 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *********************************************************************************************/
-package com.google.code.siren4j.converter;
+package com.google.code.siren4j.annotations;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ReflectedInfo {
-    private Field field;
-    private Method getter;
-    private Method setter;
+@Target({ ElementType.ANNOTATION_TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Siren4JLink {
+    String[] rel();
 
-    public ReflectedInfo(Field field, Method getter, Method setter) {
-        super();
-        this.field = field;
-        this.getter = getter;
-        this.setter = setter;
-    }
-
-    public Field getField() {
-        return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
-
-    public Method getGetter() {
-        return getter;
-    }
-
-    public void setGetter(Method getter) {
-        this.getter = getter;
-    }
-
-    public Method getSetter() {
-        return setter;
-    }
-
-    public void setSetter(Method setter) {
-        this.setter = setter;
-    }
+    String href();
 }

@@ -28,24 +28,23 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 public interface Entity {
 
-	public abstract String[] getEntityClass();
+    public abstract String[] getEntityClass();
 
-	public abstract Map<String, Object> getProperties();
+    public abstract Map<String, Object> getProperties();
 
-	public abstract List<Entity> getEntities();
+    public abstract List<Entity> getEntities();
 
-	public abstract List<Link> getLinks();
+    public abstract List<Link> getLinks();
 
-	public abstract List<Action> getActions();
-	
-	public abstract String getHref();
+    public abstract List<Action> getActions();
 
-	public abstract String[] getRel();
-	
-	@JsonIgnore
-	public abstract boolean isReference();
+    public abstract String getHref();
+
+    public abstract String[] getRel();
+
+    @JsonIgnore
+    public abstract boolean isReference();
 
 }

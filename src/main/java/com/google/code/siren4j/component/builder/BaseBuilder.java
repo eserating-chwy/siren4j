@@ -33,132 +33,119 @@ public abstract class BaseBuilder<T> {
     protected List<Step> steps = new ArrayList<Step>();
 
     /**
-     * Iterates through all of the build steps and uses reflection call the
-     * specified method on either the builder itself or the component being
-     * built. Also calls {@link #postProcess(Object)} and then
-     * {@link #validate(Object)}.
+     * Iterates through all of the build steps and uses reflection call the specified method on either the builder itself or
+     * the component being built. Also calls {@link #postProcess(Object)} and then {@link #validate(Object)}.
      * 
      * @return the newly built component instance, never <code>null</code>.
      */
     public T build() {
-	T obj = createInstance();
-	try {
-	    for (Step step : steps) {
-		if (step.isBuilderMethodCall()) {
-		    callMethod(this, step);
-		} else {
-		    callMethod(obj, step);
-		}
-	    }
-	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	postProcess(obj);
-	validate(obj);
-	return obj;
+        T obj = createInstance();
+        try {
+            for (Step step : steps) {
+                if (step.isBuilderMethodCall()) {
+                    callMethod(this, step);
+                } else {
+                    callMethod(obj, step);
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        postProcess(obj);
+        validate(obj);
+        return obj;
     }
 
     /**
-     * A subclass can post process the component instance after built by the
-     * base but before it is returned by {@link #build()}.
+     * A subclass can post process the component instance after built by the base but before it is returned by
+     * {@link #build()}.
      * 
      * @param obj
-     *            the component object, never <code>null</code>.
+     * the component object, never <code>null</code>.
      */
     protected void postProcess(T obj) {
 
     }
 
     /**
-     * Allows validation to occur on the built component object instance. This
-     * is called after the object is built and after
-     * {@link #postProcess(Object)} is called but before the component is
-     * returned by {@link #build}.
+     * Allows validation to occur on the built component object instance. This is called after the object is built and after
+     * {@link #postProcess(Object)} is called but before the component is returned by {@link #build}.
      * 
      * @param obj
-     *            the component object, never <code>null</code>.
+     * the component object, never <code>null</code>.
      */
     protected void validate(T obj) {
 
     }
 
     /**
-     * The subclass must implement this method and return an instance of the
-     * component type specified by the return type.
+     * The subclass must implement this method and return an instance of the component type specified by the return type.
      * 
      * @return never <code>null</code>.
      */
     protected abstract T createInstance();
 
     /**
-     * Adds a builder step for this builder, upon build these steps will be
-     * called in the same order they came in on.
+     * Adds a builder step for this builder, upon build these steps will be called in the same order they came in on.
      * 
      * @param methodName
      * @param args
      */
-    protected void addStep(String methodName, Object[] args, Class[] argTypes) {
-	addStep(methodName, args, argTypes, false);
+    protected void addStep(String methodName, Object[] args, Class<?>[] argTypes) {
+        addStep(methodName, args, argTypes, false);
     }
 
     /**
-     * Adds a builder step for this builder, upon build these steps will be
-     * called in the same order they came in on.
+     * Adds a builder step for this builder, upon build these steps will be called in the same order they came in on.
      * 
      * @param methodName
      * @param args
      * @param builderMethod
      */
-    protected void addStep(String methodName, Object[] args, Class[] argTypes,
-	    boolean builderMethod) {
-	steps.add(new Step(methodName, args, argTypes, builderMethod));
+    protected void addStep(String methodName, Object[] args, Class<?>[] argTypes, boolean builderMethod) {
+        steps.add(new Step(methodName, args, argTypes, builderMethod));
     }
-    
+
     /**
-     * Adds a builder step for this builder, upon build these steps will be
-     * called in the same order they came in on.
+     * Adds a builder step for this builder, upon build these steps will be called in the same order they came in on.
      * 
      * @param methodName
      * @param args
      */
     protected void addStep(String methodName, Object[] args) {
-	addStep(methodName, args, false);
+        addStep(methodName, args, false);
     }
-    
+
     /**
-     * Adds a builder step for this builder, upon build these steps will be
-     * called in the same order they came in on.
+     * Adds a builder step for this builder, upon build these steps will be called in the same order they came in on.
      * 
      * @param methodName
      * @param args
      * @param builderMethod
      */
-    protected void addStep(String methodName, Object[] args, 
-	    boolean builderMethod) {
-	steps.add(new Step(methodName, args, getTypes(args), builderMethod));
+    protected void addStep(String methodName, Object[] args, boolean builderMethod) {
+        steps.add(new Step(methodName, args, getTypes(args), builderMethod));
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private void callMethod(Object obj, Step step) throws SecurityException,
-	    NoSuchMethodException, IllegalArgumentException,
-	    IllegalAccessException, InvocationTargetException {
-	Class clazz = obj.getClass();
-	Method method = clazz.getDeclaredMethod(step.getMethodName(),
-		step.getArgTypes());
-	method.invoke(obj, step.getArguments());	
-    }    
+    private void callMethod(Object obj, Step step) throws SecurityException, NoSuchMethodException,
+        IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        Class clazz = obj.getClass();
+        Method method = clazz.getDeclaredMethod(step.getMethodName(), step.getArgTypes());
+        method.invoke(obj, step.getArguments());
+    }
 
     @SuppressWarnings("rawtypes")
     private Class[] getTypes(Object[] args) {
-	if (args == null || args.length == 0) {
-	    return null;
-	}
-	List<Class> classList = new ArrayList<Class>();
-	for (Object obj : args) {
-	    classList.add(obj == null ? Object.class : obj.getClass());
-	}
-	return classList.toArray(new Class[] {});
+        if (args == null || args.length == 0) {
+            return null;
+        }
+        List<Class> classList = new ArrayList<Class>();
+        for (Object obj : args) {
+            classList.add(obj == null ? Object.class : obj.getClass());
+        }
+        return classList.toArray(new Class[] {});
     }
 
     /**
@@ -166,36 +153,36 @@ public abstract class BaseBuilder<T> {
      */
     class Step {
 
-	private String methodName;
+        private String methodName;
 
-	private Object[] arguments;
-	
-	private Class[] argTypes;
+        private Object[] arguments;
 
-	private boolean builderMethodCall;
+        private Class<?>[] argTypes;
 
-	Step(String methodName, Object[] arguments, Class[] argTypes, boolean builderMethod) {
-	    this.methodName = methodName;
-	    this.arguments = arguments;
-	    this.builderMethodCall = builderMethod;
-	    this.argTypes = argTypes;
-	}
+        private boolean builderMethodCall;
 
-	public String getMethodName() {
-	    return methodName;
-	}
+        Step(String methodName, Object[] arguments, Class<?>[] argTypes, boolean builderMethod) {
+            this.methodName = methodName;
+            this.arguments = arguments;
+            this.builderMethodCall = builderMethod;
+            this.argTypes = argTypes;
+        }
 
-	public Object[] getArguments() {
-	    return arguments;
-	}
-	
-	public Class[] getArgTypes() {
-	    return argTypes;
-	}
+        public String getMethodName() {
+            return methodName;
+        }
 
-	public boolean isBuilderMethodCall() {
-	    return builderMethodCall;
-	}
+        public Object[] getArguments() {
+            return arguments;
+        }
+
+        public Class<?>[] getArgTypes() {
+            return argTypes;
+        }
+
+        public boolean isBuilderMethodCall() {
+            return builderMethodCall;
+        }
 
     }
 

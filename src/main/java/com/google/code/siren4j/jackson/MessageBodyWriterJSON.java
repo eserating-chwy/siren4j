@@ -11,32 +11,27 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 @Provider
 public class MessageBodyWriterJSON extends JacksonJsonProvider {
 
-	public MessageBodyWriterJSON() {
-		super();
-	}
+    public MessageBodyWriterJSON() {
+        super();
+    }
 
-	public MessageBodyWriterJSON(Annotations... annotationsToUse) {
-		super(annotationsToUse);
-	}
+    public MessageBodyWriterJSON(Annotations... annotationsToUse) {
+        super(annotationsToUse);
+    }
 
-	public MessageBodyWriterJSON(ObjectMapper mapper,
-			Annotations[] annotationsToUse) {
-		super(mapper, annotationsToUse);
-	}
+    public MessageBodyWriterJSON(ObjectMapper mapper, Annotations[] annotationsToUse) {
+        super(mapper, annotationsToUse);
+    }
 
-	public MessageBodyWriterJSON(ObjectMapper mapper) {
-		super(mapper);
-	}
+    public MessageBodyWriterJSON(ObjectMapper mapper) {
+        super(mapper);
+    }
 
-	@Override
-	public ObjectMapper locateMapper(Class<?> type, MediaType mediaType) {
-		ObjectMapper mapper =  super.locateMapper(type, mediaType);
-		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		return mapper;
-	}
-	
-	
-	
-	
+    @Override
+    public ObjectMapper locateMapper(Class<?> type, MediaType mediaType) {
+        ObjectMapper mapper = super.locateMapper(type, mediaType);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        return mapper;
+    }
 
 }

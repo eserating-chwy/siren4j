@@ -27,7 +27,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 import com.google.code.siren4j.component.Link;
 import com.google.code.siren4j.component.impl.LinkImpl;
-import com.google.code.siren4j.error.BuilderValidationException;
+import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 
 public class LinkBuilder extends BaseBuilder<Link> {
 
@@ -36,35 +36,33 @@ public class LinkBuilder extends BaseBuilder<Link> {
     }
 
     public static LinkBuilder newInstance() {
-	return new LinkBuilder();
+        return new LinkBuilder();
     }
 
     public LinkBuilder setRelationship(String... rel) {
-	addStep("setRel", new Object[] { rel }, new Class[]{String[].class});
-	return this;
+        addStep("setRel", new Object[] { rel }, new Class[] { String[].class });
+        return this;
     }
 
     public LinkBuilder setHref(String href) {
-	addStep("setHref", new Object[] { href });
-	return this;
+        addStep("setHref", new Object[] { href });
+        return this;
     }
 
     @Override
     protected Link createInstance() {
-	return new LinkImpl();
+        return new LinkImpl();
     }
 
     @Override
     protected void validate(Link obj) {
-	String requiredMsg = "Required property.";
-	if (obj.getRel() == null || ArrayUtils.isEmpty(obj.getRel())) {
-	    throw new BuilderValidationException("rel", obj.getClass(),
-		    requiredMsg);
-	}
-	if (obj.getHref() == null) {
-	    throw new BuilderValidationException("href", obj.getClass(),
-		    requiredMsg);
-	}
+        String requiredMsg = "Required property.";
+        if (obj.getRel() == null || ArrayUtils.isEmpty(obj.getRel())) {
+            throw new Siren4JBuilderValidationException("rel", obj.getClass(), requiredMsg);
+        }
+        if (obj.getHref() == null) {
+            throw new Siren4JBuilderValidationException("href", obj.getClass(), requiredMsg);
+        }
     }
 
 }

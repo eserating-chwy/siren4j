@@ -35,108 +35,118 @@ import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
 
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({"class", "rel", "href", "properties", "entities", "actions", "links"})
+@JsonPropertyOrder({ "class", "rel", "href", "properties", "entities", "actions", "links" })
 public class EntityImpl implements Entity {
-	
-	@JsonProperty(value="class")
-	private String[] entityClass;
-	
-	private String[] rel;
-	
-	private String href;
-	
-	private boolean reference;
-	
-	private Map<String, Object> properties;
-	
-	private List<Entity> entities;
-	
-	private List<Link> links;
-	
-	private List<Action> actions;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getEntityClass()
-	 */
-	public String[] getEntityClass() {
-		return entityClass;
-	}
+    @JsonProperty(value = "class")
+    private String[] entityClass;
 
-	public void setEntityClass(String... entityClass) {
-		this.entityClass = entityClass;
-	}
+    private String[] rel;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getProperties()
-	 */
-	public Map<String, Object> getProperties() {
-		return properties;
-	}
+    private String href;
 
-	public void setProperties(Map<String, Object> properties) {
-		this.properties = properties;
-	}
+    private boolean reference;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getEntities()
-	 */
-	public List<Entity> getEntities() {
-		return entities;
-	}
+    private Map<String, Object> properties;
 
-	public void setEntities(List<Entity> entities) {
-		this.entities = entities;
-	}
+    private List<Entity> entities;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getLinks()
-	 */
-	public List<Link> getLinks() {
-		return links;
-	}
+    private List<Link> links;
 
-	public void setLinks(List<Link> links) {
-		this.links = links;
-	}
+    private List<Action> actions;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getActions()
-	 */
-	public List<Action> getActions() {
-		return actions;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getEntityClass()
+     */
+    public String[] getEntityClass() {
+        return entityClass;
+    }
 
-	public void setActions(List<Action> actions) {
-		this.actions = actions;
-	}
+    public void setEntityClass(String... entityClass) {
+        this.entityClass = entityClass;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Entity#getRel()
-	 */
-	public String[] getRel() {
-		return rel;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getProperties()
+     */
+    public Map<String, Object> getProperties() {
+        return properties;
+    }
 
-	public void setRel(String... rel) {
-		this.rel = rel;
-	}
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
 
-	public boolean isReference() {
-		return reference;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getEntities()
+     */
+    public List<Entity> getEntities() {
+        return entities;
+    }
 
-	public void setReference(Boolean reference) {
-		this.reference = reference;
-	}
+    public void setEntities(List<Entity> entities) {
+        this.entities = entities;
+    }
 
-	public String getHref() {
-		return href;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getLinks()
+     */
+    public List<Link> getLinks() {
+        return links;
+    }
 
-	public void setHref(String href) {
-		this.href = href;
-	}
-	
-	
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getActions()
+     */
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Entity#getRel()
+     */
+    public String[] getRel() {
+        return rel;
+    }
+
+    public void setRel(String... rel) {
+        this.rel = rel;
+    }
+
+    public boolean isReference() {
+        return reference;
+    }
+
+    public void setReference(Boolean reference) {
+        this.reference = reference;
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
 
 }

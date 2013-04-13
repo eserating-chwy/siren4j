@@ -1,8 +1,8 @@
 package com.google.code.siren4j.component.testpojos;
 
-import com.google.code.siren4j.annotations.SirenEntity;
+import com.google.code.siren4j.annotations.Siren4JEntity;
 
-@SirenEntity(name = "author", uri = "/authors/{id}")
+@Siren4JEntity(name = "author", uri = "/authors/{id}")
 public class Author extends BasePojo {
 
     private String firstname;

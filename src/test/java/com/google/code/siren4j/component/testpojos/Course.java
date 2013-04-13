@@ -3,28 +3,28 @@ package com.google.code.siren4j.component.testpojos;
 import java.util.Collection;
 import java.util.Date;
 
-import com.google.code.siren4j.annotations.SirenAction;
-import com.google.code.siren4j.annotations.SirenActionField;
-import com.google.code.siren4j.annotations.SirenEntity;
-import com.google.code.siren4j.annotations.SirenInclude;
-import com.google.code.siren4j.annotations.SirenInclude.Include;
-import com.google.code.siren4j.annotations.SirenLink;
-import com.google.code.siren4j.annotations.SirenSubEntity;
+import com.google.code.siren4j.annotations.Siren4JAction;
+import com.google.code.siren4j.annotations.Siren4JActionField;
+import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.annotations.Siren4JInclude;
+import com.google.code.siren4j.annotations.Siren4JInclude.Include;
+import com.google.code.siren4j.annotations.Siren4JLink;
+import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
-@SirenInclude(Include.NON_NULL)
-@SirenEntity(name = "course", uri = "/courses/{courseid}",
+@Siren4JInclude(Include.NON_NULL)
+@Siren4JEntity(name = "course", uri = "/courses/{courseid}",
    links = {
-       @SirenLink(rel = "reviews", href="/courseReviews/course/{courseid}")
+       @Siren4JLink(rel = "reviews", href="/courseReviews/course/{courseid}")
    },
    actions = {
-       @SirenAction(
+       @Siren4JAction(
            name = "addReview",
            method = Method.POST,
            href = "/courseReviews/course/{courseid}",
            fields = {
-        	    @SirenActionField(name = "userid", type = "text", required = true ),
-        	    @SirenActionField(name = "body", type = "text", required = true, maxLength = 250)
+        	    @Siren4JActionField(name = "userid", type = "text", required = true ),
+        	    @Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250)
            }
        )
    }
@@ -42,7 +42,7 @@ public class Course extends BasePojo{
     private String type;
     private Date createdate;
     
-    @SirenSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
+    @Siren4JSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
     private Collection<Author> authors;
 
     public String getCourseid() {

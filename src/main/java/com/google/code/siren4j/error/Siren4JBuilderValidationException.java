@@ -25,60 +25,52 @@ package com.google.code.siren4j.error;
 
 import org.apache.commons.lang.StringUtils;
 
-public class BuilderValidationException extends RuntimeException {
-    
-	private static final long serialVersionUID = -5007142697946166657L;
-	
-	private String propertyName;
-	
-	@SuppressWarnings("rawtypes")
-	private Class clazz;
-	
-	@SuppressWarnings("rawtypes")
-	public BuilderValidationException(String propertyName, Class clazz, String message) {
-		super(message);
-		this.propertyName = propertyName;
-		this.clazz = clazz;
-	}
+public class Siren4JBuilderValidationException extends RuntimeException implements Siren4JException {
 
-	public BuilderValidationException(String message) {
-		super(message);
-	}
+    private static final long serialVersionUID = -5007142697946166657L;
 
-	public String getPropertyName() {
-		return propertyName;
-	}
+    private String propertyName;
 
-	@SuppressWarnings("rawtypes")
-	public Class getClazz() {
-		return clazz;
-	}
+    @SuppressWarnings("rawtypes")
+    private Class clazz;
 
-	@Override
-	public String getMessage() {
-		StringBuilder sb = new StringBuilder();
-		if(StringUtils.isNotBlank(propertyName) && clazz != null) {
-			sb.append("Property: <");
-			sb.append(propertyName);
-			sb.append("> Class: <");
-			sb.append(clazz.getName());
-			sb.append(">: \n");
-		}
-		sb.append(super.getMessage());
-		return sb.toString();
-	}
+    @SuppressWarnings("rawtypes")
+    public Siren4JBuilderValidationException(String propertyName, Class clazz, String message) {
+        super(message);
+        this.propertyName = propertyName;
+        this.clazz = clazz;
+    }
 
-	@Override
-	public String getLocalizedMessage() {
-		return getMessage();
-	}
-	
-	
-	
-	
-	
-	
+    public Siren4JBuilderValidationException(String message) {
+        super(message);
+    }
 
-	
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Class getClazz() {
+        return clazz;
+    }
+
+    @Override
+    public String getMessage() {
+        StringBuilder sb = new StringBuilder();
+        if (StringUtils.isNotBlank(propertyName) && clazz != null) {
+            sb.append("Property: <");
+            sb.append(propertyName);
+            sb.append("> Class: <");
+            sb.append(clazz.getName());
+            sb.append(">: \n");
+        }
+        sb.append(super.getMessage());
+        return sb.toString();
+    }
+
+    @Override
+    public String getLocalizedMessage() {
+        return getMessage();
+    }
 
 }

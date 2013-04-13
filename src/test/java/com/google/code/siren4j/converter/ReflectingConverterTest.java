@@ -16,7 +16,7 @@ public class ReflectingConverterTest {
     @Test
     public void testToEntity() throws Exception {
 	
-	    Entity ent = ReflectingConverter.toEntity(getTestCourse());
+	    Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
 	    ObjectMapper mapper = new ObjectMapper();
 	    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 	    System.out.println(mapper.writeValueAsString(ent));

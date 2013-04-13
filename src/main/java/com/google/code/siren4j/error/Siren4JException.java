@@ -16,55 +16,36 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *********************************************************************************************/
-package com.google.code.siren4j.resource;
+package com.google.code.siren4j.error;
 
-import java.util.Collection;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
-import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
-import com.google.code.siren4j.component.Action;
-import com.google.code.siren4j.component.Link;
+/**
+ * A convenience interface to mark Siren4JExceptions.
+ */
+public interface Siren4JException {
 
-public abstract class BaseResource implements Resource {
+    public abstract String getMessage();
 
-    @Siren4JPropertyIgnore
-    protected String overrideUri;
-    @Siren4JPropertyIgnore
-    protected Boolean overrideEmbeddedLink;
-    @Siren4JPropertyIgnore
-    protected Collection<Link> entityLinks;
-    @Siren4JPropertyIgnore
-    protected Collection<Action> entityActions;
+    public abstract String getLocalizedMessage();
 
-    public void setOverrideUri(String uri) {
-        overrideUri = uri;
-    }
+    public abstract Throwable getCause();
 
-    public String getOverrideUri() {
-        return overrideUri;
-    }
+    public abstract Throwable initCause(Throwable cause);
 
-    public void setOverrideEmbeddedLink(Boolean isEmbeddedLink) {
-        overrideEmbeddedLink = isEmbeddedLink;
-    }
+    public abstract String toString();
 
-    public Boolean getOverrideEmbeddedLink() {
-        return overrideEmbeddedLink;
-    }
+    public abstract void printStackTrace();
 
-    public Collection<Link> getEntityLinks() {
-        return entityLinks;
-    }
+    public abstract void printStackTrace(PrintStream s);
 
-    public void setEntityLinks(Collection<Link> entityLinks) {
-        this.entityLinks = entityLinks;
-    }
+    public abstract void printStackTrace(PrintWriter s);
 
-    public Collection<Action> getEntityActions() {
-        return entityActions;
-    }
+    public abstract Throwable fillInStackTrace();
 
-    public void setEntityActions(Collection<Action> entityActions) {
-        this.entityActions = entityActions;
-    }
+    public abstract StackTraceElement[] getStackTrace();
+
+    public abstract void setStackTrace(StackTraceElement[] stackTrace);
 
 }

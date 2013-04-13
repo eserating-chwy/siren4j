@@ -40,7 +40,7 @@ import com.google.code.siren4j.component.Link;
 import com.google.code.siren4j.component.impl.ActionImpl;
 import com.google.code.siren4j.component.impl.EntityImpl;
 import com.google.code.siren4j.component.impl.LinkImpl;
-import com.google.code.siren4j.error.BuilderValidationException;
+import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 
 public class EntityBuilder extends BaseBuilder<Entity> {
 
@@ -56,164 +56,161 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     }
 
     public static EntityBuilder newInstance() {
-	return new EntityBuilder();
+        return new EntityBuilder();
     }
 
     public EntityBuilder setEntityClass(String... entityClass) {
-	addStep("setEntityClass", new Object[] { entityClass });
-	return this;
+        addStep("setEntityClass", new Object[] { entityClass });
+        return this;
     }
 
     public EntityBuilder setRelationship(String... rel) {
-	addStep("setRel", new Object[] { rel });
-	return this;
+        addStep("setRel", new Object[] { rel });
+        return this;
     }
 
     public EntityBuilder setHref(String href) {
-	addStep("setHref", new Object[] { href });
-	addStep("setReference", new Object[] { true });
-	return this;
+        addStep("setHref", new Object[] { href });
+        addStep("setReference", new Object[] { true });
+        return this;
     }
 
     public EntityBuilder addProperty(String name, Object value) {
-	addStep("_addProperty", new Object[] { name, value }, true);
-	return this;
+        addStep("_addProperty", new Object[] { name, value }, true);
+        return this;
     }
 
     public EntityBuilder addProperties(Map<String, Object> properties) {
-	for (String key : properties.keySet()) {
-	    addProperty(key, properties.get(key));
-	}
-	return this;
+        for (String key : properties.keySet()) {
+            addProperty(key, properties.get(key));
+        }
+        return this;
     }
 
     public EntityBuilder addSubEntity(Entity subEntity) {
-	addStep("_addEntity", new Object[] { subEntity }, true);
-	return this;
+        addStep("_addEntity", new Object[] { subEntity }, true);
+        return this;
     }
 
     public EntityBuilder addSubEntities(List<Entity> entities) {
-	for (Entity entity : entities) {
-	    addSubEntity(entity);
-	}
-	return this;
+        for (Entity entity : entities) {
+            addSubEntity(entity);
+        }
+        return this;
     }
 
     public EntityBuilder addLink(Link link) {
-	addStep("_addLink", new Object[] { link }, true);
-	return this;
+        addStep("_addLink", new Object[] { link }, true);
+        return this;
     }
 
     public EntityBuilder addLinks(List<Link> links) {
-	for (Link link : links) {
-	    addLink(link);
-	}
-	return this;
+        for (Link link : links) {
+            addLink(link);
+        }
+        return this;
     }
 
     public EntityBuilder addAction(Action action) {
-	addStep("_addAction", new Object[] { action }, true);
-	return this;
+        addStep("_addAction", new Object[] { action }, true);
+        return this;
     }
 
     public EntityBuilder addActions(List<Action> actions) {
-	for (Action action : actions) {
-	    addAction(action);
-	}
-	return this;
+        for (Action action : actions) {
+            addAction(action);
+        }
+        return this;
     }
 
     void _addEntity(EntityImpl entity) {
-	subEntities.add(entity);
+        subEntities.add(entity);
     }
 
     void _addLink(LinkImpl link) {
-	links.add(link);
+        links.add(link);
     }
 
     void _addAction(ActionImpl action) {
-	actions.add(action);
+        actions.add(action);
     }
-    
+
     void _addProperty(String name, Object value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, String value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Integer value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Long value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Float value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Double value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Boolean value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     void _addProperty(String name, Date value) {
-	properties.put(name, value);
+        properties.put(name, value);
     }
 
     @Override
     protected void postProcess(Entity obj) {
-	EntityImpl entity = (EntityImpl) obj;
-	if (!CollectionUtils.isEmpty(subEntities)) {
-	    entity.setEntities(subEntities);
-	}
+        EntityImpl entity = (EntityImpl) obj;
+        if (!CollectionUtils.isEmpty(subEntities)) {
+            entity.setEntities(subEntities);
+        }
 
-	if (!CollectionUtils.isEmpty(actions)) {
-	    entity.setActions(actions);
-	}
+        if (!CollectionUtils.isEmpty(actions)) {
+            entity.setActions(actions);
+        }
 
-	if (!CollectionUtils.isEmpty(links)) {
-	    entity.setLinks(links);
-	}
+        if (!CollectionUtils.isEmpty(links)) {
+            entity.setLinks(links);
+        }
 
-	if (!MapUtils.isEmpty(properties)) {
-	    entity.setProperties(properties);
-	}
+        if (!MapUtils.isEmpty(properties)) {
+            entity.setProperties(properties);
+        }
     }
 
     @Override
     protected void validate(Entity obj) {
-	validateSubEntities(obj);
+        validateSubEntities(obj);
     }
-    
 
     private void validateSubEntities(Entity obj) {
-	// Validate that all sub entities have a "rel" set.
-	String relRequired = "Sub entities are required to have a <rel> property set.";
-	String hrefReqForEmbed = "Sub entities that are embedded links are required to have a <href> property set.";
-	if (!CollectionUtils.isEmpty(obj.getEntities())) {
-	    for (Entity e : obj.getEntities()) {
-		if (e.getRel() == null || ArrayUtils.isEmpty(e.getRel())) {
-		    throw new BuilderValidationException("entities",
-			    obj.getClass(), relRequired);
-		}
-		if (e.isReference() && StringUtils.isBlank(e.getHref())) {
-		    throw new BuilderValidationException("entities",
-			    obj.getClass(), hrefReqForEmbed);
-		}
-	    }
-	}
+        // Validate that all sub entities have a "rel" set.
+        String relRequired = "Sub entities are required to have a <rel> property set.";
+        String hrefReqForEmbed = "Sub entities that are embedded links are required to have a <href> property set.";
+        if (!CollectionUtils.isEmpty(obj.getEntities())) {
+            for (Entity e : obj.getEntities()) {
+                if (e.getRel() == null || ArrayUtils.isEmpty(e.getRel())) {
+                    throw new Siren4JBuilderValidationException("entities", obj.getClass(), relRequired);
+                }
+                if (e.isReference() && StringUtils.isBlank(e.getHref())) {
+                    throw new Siren4JBuilderValidationException("entities", obj.getClass(), hrefReqForEmbed);
+                }
+            }
+        }
     }
 
     @Override
     protected Entity createInstance() {
-	return new EntityImpl();
+        return new EntityImpl();
     }
 
 }

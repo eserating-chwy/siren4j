@@ -16,44 +16,29 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *********************************************************************************************/
-package com.google.code.siren4j.converter;
+package com.google.code.siren4j.annotations;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ReflectedInfo {
-    private Field field;
-    private Method getter;
-    private Method setter;
+import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
-    public ReflectedInfo(Field field, Method getter, Method setter) {
-        super();
-        this.field = field;
-        this.getter = getter;
-        this.setter = setter;
-    }
+@Target({ ElementType.ANNOTATION_TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Siren4JAction {
+    String name();
 
-    public Field getField() {
-        return field;
-    }
+    String[] actionClass() default {};
 
-    public void setField(Field field) {
-        this.field = field;
-    }
+    Method method() default Method.GET;
 
-    public Method getGetter() {
-        return getter;
-    }
+    String href();
 
-    public void setGetter(Method getter) {
-        this.getter = getter;
-    }
+    String title() default "";
 
-    public Method getSetter() {
-        return setter;
-    }
+    String type() default "";
 
-    public void setSetter(Method setter) {
-        this.setter = setter;
-    }
+    Siren4JActionField[] fields() default {};
 }

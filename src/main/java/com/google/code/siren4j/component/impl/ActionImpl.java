@@ -33,133 +33,115 @@ import com.google.code.siren4j.component.Field;
 
 @JsonInclude(Include.NON_NULL)
 public class ActionImpl implements Action {
-	
-	private String name;
-	
-	@JsonProperty(value="class")
-	private List<String> actionClass;
-	
-	private Method method = Method.GET;
-	
-	private String href;
-	
-	private String title;
-	
-	private String type;
-	
-	private List<Field> fields;	
-	
-	
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getName()
-	 */
-	public String getName() {
-		return name;
-	}
 
+    private String name;
 
+    @JsonProperty(value = "class")
+    private List<String> actionClass;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private Method method = Method.GET;
 
+    private String href;
 
+    private String title;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getActionClass()
-	 */
-	public List<String> getActionClass() {
-		return actionClass;
-	}
+    private String type;
 
+    private List<Field> fields;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getName()
+     */
+    public String getName() {
+        return name;
+    }
 
-	public void setActionClass(List<String> actionClass) {
-		this.actionClass = actionClass;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getActionClass()
+     */
+    public List<String> getActionClass() {
+        return actionClass;
+    }
 
+    public void setActionClass(List<String> actionClass) {
+        this.actionClass = actionClass;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getMethod()
-	 */
-	public Method getMethod() {
-		return method;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getMethod()
+     */
+    public Method getMethod() {
+        return method;
+    }
 
+    public void setMethod(Method method) {
+        this.method = method;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getHref()
+     */
+    public String getHref() {
+        return href;
+    }
 
-	public void setMethod(Method method) {
-		this.method = method;
-	}
+    public void setHref(String href) {
+        this.href = href;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getTitle()
+     */
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getHref()
-	 */
-	public String getHref() {
-		return href;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getType()
+     */
+    public String getType() {
+        return type;
+    }
 
+    public void setType(String type) {
+        this.type = type;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Action#getFields()
+     */
+    public List<Field> getFields() {
+        return fields;
+    }
 
-	public void setHref(String href) {
-		this.href = href;
-	}
+    public void setFields(List<Field> fields) {
+        this.fields = fields;
+    }
 
-
-
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getTitle()
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-
-
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getType()
-	 */
-	public String getType() {
-		return type;
-	}
-
-
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-
-
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Action#getFields()
-	 */
-	public List<Field> getFields() {
-		return fields;
-	}
-
-
-
-	public void setFields(List<Field> fields) {
-		this.fields = fields;
-	}
-    
-	
-	public enum Method {
-		GET,
-		PUT,
-		POST,
-		DELETE,
-		PATCH
-	}
+    public enum Method {
+        GET, PUT, POST, DELETE, PATCH
+    }
 
 }

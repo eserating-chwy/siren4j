@@ -31,35 +31,38 @@ import com.google.code.siren4j.component.Link;
 
 @JsonInclude(Include.NON_NULL)
 public class LinkImpl implements Link {
-    
-	private String[] rel;
-	
-	private String href;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Link#getRel()
-	 */
-	public String[] getRel() {
-		return rel;
-	}
+    private String[] rel;
 
-	public void setRel(String... rel) {
-		this.rel = rel;
-	}
+    private String href;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Link#getHref()
-	 */
-	public String getHref() {
-		return href;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Link#getRel()
+     */
+    public String[] getRel() {
+        return rel;
+    }
 
-	public void setHref(String href) {
-		if(StringUtils.isBlank(href)) {
-			throw new IllegalArgumentException("href cannot be null or empty.");
-		}
-		this.href = href;
-	}
-	
-	
+    public void setRel(String... rel) {
+        this.rel = rel;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Link#getHref()
+     */
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        if (StringUtils.isBlank(href)) {
+            throw new IllegalArgumentException("href cannot be null or empty.");
+        }
+        this.href = href;
+    }
+
 }

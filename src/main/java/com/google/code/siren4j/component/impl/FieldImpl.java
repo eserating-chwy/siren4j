@@ -30,113 +30,114 @@ import com.google.code.siren4j.meta.FieldType;
 
 @JsonInclude(Include.NON_NULL)
 public class FieldImpl implements Field {
-	
-	private String name;
-	
-	private FieldType type;
-	
-	private String value;	
-	
-	private boolean required;
-	
-	private String pattern;
-	
-	@JsonInclude(Include.NON_DEFAULT)
-	private int max = -1;
-	
-	@JsonInclude(Include.NON_DEFAULT)
-	private int min = -1;
-	
-	@JsonInclude(Include.NON_DEFAULT)
-	private int maxLength = -1;
-	
-	@JsonInclude(Include.NON_DEFAULT)
-	private int step = -1;
-	
-	
-	
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Field#getName()
-	 */
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String name;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Field#getType()
-	 */
-	public FieldType getType() {
-		return type;
-	}
+    private FieldType type;
 
-	public void setType(FieldType type) {
-		this.type = type;
-	}
+    private String value;
 
-	/* (non-Javadoc)
-	 * @see com.google.code.siren4j.component.impl.Field#getValue()
-	 */
-	public String getValue() {
-		return value;
-	}
+    private boolean required;
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    private String pattern;
 
-	public boolean isRequired() {
-		return required;
-	}
+    @JsonInclude(Include.NON_DEFAULT)
+    private int max = -1;
 
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
+    @JsonInclude(Include.NON_DEFAULT)
+    private int min = -1;
 
-	public String getPattern() {
-		return pattern;
-	}
+    @JsonInclude(Include.NON_DEFAULT)
+    private int maxLength = -1;
 
-	public void setPattern(String pattern) {
-		this.pattern = pattern;
-	}
+    @JsonInclude(Include.NON_DEFAULT)
+    private int step = -1;
 
-	public int getMax() {
-		return max;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Field#getName()
+     */
+    public String getName() {
+        return name;
+    }
 
-	public void setMax(int max) {
-		this.max = max;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public int getMin() {
-		return min;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Field#getType()
+     */
+    public FieldType getType() {
+        return type;
+    }
 
-	public void setMin(int min) {
-		this.min = min;
-	}
+    public void setType(FieldType type) {
+        this.type = type;
+    }
 
-	public int getMaxLength() {
-		return maxLength;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.google.code.siren4j.component.impl.Field#getValue()
+     */
+    public String getValue() {
+        return value;
+    }
 
-	public void setMaxLength(int maxLength) {
-		this.maxLength = maxLength;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public int getStep() {
-		return step;
-	}
+    public boolean isRequired() {
+        return required;
+    }
 
-	public void setStep(int step) {
-		this.step = step;
-	}
-	
-	
-	
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    public int getMin() {
+        return min;
+    }
+
+    public void setMin(int min) {
+        this.min = min;
+    }
+
+    public int getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(int maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public int getStep() {
+        return step;
+    }
+
+    public void setStep(int step) {
+        this.step = step;
+    }
 
 }

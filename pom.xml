@@ -5,9 +5,9 @@
   <groupId>com.google.code</groupId>
   <artifactId>Siren4J</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1-Alpha-SNAPSHOT</version>
   
-  <name>Siren4J Maven Webapp</name>
+  <name>Siren4J</name>
   <url>http://maven.apache.org</url>
   
   <dependencies>
@@ -30,7 +30,12 @@
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
       <version>3.2.1</version>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>14.0.1</version>
+</dependency>    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -46,6 +51,31 @@
   </dependencies>
   
   <build>
-    <finalName>Siren4J</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>attach-javadocs</id>
+                    <goals>
+                        <goal>jar</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
   </build>
 </project>

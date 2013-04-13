@@ -41,7 +41,7 @@ public class LinkBuilderTest {
 		.setHref(path)
 		.build();
 		
-		assertEquals(Link.RELATIONSHIP_SELF, result.getRel());
+		assertEquals(Link.RELATIONSHIP_SELF, result.getRel()[0]);
 		assertEquals(path, result.getHref());
 		
 	}

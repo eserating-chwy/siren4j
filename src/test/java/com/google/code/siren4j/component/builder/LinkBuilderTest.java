@@ -28,12 +28,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.google.code.siren4j.component.Link;
+import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 
 public class LinkBuilderTest {
 
 	
 	@Test
-	public void testBuild() throws Exception {
+	public void testNormalBuild() throws Exception {
 		LinkBuilder builder = LinkBuilder.newInstance();
 		
 		String path = "/some/path";
@@ -44,5 +45,36 @@ public class LinkBuilderTest {
 		assertEquals(Link.RELATIONSHIP_SELF, result.getRel()[0]);
 		assertEquals(path, result.getHref());
 		
+	}
+	
+	@Test
+	public void testNoRelationship() throws Exception {
+	    LinkBuilder builder = LinkBuilder.newInstance();
+            
+            String path = "/some/path";
+            try {
+                Link result = builder.setHref(path).build();
+                fail("Expected validation exception for missing relationship.");
+            } catch (Exception e) {
+               assertTrue(e instanceof Siren4JBuilderValidationException);
+            }
+            
+           
+	}
+	
+	@Test
+	public void testNoHref() throws Exception {
+	    LinkBuilder builder = LinkBuilder.newInstance();
+            
+            String path = "/some/path";
+            try {
+                Link result = builder.setRelationship(Link.RELATIONSHIP_SELF)
+                    .build();
+                fail("Expected validation exception for missing href.");
+            } catch (Exception e) {
+                assertTrue(e instanceof Siren4JBuilderValidationException);
+            }
+            
+            
 	}
 }

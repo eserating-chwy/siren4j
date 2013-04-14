@@ -20,6 +20,7 @@ package com.google.code.siren4j.converter;
 
 import java.util.Date;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,12 +36,26 @@ public class ReflectingConverterTest {
     public void testToEntity() throws Exception {
 
         Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
+        
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         System.out.println(mapper.writeValueAsString(ent));
 
     }
+    
+    @Test
+    @Ignore
+    public void testToEntityPerformance() throws Exception {
+        Date start = new Date();
+        for(int i = 1; i < 10000; i++) {
+            ReflectingConverter.getInstance().toEntity(getTestCourse());
+        }
+        Date end = new Date();
+        long elapsed = end.getTime() - start.getTime();
+        System.out.println("Elapsed time: " + elapsed + " milliseconds");
 
+    }
+    
     private Course getTestCourse() {
         Course course = new Course();
         course.setCourseid("testCourseID1");

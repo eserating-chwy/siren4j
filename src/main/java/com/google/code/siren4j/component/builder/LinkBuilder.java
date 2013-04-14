@@ -63,6 +63,7 @@ public class LinkBuilder extends BaseBuilder<Link> {
         if (obj.getHref() == null) {
             throw new Siren4JBuilderValidationException("href", obj.getClass(), requiredMsg);
         }
-    }
+    }   
+    
 
 }

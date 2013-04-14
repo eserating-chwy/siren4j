@@ -44,7 +44,7 @@ public class ReflectingConverterTest {
     }
     
     @Test
-    @Ignore
+    //@Ignore
     public void testToEntityPerformance() throws Exception {
         Date start = new Date();
         for(int i = 1; i < 10000; i++) {

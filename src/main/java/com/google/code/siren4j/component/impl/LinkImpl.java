@@ -24,6 +24,8 @@
 package com.google.code.siren4j.component.impl;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -64,5 +66,29 @@ public class LinkImpl implements Link {
         }
         this.href = href;
     }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+            .append(rel)
+            .append(href)
+            .toHashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) { return false;}
+        if(obj == this) { return true;}
+        if(obj.getClass() != getClass()) {
+          return false;
+        }
+        LinkImpl link = (LinkImpl)obj;
+        return new EqualsBuilder()
+            .append(href, link.href)
+            .append(rel, link.rel)
+            .isEquals();
+    }
+    
+    
 
 }

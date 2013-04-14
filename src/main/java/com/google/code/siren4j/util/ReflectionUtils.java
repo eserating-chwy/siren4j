@@ -29,18 +29,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.converter.ReflectedInfo;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 public class ReflectionUtils {
 
     public static final String GETTER_PREFIX = "get";
     public static final String GETTER_PREFIX_BOOLEAN = "is";
     public static final String SETTER_PREFIX = "set";
+    /**
+     * Field info is cached as it is an expensive operation but the values don't actually change
+     * until code is changed and recompiled.
+     */
+    public static Cache<Class<?>, List<ReflectedInfo>> fieldInfoCache = 
+        CacheBuilder.newBuilder().maximumSize(1000).build();
 
     public static final Class<?>[] propertyTypes = new Class<?>[] { int.class, Integer.class, long.class, Long.class,
         double.class, Double.class, float.class, Float.class, short.class, Short.class, byte.class, Byte.class,
@@ -95,22 +105,37 @@ public class ReflectionUtils {
      * Retrieve all fields deemed as Exposed, i.e. they are public or have a public accessor method or are marked by an
      * annotation to be exposed.
      * 
-     * @param obj
-     * cannot be <code>null</code>.
+     * @param obj cannot be <code>null</code>.
      * @return
      */
-    public static List<ReflectedInfo> getExposedFieldInfo(Class<?> clazz) {
-        List<ReflectedInfo> exposed = new ArrayList<ReflectedInfo>();
-        for (Method m : clazz.getMethods()) {
-            if (ReflectionUtils.isGetter(m) && !isIgnored(m)) {
-                Field f = getGetterField(m);
-                if (f != null && !isIgnored(f)) {
-                    f.setAccessible(true);
-                    exposed.add(new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f)));
+    public static List<ReflectedInfo> getExposedFieldInfo(final Class<?> clazz) {
+        List<ReflectedInfo> results = null;
+        try {
+            results = fieldInfoCache.get(clazz, new Callable<List<ReflectedInfo>>() {
+                /**
+                 * This method is called if the value is not found in the cache. This
+                 * is where the real reflection work is done.
+                 */
+                public List<ReflectedInfo> call() throws Exception {
+                    List<ReflectedInfo> exposed = new ArrayList<ReflectedInfo>();
+                    for (Method m : clazz.getMethods()) {
+                        if (ReflectionUtils.isGetter(m) && !isIgnored(m)) {
+                            Field f = getGetterField(m);
+                            if (f != null && !isIgnored(f)) {
+                                f.setAccessible(true);
+                                exposed.add(new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f)));
+                            }
+                        }
+                    }
+                    return exposed;
                 }
-            }
+                
+            });
+        } catch (ExecutionException e) {
+             
         }
-        return exposed;
+        return results;        
+        
     }
 
     /**

@@ -42,6 +42,25 @@ import com.google.code.siren4j.component.impl.EntityImpl;
 import com.google.code.siren4j.component.impl.LinkImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 
+/**
+ * The EntityBuilder allows the construction of an Entity object via a fluent
+ * builder API.
+ * 
+ * <pre>
+ * <b>Example Usage:</b>
+ * 
+ * EntityBuilder builder = EntityBuilder.newInstance();
+ * Entity result = builder
+ *    .setEntityClass("test")
+ *    .addProperty("foo", "hello")
+ *    .addProperty("number", 1)
+ *    .addLinks(getLinks())
+ *    .addActions(getActions())
+ *    .build();    
+ *    
+ * </pre>
+ * 
+ */
 public class EntityBuilder extends BaseBuilder<Entity> {
 
     private List<Entity> subEntities = new ArrayList<Entity>();
@@ -54,69 +73,174 @@ public class EntityBuilder extends BaseBuilder<Entity> {
 
     private EntityBuilder() {
     }
-
+    
+    /**
+     * Creates a new instance of the <code>EntityBuilder</code>.
+     * @return new instance of the builder, never <code>null</code>.
+     */
     public static EntityBuilder newInstance() {
         return new EntityBuilder();
     }
-
+    
+    /**
+     * Set the entity class of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param entityClass cannot be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder setEntityClass(String... entityClass) {
+    	if(ArrayUtils.isEmpty(entityClass)) {
+    		throw new IllegalArgumentException("entityClass cannot be null or empty.");
+    	}
         addStep("setEntityClass", new Object[] { entityClass });
         return this;
     }
-
+    
+    /**
+     * Sets the relationship of the entity to be built. Generally only used for sub entities. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param rel cannot be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder setRelationship(String... rel) {
-        addStep("setRel", new Object[] { rel });
+    	if(ArrayUtils.isEmpty(rel)) {
+    		throw new IllegalArgumentException("rel cannot be null or empty.");
+    	}
+    	addStep("setRel", new Object[] { rel });
         return this;
     }
-
+    
+    /**
+     * Set the href of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is a required property if this entity is an embedded link, as specified
+     * by the Siren specification. If set then this entity will be considered an embedded link.
+     * @param href cannot be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder setHref(String href) {
+    	if(StringUtils.isBlank(href)) {
+    		throw new IllegalArgumentException("href cannot be null or empty.");
+    	}
         addStep("setHref", new Object[] { href });
         addStep("setReference", new Object[] { true });
         return this;
     }
-
+    
+    /**
+     * Adds a single property to the entity to be built. 
+     * Properties are optional according to the Siren specification.
+     * @param name cannot be <code>null</code> or empty.
+     * @param value may be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addProperty(String name, Object value) {
+    	if(StringUtils.isBlank(name)) {
+    		throw new IllegalArgumentException("name cannot be null or empty.");
+    	}
         addStep("_addProperty", new Object[] { name, value }, true);
         return this;
     }
-
+    
+    /**
+     * Adds a map of properties to the entity to be built. 
+     * Properties are optional according to the Siren specification.
+     * @param properties cannot be <code>null</code>.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addProperties(Map<String, Object> properties) {
+    	if(MapUtils.isEmpty(properties)) {
+    		throw new IllegalArgumentException("properties cannot be null or empty.");
+    	}
         for (String key : properties.keySet()) {
             addProperty(key, properties.get(key));
         }
         return this;
     }
-
+    
+    /**
+     * Add a sub entity to the entity to be built. 
+     * Sub entities are optional according to the Siren specification.
+     * @param subEntity cannot be <code>null</code>.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addSubEntity(Entity subEntity) {
+    	if(subEntity == null) {
+    		throw new IllegalArgumentException("subEntity cannot be null.");
+    	}
         addStep("_addEntity", new Object[] { subEntity }, true);
         return this;
     }
-
+    
+    /**
+     * Add a list of sub entities to the entity to be built. 
+     * Sub entities are optional according to the Siren specification.
+     * @param entities cannot be <code>null</code>, may be empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addSubEntities(List<Entity> entities) {
-        for (Entity entity : entities) {
+    	if(entities == null) {
+    		throw new IllegalArgumentException("entities cannot be null.");
+    	}
+    	for (Entity entity : entities) {
             addSubEntity(entity);
         }
         return this;
     }
-
+    
+    /**
+     * Add a link to the entity to be built. Links are optional according to the Siren specification, however
+     * an entity should always have a 'self' link to be considered HATEAOS compliant.
+     * @param link cannot be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addLink(Link link) {
-        addStep("_addLink", new Object[] { link }, true);
+    	if(link == null) {
+    		throw new IllegalArgumentException("link cannot be null.");
+    	}
+    	addStep("_addLink", new Object[] { link }, true);
         return this;
     }
 
+    /**
+     * Adds list of links to the entity to be built. Links are optional according to the Siren specification, however
+     * an entity should always have a 'self' link to be considered HATEAOS compliant.
+     * @param links cannot be <code>null</code>, may be empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addLinks(List<Link> links) {
+    	if(links == null) {
+    		throw new IllegalArgumentException("links cannot be null.");
+    	}
         for (Link link : links) {
             addLink(link);
         }
         return this;
     }
-
+    
+    /**
+     * Add an action to the entity to be built. Actions are options according to the Siren specification.
+     * @param action cannot be <code>null</code>.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addAction(Action action) {
-        addStep("_addAction", new Object[] { action }, true);
+    	if(action == null) {
+    		throw new IllegalArgumentException("action cannot be null.");
+    	}
+    	addStep("_addAction", new Object[] { action }, true);
         return this;
     }
-
+    
+    /**
+     * Add a list of actions to the entity to be built. Actions are options according to the Siren specification.
+     * @param actions cannot be <code>null</code>, may be empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
     public EntityBuilder addActions(List<Action> actions) {
+    	if(actions == null) {
+    		throw new IllegalArgumentException("actions cannot be null.");
+    	}
         for (Action action : actions) {
             addAction(action);
         }
@@ -191,7 +315,12 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     protected void validate(Entity obj) {
         validateSubEntities(obj);
     }
-
+    
+    /**
+     * Validate sub entities ensuring the existence of a relationship and if an embedded link then ensure the
+     * existence of an href.
+     * @param obj assumed not <code>null</code>.
+     */
     private void validateSubEntities(Entity obj) {
         // Validate that all sub entities have a "rel" set.
         String relRequired = "Sub entities are required to have a <rel> property set.";

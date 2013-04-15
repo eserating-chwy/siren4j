@@ -25,7 +25,7 @@ package com.google.code.siren4j.error;
 
 import org.apache.commons.lang.StringUtils;
 
-public class Siren4JBuilderValidationException extends RuntimeException implements Siren4JException {
+public class Siren4JBuilderValidationException extends Siren4JRuntimeException {
 
     private static final long serialVersionUID = -5007142697946166657L;
 

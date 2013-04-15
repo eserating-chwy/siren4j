@@ -24,7 +24,7 @@ import java.io.PrintWriter;
 /**
  * A convenience interface to mark Siren4JExceptions.
  */
-public interface Siren4JException {
+public interface Siren4JThrowable {
 
     public abstract String getMessage();
 

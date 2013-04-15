@@ -22,9 +22,32 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
+/**
+ * Annotation to add meta to a field and change serialization behavior.
+ * 
+ * <pre>
+ * <code>
+ * Usage:
+ * 
+ *      &#064;Siren4JProperty(name = "courseid")
+ * 
+ *     <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>no</td><td>Tells serialization to use this name instead of the field name.</td></tr>
+ *          <tr><td>type</td><td>no</td><td>Indicates field type, defaults to {@link Type.SIMPLE}.</td></tr>
+ *       </tbody>
+ *     </table>     
+ *     
+ * </code>
+ * </pre>
+ *
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JProperty {
     String name();
 

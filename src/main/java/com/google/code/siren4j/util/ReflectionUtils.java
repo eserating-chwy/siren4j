@@ -37,6 +37,8 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.converter.ReflectedInfo;
+import com.google.code.siren4j.error.Siren4JException;
+import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
@@ -132,7 +134,7 @@ public class ReflectionUtils {
                 
             });
         } catch (ExecutionException e) {
-             
+           throw new Siren4JRuntimeException(e);     
         }
         return results;        
         
@@ -191,11 +193,10 @@ public class ReflectionUtils {
      * @param parentMode
      * @param obj
      * @return
-     * @throws IllegalArgumentException
-     * @throws IllegalAccessException
+     * @throws Siren4JException
      */
     public static String replaceFieldTokens(Object obj, String str, List<ReflectedInfo> fields, boolean parentMode)
-        throws IllegalArgumentException, IllegalAccessException {
+        throws Siren4JException {
         Map<String, Field> index = new HashMap<String, Field>();
         if (StringUtils.isBlank(str)) {
             return str;
@@ -208,17 +209,21 @@ public class ReflectionUtils {
                 }
             }
         }
-        for (String key : ReflectionUtils.getTokenKeys(str)) {
-            if ((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
-                String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
-                if (index.containsKey(fieldname)) {
-                    Field f = index.get(fieldname);
-                    if (ArrayUtils.contains(propertyTypes, f.getType())) {
-                        str = str.replaceAll("\\{" + key + "\\}", "" + f.get(obj));
-                    }
-                }
-            }
-        }
+        try {
+			for (String key : ReflectionUtils.getTokenKeys(str)) {
+			    if ((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
+			        String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
+			        if (index.containsKey(fieldname)) {
+			            Field f = index.get(fieldname);
+			            if (ArrayUtils.contains(propertyTypes, f.getType())) {
+			                str = str.replaceAll("\\{" + key + "\\}", "" + f.get(obj));
+			            }
+			        }
+			    }
+			}
+		} catch (Exception e) {
+			throw new Siren4JException(e);
+		} 
         return str;
 
     }
@@ -275,6 +280,26 @@ public class ReflectionUtils {
             }
         } while (start != -1 && end != -1);
         return results;
+    }
+    
+    /**
+     * Convenience method to retrieve the field value for the specified object wrapped to
+     * catch exceptions and re throw as <code>Siren4JRuntimeException</code>.
+     * @param field cannot be <code>null</code>.
+     * @param obj may be <code>null</code>.
+     * @return the value, may be <code>null</code>.
+     */
+    public static Object getFieldValue(Field field, Object obj) {
+    	if(field == null) {
+    		throw new IllegalArgumentException("field cannot be null.");
+    	}
+    	try {
+			return field.get(obj);
+		} catch (IllegalArgumentException e) {
+			throw new Siren4JRuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new Siren4JRuntimeException(e);
+		}
     }
 
 }

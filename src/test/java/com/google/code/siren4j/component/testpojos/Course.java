@@ -40,6 +40,25 @@ public class Course extends BasePojo{
     private String title;
     private String description;
     private String type;
+    
+    @Siren4JSubEntity(rel = "lastComment")
+    private Comment lastComment;
+    
+    @Siren4JSubEntity(
+    		links = {
+    				@Siren4JLink(rel = "course", href = "/courses/{courseid}/overridden"),
+    			    @Siren4JLink(rel = "foo", href = "/foo/{title}")		
+    		},
+    		actions = {
+    				@Siren4JAction(name = "Delete", method = Method.DELETE, href = "/comments/{id}/overridden"),
+    				@Siren4JAction(name = "Reject", method = Method.PUT, href = "/comments/{id}/reject")
+    		}
+    )		
+    private Comment firstComment;
+    
+    @Siren4JSubEntity()
+    private Comment nullComment;
+    
     private Date createdate;
     
     @Siren4JSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
@@ -92,6 +111,30 @@ public class Course extends BasePojo{
     public void setAuthors(Collection<Author> authors) {
         this.authors = authors;
     }
+
+	public Comment getLastComment() {
+		return lastComment;
+	}
+
+	public void setLastComment(Comment lastComment) {
+		this.lastComment = lastComment;
+	}
+
+	public Comment getFirstComment() {
+		return firstComment;
+	}
+
+	public void setFirstComment(Comment firstComment) {
+		this.firstComment = firstComment;
+	}
+
+	public Comment getNullComment() {
+		return nullComment;
+	}
+	
+	
+    
+    
     
     
 

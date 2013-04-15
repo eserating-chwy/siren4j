@@ -30,6 +30,8 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.google.code.siren4j.error.Siren4JRuntimeException;
+
 /**
  * All Siren4J components should be derived from the <code>BaseBuilder</code> class. This
  * class contains the functionality needed for builders to easily add steps, validation and then
@@ -59,8 +61,7 @@ public abstract class BaseBuilder<T> {
                 }
             }
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new Siren4JRuntimeException(e);
         }
         postProcess(obj);
         validate(obj);

@@ -23,8 +23,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Indicates property inclusion.
+ *
+ */
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JInclude {
     Include value() default Include.ALWAYS;
 

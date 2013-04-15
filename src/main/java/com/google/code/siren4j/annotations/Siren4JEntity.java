@@ -23,8 +23,51 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to define an entity. Every resource class should have one of these annotations
+ * to define the name and self uri. Adding links and actions here is convenient but optional as they can
+ * also be added dynamically at runtime.
+ * 
+ * <pre>
+ * <code>
+ * Usage:
+ * 
+ *      &#064;Siren4JEntity(name = "course", uri = "/courses/{courseid}",
+ *         links = {
+ *             &#064;Siren4JLink(rel = "reviews", href="/courseReviews/course/{courseid}")
+ *         },
+ *         actions = {
+ *             &#064;Siren4JAction(
+ *                 name = "addReview",
+ *                 method = Method.POST,
+ *                 href = "/courseReviews/course/{courseid}",
+ *                 fields = {
+ *       	            &#064;Siren4JActionField(name = "userid", type = "text", required = true ),
+ *       	            &#064;Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250)
+ *                 }
+ *            )
+ *         }
+ *     )
+ * 
+ *     <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>yes</td><td>Unique name for the entity.</td></tr>
+ *          <tr><td>uri</td><td>no</td><td>URI pattern to self</td></tr>
+ *          <tr><td>links</td><td>no</td><td>One or more {@link Siren4JLink} annotations.</td></tr>
+ *          <tr><td>actions</td><td>no</td><td>One or more {@link Siren4JAction} annotations.</td></tr>
+ *       </tbody>
+ *     </table>     
+ *     
+ * </code>
+ * </pre>
+ *
+ */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JEntity {
     String name();
 

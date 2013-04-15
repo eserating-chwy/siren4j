@@ -23,24 +23,26 @@
  *********************************************************************************************/
 package com.google.code.siren4j.error;
 
-public class Siren4JRuntimeException extends RuntimeException implements Siren4JThrowable{
+public class Siren4JException extends Exception implements Siren4JThrowable {
 
-	private static final long serialVersionUID = 7764190460419228957L;
+	private static final long serialVersionUID = -6060262892771887456L;
 
-	public Siren4JRuntimeException() {
+	public Siren4JException() {
 		super();
 	}
 
-	public Siren4JRuntimeException(String message, Throwable cause) {
+	public Siren4JException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public Siren4JRuntimeException(String message) {
+	public Siren4JException(String message) {
 		super(message);
 	}
 
-	public Siren4JRuntimeException(Throwable cause) {
+	public Siren4JException(Throwable cause) {
 		super(cause);
 	}
-    
+	
+	
+
 }

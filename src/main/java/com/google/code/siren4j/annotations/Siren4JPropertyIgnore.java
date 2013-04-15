@@ -23,8 +23,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * A flag that mark the property to not be included when serialized by the converter.
+ */
 @Target({ ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JPropertyIgnore {
 
 }

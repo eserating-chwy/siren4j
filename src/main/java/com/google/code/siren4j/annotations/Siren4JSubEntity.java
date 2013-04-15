@@ -23,8 +23,39 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to define a sub-entity. Typically used on a resource collection field, but can also be on
+ * a single type entity field. Values set in this annotation override values set by the enities own
+ * {@link Siren4JEnity} annotation.
+ * 
+ * <pre>
+ * <code>
+ * Usage:
+ * 
+ *      &#064;Siren4JSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
+ * 
+ *     <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>no</td><td>Unique name for the subentity.</td></tr>
+ *          <tr><td>rel</td><td>no</td><td>Array of strings that indicate the subentites relationship with its parent.</td></tr>
+ *          <tr><td>uri</td><td>no</td><td>URI pattern to self</td></tr>
+ *          <tr><td>links</td><td>no</td><td>One or more {@link Siren4JLink} annotations.</td></tr>
+ *          <tr><td>actions</td><td>no</td><td>One or more {@link Siren4JAction} annotations.</td></tr>
+ *          <tr><td>embeddedLink</td><td>no</td><td>Marks the subentity as an embedded link, defaults to false.</td></tr>
+ *          
+ *       </tbody>
+ *     </table>     
+ *     
+ * </code>
+ * </pre>
+ *
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JSubEntity {
     String name() default "";
 

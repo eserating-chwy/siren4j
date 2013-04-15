@@ -23,24 +23,27 @@
  *********************************************************************************************/
 package com.google.code.siren4j.error;
 
-public class Siren4JRuntimeException extends RuntimeException implements Siren4JThrowable{
+/**
+ * Thrown by a component converter upon error.
+ *
+ */
+public class Siren4JConversionException extends Siren4JException {
 
-	private static final long serialVersionUID = 7764190460419228957L;
+	private static final long serialVersionUID = 8003075870865797238L;
 
-	public Siren4JRuntimeException() {
-		super();
+	public Siren4JConversionException() {
 	}
 
-	public Siren4JRuntimeException(String message, Throwable cause) {
+	public Siren4JConversionException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public Siren4JRuntimeException(String message) {
+	public Siren4JConversionException(String message) {
 		super(message);
 	}
 
-	public Siren4JRuntimeException(Throwable cause) {
+	public Siren4JConversionException(Throwable cause) {
 		super(cause);
 	}
-    
+
 }

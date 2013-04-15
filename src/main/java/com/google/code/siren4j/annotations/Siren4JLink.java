@@ -23,8 +23,32 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation to for adding links to entities.
+ * 
+ * <pre>
+ * <code>
+ * Usage:
+ * 
+ *      &#064;Siren4JLink(rel = "user", href = "/users/{userid}")
+ * 
+ *     <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>rel</td><td>yes</td><td>Array of string to indicate link relationship to its parent.</td></tr>
+ *          <tr><td>href</td><td>yes</td><td>The links URI pattern.</td></tr>
+ *       </tbody>
+ *     </table>     
+ *     
+ * </code>
+ * </pre>
+ *
+ */
 @Target({ ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JLink {
     String[] rel();
 

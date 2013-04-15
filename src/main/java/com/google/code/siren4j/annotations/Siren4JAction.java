@@ -24,9 +24,47 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
-
+/**
+ * Annotation that defines an action to be added to the entity.
+ * 
+ * <pre>
+ * <code>
+ * 
+ *      &#064;Siren4JAction(
+ *         name = "addReview",
+ *         title = "Add a Review",
+ *         method = Method.POST,
+ *         href = "/courseReviews/course/{courseid}",
+ *         type = "application/json",
+ *         fields = {
+ *       	    &#064;Siren4JActionField(name = "userid", type = "text", required = true ),
+ *       	    &#064;Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250)
+ *          }
+ *      )
+ *      
+ *      <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>yes</td><td>Unique name for the action.</td></tr>
+ *          <tr><td>href</td><td>yes</td><td>URI of the action.</td></tr>
+ *          <tr><td>method</td><td>no</td><td>Method for the action {@link Method}, defaults to Method.GET</td></tr>
+ *          <tr><td>actionClass</td><td>no</td><td>Array of string to classify the action.</td></tr>
+ *          <tr><td>title</td><td>no</td><td>Display title for the action.</td></tr>
+ *          <tr><td>fields</td><td>no</td><td>One or more {@link Siren4JActionField} annotation</td></tr>
+ *       </tbody>
+ *     </table>
+ *      
+ *      This annotation is used within a {@link Siren4JEntity} or {@link Siren4JSubEntity}. *         
+ *  
+ * </code>
+ * </pre>
+ *
+ */
 @Target({ ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JAction {
     String name();
 

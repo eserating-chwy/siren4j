@@ -22,9 +22,46 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
+/**
+ * Annotation to define an action.
+ * 
+ * <pre>
+ * <code>
+ * Usage:
+ * 
+ *     &#064;Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250)
+ * 
+ *     <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>yes</td><td>Unique name for the field.</td></tr>
+ *          <tr><td>type</td><td>no</td><td>HTML5 form field type, see below for allowed types.</td></tr>
+ *          <tr><td>value</td><td>no</td><td>Default value for the field.</td></tr>
+ *          <tr><td>pattern</td><td>no</td><td>HTML5 validation pattern.</td></tr>
+ *          <tr><td>required</td><td>no</td><td>Required validation, true or false, defaults to false</td></tr>
+ *          <tr><td>min</td><td>no</td><td>Validation for minimum numerical value. Type must equal 'number'</td></tr>
+ *          <tr><td>max</td><td>no</td><td>Validation for maximum numerical value. Type must equal 'number'</td></tr>
+ *          <tr><td>maxLength</td><td>no</td><td>Validation for maximum string length.</td></tr>
+ *          <tr><td>step</td><td>no</td><td>The step attribute indicates the granularity that is
+ *           expected (and required) of the value, by limiting the allowed values. Type must equal 'number'</td></tr>
+ *       </tbody>
+ *     </table>
+ *     
+ *     <b>Allowed HTML5 field types:</b>
+ *     hidden, text, search, tel, url, email, password, datetime, date, date, month, week, time, datetime-local,
+ *     number, range, color, checkbox, radio, file, submit, image, reset, button
+ *     
+ *     This annotation is used within a {@link Siren4JAction}.
+ *     
+ * </code>
+ * </pre>
+ *
+ */
 @Target({ ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JActionField {
     String name();
 

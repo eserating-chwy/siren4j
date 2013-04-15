@@ -23,13 +23,18 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.impl;
 
+
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Field;
 import com.google.code.siren4j.meta.FieldType;
 
 @JsonInclude(Include.NON_NULL)
-public class FieldImpl implements Field {
+public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     private String name;
 
@@ -139,5 +144,31 @@ public class FieldImpl implements Field {
     public void setStep(int step) {
         this.step = step;
     }
+
+    
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+        hashCodeBuilder.append(name);
+        return hashCodeBuilder.toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof FieldImpl)) {
+            return false;
+        }
+        FieldImpl other = (FieldImpl) obj;
+        EqualsBuilder equalsBuilder = new EqualsBuilder();
+        equalsBuilder.append(name, other.name);
+        return equalsBuilder.isEquals();
+    }
+    
 
 }

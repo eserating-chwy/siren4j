@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Link;
 
 @JsonInclude(Include.NON_NULL)
-public class LinkImpl implements Link {
+public class LinkImpl extends Siren4JBaseComponent implements Link {
 
     private String[] rel;
 
@@ -87,8 +87,6 @@ public class LinkImpl implements Link {
             .append(href, link.href)
             .append(rel, link.rel)
             .isEquals();
-    }
-    
-    
+    }    
 
 }

@@ -68,6 +68,7 @@ public class FieldBuilderTest {
 		
 	}
 	
+	@Test
 	public void testSetterOrdering() throws Exception {
 		//Last call to a particular setter should win.
 		//This is really testing the BaseBuilder.

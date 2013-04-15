@@ -26,6 +26,9 @@ package com.google.code.siren4j.component.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -36,7 +39,7 @@ import com.google.code.siren4j.component.Link;
 
 @JsonInclude(Include.NON_NULL)
 @JsonPropertyOrder({ "class", "rel", "href", "properties", "entities", "actions", "links" })
-public class EntityImpl implements Entity {
+public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     @JsonProperty(value = "class")
     private String[] entityClass;
@@ -147,6 +150,36 @@ public class EntityImpl implements Entity {
 
     public void setHref(String href) {
         this.href = href;
+    }
+    
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+        hashCodeBuilder.append(rel)
+            .append(entityClass)
+            .append(reference)
+            .append(href);
+        return hashCodeBuilder.toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof EntityImpl)) {
+            return false;
+        }
+        EntityImpl other = (EntityImpl) obj;
+        EqualsBuilder equalsBuilder = new EqualsBuilder();
+        equalsBuilder.append(rel, other.rel)
+            .append(entityClass, other.entityClass)
+            .append(reference, other.reference)
+            .append(href, href);
+        return equalsBuilder.isEquals();
     }
 
 }

@@ -25,6 +25,9 @@ package com.google.code.siren4j.component.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -32,7 +35,7 @@ import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Field;
 
 @JsonInclude(Include.NON_NULL)
-public class ActionImpl implements Action {
+public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     private String name;
 
@@ -142,6 +145,30 @@ public class ActionImpl implements Action {
 
     public enum Method {
         GET, PUT, POST, DELETE, PATCH
+    }
+    
+    @Override
+    public int hashCode() {
+        HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
+        hashCodeBuilder.append(name);
+        return hashCodeBuilder.toHashCode();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof ActionImpl)) {
+            return false;
+        }
+        ActionImpl other = (ActionImpl) obj;
+        EqualsBuilder equalsBuilder = new EqualsBuilder();
+        equalsBuilder.append(name, other.name);
+        return equalsBuilder.isEquals();
     }
 
 }

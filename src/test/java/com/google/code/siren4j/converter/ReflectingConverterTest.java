@@ -20,11 +20,8 @@ package com.google.code.siren4j.converter;
 
 import java.util.Date;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Course;
@@ -37,9 +34,7 @@ public class ReflectingConverterTest {
 
         Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
         
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        System.out.println(mapper.writeValueAsString(ent));
+        System.out.println(ent.toString());
 
     }
     

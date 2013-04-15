@@ -25,11 +25,8 @@ package com.google.code.siren4j.component.builder;
 
 import static org.junit.Assert.*;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.google.code.siren4j.component.Entity;

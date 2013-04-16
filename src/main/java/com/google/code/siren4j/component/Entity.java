@@ -26,8 +26,6 @@ package com.google.code.siren4j.component;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public interface Entity {
 
     public abstract String[] getEntityClass();

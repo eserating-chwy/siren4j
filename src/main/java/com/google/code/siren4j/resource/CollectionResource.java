@@ -22,11 +22,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 
 /**
  * Class representing a collection of resources.
  */
+@Siren4JEntity(name = "siren4J.collectionResource")
 public class CollectionResource<T> extends BaseResource implements Collection<T> {
     @Siren4JSubEntity
     private Collection<T> items = new ArrayList<T>();

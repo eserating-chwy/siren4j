@@ -3,18 +3,23 @@
  * 
  * Copyright (c) 2013 Erik R Serating
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
- * documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
- * persons to whom the Software is furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
- * Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
- * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
@@ -27,6 +32,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.code.siren4j.annotations.Siren4JAction;
 import com.google.code.siren4j.annotations.Siren4JActionField;
@@ -53,28 +60,40 @@ import com.google.code.siren4j.util.ReflectionUtils;
 
 public class ReflectingConverter {
 
-    /**
-     * The singleton instance for this class.
-     */
-    private static ReflectingConverter instance;
+    private static Logger LOG = LoggerFactory.getLogger(ReflectingConverter.class);
+    
+    private ResourceRegistry registry;
 
     /**
      * Private ctor to prevent direct instantiation.
+     * @throws Siren4JException 
      */
-    private ReflectingConverter() {
-
+    private ReflectingConverter() throws Siren4JException {
+       this(null);
+    }
+    
+    private ReflectingConverter(ResourceRegistry registry) throws Siren4JException {
+        this.registry = registry;
     }
 
     /**
-     * Gets the singleton instance of the converter.
+     * Gets a new  instance of the converter.
      * 
      * @return the converter, never <code>null</code>.
+     * @throws Siren4JException 
      */
-    public static ReflectingConverter getInstance() {
-        if (instance == null) {
-            instance = new ReflectingConverter();
-        }
-        return instance;
+    public static ReflectingConverter newInstance(ResourceRegistry registry) throws Siren4JException {
+       return new ReflectingConverter(registry);
+    }
+    
+    /**
+     * Gets a new  instance of the converter.
+     * 
+     * @return the converter, never <code>null</code>.
+     * @throws Siren4JException 
+     */
+    public static ReflectingConverter newInstance() throws Siren4JException {
+        return new ReflectingConverter(null);
     }
 
     /**
@@ -94,8 +113,23 @@ public class ReflectingConverter {
         }
     }
 
-    public Resource toResource(Entity entity) throws Siren4JConversionException {
-        return null;
+    public Resource toResource(Entity entity) throws Siren4JConversionException, Siren4JException {
+        if(registry == null) {
+            LOG.warn("No ResourceRegistry set, using default which " +
+               "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
+            registry = ResourceRegistryImpl.newInstance((String[])null);
+        }
+        Resource resource = null;
+        if(entity != null) {
+           String[] eClass = entity.getEntityClass();
+           if(eClass == null || eClass.length == 0) {
+               throw new Siren4JConversionException("No entity class defined, won't be able to match to Java class. Can't go on.");
+           }
+           if(!registry.containsEntityEntry(eClass[0])) {
+               throw new Siren4JConversionException("No matching resource found in the registry. Can't go on.");
+           }
+        }
+        return resource;
     }
 
     /**
@@ -138,6 +172,7 @@ public class ReflectingConverter {
         if (parentSubAnno != null) {
             cname = StringUtils.defaultIfEmpty(parentSubAnno.name(), cname);
             uri = StringUtils.defaultIfEmpty(parentSubAnno.uri(), uri);
+            //Determine if the entity is an embeddedLink
             embeddedLink = parentSubAnno.embeddedLink();
             if (obj instanceof Resource) {
                 Boolean overrideLink = ((Resource) obj).getOverrideEmbeddedLink();
@@ -535,7 +570,6 @@ public class ReflectingConverter {
      * @param arr
      * @return
      */
-    @SuppressWarnings({ "null" })
     private boolean isStringArrayEmpty(String[] arr) {
         boolean empty = true;
         if (arr != null) {

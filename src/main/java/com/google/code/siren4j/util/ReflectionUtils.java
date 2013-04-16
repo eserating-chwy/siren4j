@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.converter.ReflectedInfo;
 import com.google.code.siren4j.error.Siren4JException;
@@ -130,7 +131,11 @@ public class ReflectionUtils {
                             Field f = getGetterField(m);
                             if (f != null && !isIgnored(f)) {
                                 f.setAccessible(true);
-                                exposed.add(new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f)));
+                                Siren4JProperty propAnno = f.getAnnotation(Siren4JProperty.class);
+                                String effectiveName = propAnno != null 
+                                    ? StringUtils.defaultIfEmpty(propAnno.name(), f.getName())
+                                        : f.getName();
+                                exposed.add(new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName));
                             }
                         }
                     }
@@ -372,6 +377,29 @@ public class ReflectionUtils {
             }
         }
         return key.toString();
+    }
+    
+    /**
+     * Helper method to find the field info by its effective name from the passed in list of info.
+     * @param infoList cannot be <code>null</code>.
+     * @param name cannot be <code>null</code> or empty.
+     * @return the info or <code>null</code> if not found.
+     */
+    public static ReflectedInfo getFieldInfoByEffectiveName(List<ReflectedInfo> infoList, String name) {
+        if(infoList == null) {
+            throw new IllegalArgumentException("infoList cannot be null.");
+        }
+        if(StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("name cannot be null or empty.");
+        }
+        ReflectedInfo result = null;
+        for(ReflectedInfo info : infoList) {
+            if(name.equals(info.getEffectiveName())) {
+                result = info;
+                break;
+            }
+        }
+        return result;
     }
 
 }

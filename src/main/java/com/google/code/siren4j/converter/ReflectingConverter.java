@@ -24,12 +24,16 @@
 package com.google.code.siren4j.converter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -114,20 +118,61 @@ public class ReflectingConverter {
     }
 
     public Resource toResource(Entity entity) throws Siren4JConversionException, Siren4JException {
-        if(registry == null) {
-            LOG.warn("No ResourceRegistry set, using default which " +
-               "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
-            registry = ResourceRegistryImpl.newInstance((String[])null);
+        if (registry == null) {
+            LOG.warn("No ResourceRegistry set, using default which "
+                + "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
+            registry = ResourceRegistryImpl.newInstance((String[]) null);
         }
         Resource resource = null;
-        if(entity != null) {
-           String[] eClass = entity.getEntityClass();
-           if(eClass == null || eClass.length == 0) {
-               throw new Siren4JConversionException("No entity class defined, won't be able to match to Java class. Can't go on.");
-           }
-           if(!registry.containsEntityEntry(eClass[0])) {
-               throw new Siren4JConversionException("No matching resource found in the registry. Can't go on.");
-           }
+        if (entity != null) {
+            String[] eClass = entity.getEntityClass();
+            if (eClass == null || eClass.length == 0) {
+                throw new Siren4JConversionException(
+                    "No entity class defined, won't be able to match to Java class. Can't go on.");
+            }
+            if (!registry.containsEntityEntry(eClass[0])) {
+                throw new Siren4JConversionException("No matching resource found in the registry. Can't go on.");
+            }
+            Class<?> clazz = registry.getClassByEntityName(eClass[0]);
+            List<ReflectedInfo> fieldInfo = ReflectionUtils.getExposedFieldInfo(clazz);
+            Object obj = null;
+            try {
+                obj = clazz.newInstance();
+            } catch (Exception e) {
+                throw new Siren4JConversionException(e);
+            }
+            // Set properties
+            if(!MapUtils.isEmpty(entity.getProperties())) {
+                for(String key :entity.getProperties().keySet()) {
+                    ReflectedInfo info = ReflectionUtils.getFieldInfoByEffectiveName(fieldInfo, key);
+                    if(info != null) {
+                        Object val = entity.getProperties().get(key);
+                        if(info.getSetter() != null) {
+                            Method setter = info.getSetter();
+                            setter.setAccessible(true);
+                            try {
+                                setter.invoke(obj, new Object[]{val});
+                            } catch (Exception e) {
+                                throw new Siren4JConversionException(e);
+                            } 
+                        } else {
+                            // No setter set field directly
+                            try {
+                                info.getField().set(obj, val);
+                            } catch (Exception e) {
+                                throw new Siren4JConversionException(e);
+                            } 
+                        }
+                    } else {
+                        //Houston we have a problem!!
+                        throw new Siren4JConversionException("Unable to find field: " + key + " for class: " + clazz.getName());
+                    }
+                }
+            }
+            // Set sub entities
+            
+            
+            resource = (Resource)obj;
         }
         return resource;
     }

@@ -25,12 +25,13 @@ public class ReflectedInfo {
     private Field field;
     private Method getter;
     private Method setter;
+    private String effectiveName;
 
-    public ReflectedInfo(Field field, Method getter, Method setter) {
-        super();
+    public ReflectedInfo(Field field, Method getter, Method setter, String effectiveName) {
         this.field = field;
         this.getter = getter;
         this.setter = setter;
+        this.effectiveName = effectiveName;
     }
 
     public Field getField() {
@@ -55,5 +56,25 @@ public class ReflectedInfo {
 
     public void setSetter(Method setter) {
         this.setter = setter;
+    }    
+
+    public String getEffectiveName() {
+        return effectiveName;
     }
+
+    public void setEffectiveName(String effectiveName) {
+        this.effectiveName = effectiveName;
+    }
+
+    @Override
+    public int hashCode() {
+        return field.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return field.equals(obj);
+    }
+    
+    
 }

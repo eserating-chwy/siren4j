@@ -42,9 +42,6 @@ public interface Entity {
 
     public abstract String getHref();
 
-    public abstract String[] getRel();
-
-    @JsonIgnore
-    public abstract boolean isReference();
+    public abstract String[] getRel();    
 
 }

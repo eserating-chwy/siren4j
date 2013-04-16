@@ -38,6 +38,7 @@ import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
 import com.google.code.siren4j.component.impl.ActionImpl;
+import com.google.code.siren4j.component.impl.EmbeddedEntityImpl;
 import com.google.code.siren4j.component.impl.EntityImpl;
 import com.google.code.siren4j.component.impl.LinkImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
@@ -70,6 +71,8 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     private List<Action> actions = new ArrayList<Action>();
 
     private Map<String, Object> properties = new LinkedHashMap<String, Object>();
+    
+    private boolean isEmbedded;
 
     private EntityBuilder() {
     }
@@ -124,7 +127,7 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     		throw new IllegalArgumentException("href cannot be null or empty.");
     	}
         addStep("setHref", new Object[] { href });
-        addStep("setReference", new Object[] { true });
+        isEmbedded = true;
         return this;
     }
     
@@ -246,6 +249,10 @@ public class EntityBuilder extends BaseBuilder<Entity> {
         }
         return this;
     }
+    
+    void _addEntity(EmbeddedEntityImpl entity) {
+        subEntities.add(entity);
+    }
 
     void _addEntity(EntityImpl entity) {
         subEntities.add(entity);
@@ -330,7 +337,7 @@ public class EntityBuilder extends BaseBuilder<Entity> {
                 if (e.getRel() == null || ArrayUtils.isEmpty(e.getRel())) {
                     throw new Siren4JBuilderValidationException("entities", obj.getClass(), relRequired);
                 }
-                if (e.isReference() && StringUtils.isBlank(e.getHref())) {
+                if ((e instanceof EmbeddedEntityImpl) && StringUtils.isBlank(e.getHref())) {
                     throw new Siren4JBuilderValidationException("entities", obj.getClass(), hrefReqForEmbed);
                 }
             }
@@ -339,6 +346,9 @@ public class EntityBuilder extends BaseBuilder<Entity> {
 
     @Override
     protected Entity createInstance() {
+        if(isEmbedded) {
+            return new EmbeddedEntityImpl();
+        }
         return new EntityImpl();
     }
 

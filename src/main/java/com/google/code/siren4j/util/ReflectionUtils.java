@@ -52,7 +52,12 @@ public class ReflectionUtils {
      * until code is changed and recompiled.
      */
     public static Cache<Class<?>, List<ReflectedInfo>> fieldInfoCache = 
-        CacheBuilder.newBuilder().maximumSize(1000).build();
+        CacheBuilder.newBuilder().maximumSize(2000).build();
+    /**
+     * Find Method cache another expensive operation with reflection so let's cache it.
+     */
+    public static Cache<String, Method> findMethodCache = 
+        CacheBuilder.newBuilder().maximumSize(2000).build();
 
     public static final Class<?>[] propertyTypes = new Class<?>[] { int.class, Integer.class, long.class, Long.class,
         double.class, Double.class, float.class, Float.class, short.class, Short.class, byte.class, Byte.class,
@@ -210,20 +215,20 @@ public class ReflectionUtils {
             }
         }
         try {
-			for (String key : ReflectionUtils.getTokenKeys(str)) {
-			    if ((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
-			        String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
-			        if (index.containsKey(fieldname)) {
-			            Field f = index.get(fieldname);
-			            if (ArrayUtils.contains(propertyTypes, f.getType())) {
-			                str = str.replaceAll("\\{" + key + "\\}", "" + f.get(obj));
-			            }
-			        }
-			    }
-			}
-		} catch (Exception e) {
-			throw new Siren4JException(e);
-		} 
+            for (String key : ReflectionUtils.getTokenKeys(str)) {
+                if ((!parentMode && !key.startsWith("parent.")) || (parentMode && key.startsWith("parent."))) {
+                    String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
+                    if (index.containsKey(fieldname)) {
+                        Field f = index.get(fieldname);
+                        if (ArrayUtils.contains(propertyTypes, f.getType())) {
+                            str = str.replaceAll("\\{" + key + "\\}", "" + f.get(obj));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Siren4JException(e);
+        }
         return str;
 
     }
@@ -300,6 +305,73 @@ public class ReflectionUtils {
 		} catch (IllegalAccessException e) {
 			throw new Siren4JRuntimeException(e);
 		}
+    }
+    
+    /**
+     * 
+     * @param clazz
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     * @throws NoSuchMethodException
+     */
+    public static Method findMethod(final Class<?> clazz, final String methodName, final Class<?>[] parameterTypes) 
+        throws NoSuchMethodException{
+        String key = makeFindMethodCacheKey(clazz, methodName, parameterTypes);
+        Method method = null;
+        try {
+            method = findMethodCache.get(key, new Callable<Method>(){
+
+                public Method call() throws Exception {
+                    return _findMethod(clazz, methodName, parameterTypes);
+                }
+                
+            });
+        } catch (ExecutionException e) {
+            throw new Siren4JRuntimeException(e);
+        }
+        return method;
+    }
+    
+    private static Method _findMethod(Class<?> clazz, String methodName, Class<?>[] parameterTypes) 
+        throws NoSuchMethodException {
+        Method method = null;
+        try {
+            method = clazz.getMethod(methodName, parameterTypes);
+        } catch (NoSuchMethodException e) {
+            try {
+                method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException ignore) {
+            }
+        }
+        if(method == null) {
+           Class<?> superClazz = clazz.getSuperclass();
+           if(superClazz != null) {
+               method = _findMethod(superClazz, methodName, parameterTypes);
+           }
+           if(method == null) {
+               throw new NoSuchMethodException("Method: " + methodName);
+           } else {
+               return method;
+           }
+        } else {
+            return method;
+        }
+    }
+    
+    private static String makeFindMethodCacheKey(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
+        StringBuilder key = new StringBuilder();
+        key.append(clazz.getName());
+        key.append("_");
+        key.append(methodName);
+        
+        if(parameterTypes != null) {
+            for (Class<?> c : parameterTypes) {
+                key.append("_");
+                key.append(c.getName());
+            }
+        }
+        return key.toString();
     }
 
 }

@@ -32,7 +32,9 @@ import org.junit.Test;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
+import com.google.code.siren4j.component.builder.ActionBuilder;
 import com.google.code.siren4j.component.builder.LinkBuilder;
+import com.google.code.siren4j.component.impl.ActionImpl.Method;
 import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Comment;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
@@ -61,6 +63,7 @@ public class ReflectingConverterTest {
     }
     
     @Test
+    //@Ignore
     public void testSubEntityOverrideLinks() throws Exception{
     	Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
     	Entity subEnt = this.getEntityByRel(ent.getEntities(), "courseComment");
@@ -76,6 +79,7 @@ public class ReflectingConverterTest {
     }
     
     @Test
+    //@Ignore
     public void testSubEntityOverrideActions() throws Exception{
     	Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
     	Entity subEnt = getEntityByRel(ent.getEntities(), "courseComment");
@@ -91,46 +95,89 @@ public class ReflectingConverterTest {
     }
     
     @Test
+    //@Ignore
     public void testDynamicLinksOverride() throws Exception{
     	Course course = getTestCourse();
-    	String overridenHref = "/overridden";
+    	String overriddenHref = "/overridden";
     	List<Link> dynamicLinks = new ArrayList<Link>();
-    	dynamicLinks.add(LinkBuilder.newInstance().setRelationship("reviews").setHref(overridenHref).build());
+    	dynamicLinks.add(LinkBuilder.newInstance().setRelationship("reviews").setHref(overriddenHref).build());
     	course.setEntityLinks(dynamicLinks);
     	
     	Entity ent = ReflectingConverter.getInstance().toEntity(course);
     	
     	Link reviewsLink = getLinkByRel(ent.getLinks(), "reviews");
-    	assertEquals(overridenHref, reviewsLink.getHref());
+    	assertEquals(overriddenHref, reviewsLink.getHref());
     }
     
     @Test
-    public void testDynamicActionOverride() {
+    //@Ignore
+    public void testDynamicActionOverride() throws Exception{
+        Course course = getTestCourse();
+        String overridenHref = "/overridden";
+        List<Action> dynamicActions = new ArrayList<Action>();
+        dynamicActions.add(
+            ActionBuilder.newInstance().setName("addReview")
+            .setHref(overridenHref).setMethod(Method.DELETE).build());
+        course.setEntityActions(dynamicActions);
+        Entity ent = ReflectingConverter.getInstance().toEntity(course);
+        
+        Action deleteAction = getActionByName(ent.getActions(), "addReview");
+        assertEquals(overridenHref, deleteAction.getHref());
+    }
+    
+    @Test
+    //@Ignore
+    public void testNoResolveTokens() throws Exception{
+    	//tokens with square brackets around the key should not be resolved to the value
+        //they should only end up as normal tokens themselves with square brackets removed.
+        Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
+        Entity authorsEnt = getEntityByRel(ent.getEntities(), "authors2");
+        //Check to be sure that both normal and parent. tokens get resolved correctly.
+        // Resolving: /authors?courseid={parent.courseid}/{offset} where
+        //parent.courseid is the course object's field and offset is the collection resources
+        //field.
+        String expected = "/authors?courseid=testCourseID1/{offset}";
+        Link selfLink = getLinkByRel(authorsEnt.getLinks(), "self");
+        assertEquals(expected, selfLink.getHref());
+    }
+    
+    @Test
+    //@Ignore
+    public void testResolveTokens() throws Exception{
+       Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
+       Entity authorsEnt = getEntityByRel(ent.getEntities(), "authors");
+       //Check to be sure that both normal and parent. tokens get resolved correctly.
+       // Resolving: /authors?courseid={parent.courseid}/{offset} where
+       //parent.courseid is the course object's field and offset is the collection resources
+       //field.
+       String expected = "/authors?courseid=testCourseID1/10";
+       Link selfLink = getLinkByRel(authorsEnt.getLinks(), "self");
+       assertEquals(expected, selfLink.getHref());
+    }
+    
+    @Test
+    //@Ignore
+    public void testOverrideEmbeddedLink() throws Exception{
+        Entity ent = ReflectingConverter.getInstance().toEntity(getTestCourse());
+        
+        System.out.println(ent.toString());
+    }
+    
+    @Test
+    //@Ignore
+    public void testOverrideRelationship() throws Exception{
     	
     }
     
     @Test
-    public void testNoResolveTokens() {
+    //@Ignore
+    public void testActionAnnotation() throws Exception{
     	
     }
     
     @Test
-    public void testOverrideEmbeddedLink() {
-    	
-    }
-    
-    @Test
-    public void testOverrideRelationship() {
-    	
-    }
-    
-    @Test
-    public void testActionAnnotation() {
-    	
-    }
-    
-    @Test
-    public void testLinksAnnotation() {
+    //@Ignore
+    public void testLinksAnnotation() throws Exception{
     	
     }
     
@@ -166,6 +213,7 @@ public class ReflectingConverterTest {
         course.setDescription("Test Course 1 Description");
         course.setType("Online");
         CollectionResource<Author> authors = new CollectionResource<Author>();
+        authors.setOffset(10);
 
         Author author1 = new Author();
         author1.setFirstname("Jim");
@@ -182,9 +230,11 @@ public class ReflectingConverterTest {
         authors.add(author2);
 
         course.setAuthors(authors);
+        course.setAuthors2(authors);
         
         course.setLastComment(getTestComment("12", "testCourseID1", "X113", "This course is great."));
         course.setFirstComment(getTestComment("14", "testCourseID1", "X115", "This course is too easy."));
+        course.setEmbedComment(getTestComment("16", "testCourseID1", "X116", "This comment is embedded."));
 
         return course;
     }

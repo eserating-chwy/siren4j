@@ -48,8 +48,6 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     private String href;
 
-    private boolean reference;
-
     private Map<String, Object> properties;
 
     private List<Entity> entities;
@@ -135,14 +133,7 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
     public void setRel(String... rel) {
         this.rel = rel;
     }
-
-    public boolean isReference() {
-        return reference;
-    }
-
-    public void setReference(Boolean reference) {
-        this.reference = reference;
-    }
+    
 
     public String getHref() {
         return href;
@@ -157,7 +148,6 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
         HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(rel)
             .append(entityClass)
-            .append(reference)
             .append(href);
         return hashCodeBuilder.toHashCode();
     }
@@ -177,7 +167,6 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
         EqualsBuilder equalsBuilder = new EqualsBuilder();
         equalsBuilder.append(rel, other.rel)
             .append(entityClass, other.entityClass)
-            .append(reference, other.reference)
             .append(href, href);
         return equalsBuilder.isEquals();
     }

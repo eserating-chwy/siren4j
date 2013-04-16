@@ -79,18 +79,19 @@ public class ReflectingConverter {
 
     /**
      * Converts a <code>Resource</code> object into a Siren Entity. Reflection is used to determine properties, sub enities
-     * ,actions and links. Annotations are also used to figure out the values for class names and references as well as for adding
-     * actions and links.
+     * ,actions and links. Annotations are also used to figure out the values for class names and references as well as for
+     * adding actions and links.
+     * 
      * @param resource
      * @return
      * @throws Siren4JConversionException
      */
     public Entity toEntity(Resource resource) throws Siren4JConversionException {
         try {
-			return toEntity(resource, null, null, null);
-		} catch (Siren4JException e) {
-			throw new Siren4JConversionException(e);
-		}
+            return toEntity(resource, null, null, null);
+        } catch (Siren4JException e) {
+            throw new Siren4JConversionException(e);
+        }
     }
 
     public Resource toResource(Entity entity) throws Siren4JConversionException {
@@ -113,8 +114,8 @@ public class ReflectingConverter {
      * @return the entity created from the resource. May be <code>null</code>.
      * @throws Exception
      */
-    private Entity toEntity(Object obj, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo) 
-    		throws Siren4JException {
+    private Entity toEntity(Object obj, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo)
+        throws Siren4JException {
         if (obj == null) {
             return null;
         }
@@ -161,14 +162,14 @@ public class ReflectingConverter {
                 if (ArrayUtils.contains(ReflectionUtils.propertyTypes, currentField.getType())) {
                     // Property
                     if (!skipProperty(obj, currentField)) {
-                    	String propName = currentField.getName();
-                    	Siren4JProperty propAnno = currentField.getAnnotation(Siren4JProperty.class);
-                        
-                        if(propAnno != null && StringUtils.isNotBlank(propAnno.name())) {
-                        	//Override field name from annotation
-                        	propName = propAnno.name();
+                        String propName = currentField.getName();
+                        Siren4JProperty propAnno = currentField.getAnnotation(Siren4JProperty.class);
+
+                        if (propAnno != null && StringUtils.isNotBlank(propAnno.name())) {
+                            // Override field name from annotation
+                            propName = propAnno.name();
                         }
-                    	builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));
+                        builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));
                     }
                 } else {
                     // Sub Entity
@@ -195,31 +196,27 @@ public class ReflectingConverter {
      * assumed not <code>null</code>.
      * @throws Siren4JException
      */
-	private void handleSubEntity(EntityBuilder builder, Object obj,
-			Field currentField, List<ReflectedInfo> fieldInfo)
-			throws Siren4JException {
+    private void handleSubEntity(EntityBuilder builder, Object obj, Field currentField, List<ReflectedInfo> fieldInfo)
+        throws Siren4JException {
 
-		Siren4JSubEntity subAnno = currentField
-				.getAnnotation(Siren4JSubEntity.class);
-		if (subAnno != null) {
-			if (isCollection(obj, currentField)) {
-				Collection<?> coll = (Collection<?>) ReflectionUtils.getFieldValue(currentField, obj);
-				if (coll != null) {
-					for (Object o : coll) {
-						builder.addSubEntity(toEntity(o, currentField, obj,
-								fieldInfo));
-					}
-				}
-			} else {
-				Object subObj = ReflectionUtils.getFieldValue(currentField, obj);
-				if (subObj != null) {
-					builder.addSubEntity(toEntity(subObj, currentField, obj,
-							fieldInfo));
-				}
-			}
-		}
+        Siren4JSubEntity subAnno = currentField.getAnnotation(Siren4JSubEntity.class);
+        if (subAnno != null) {
+            if (isCollection(obj, currentField)) {
+                Collection<?> coll = (Collection<?>) ReflectionUtils.getFieldValue(currentField, obj);
+                if (coll != null) {
+                    for (Object o : coll) {
+                        builder.addSubEntity(toEntity(o, currentField, obj, fieldInfo));
+                    }
+                }
+            } else {
+                Object subObj = ReflectionUtils.getFieldValue(currentField, obj);
+                if (subObj != null) {
+                    builder.addSubEntity(toEntity(subObj, currentField, obj, fieldInfo));
+                }
+            }
+        }
 
-	}
+    }
 
     /**
      * Resolves the raw uri by replacing field tokens with the actual data.
@@ -298,16 +295,15 @@ public class ReflectingConverter {
                 links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
             }
         }
-		if (parentField != null) {
-			Siren4JSubEntity subentity = parentField
-					.getAnnotation(Siren4JSubEntity.class);
-			if (subentity != null && ArrayUtils.isNotEmpty(subentity.links())) {
-				for (Siren4JLink l : subentity.links()) {
-					links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
-				}
-			}
-		}
-        
+        if (parentField != null) {
+            Siren4JSubEntity subentity = parentField.getAnnotation(Siren4JSubEntity.class);
+            if (subentity != null && ArrayUtils.isNotEmpty(subentity.links())) {
+                for (Siren4JLink l : subentity.links()) {
+                    links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                }
+            }
+        }
+
         Collection<Link> resourceLinks = obj instanceof Resource ? ((Resource) obj).getEntityLinks() : null;
         if (resourceLinks != null) {
             for (Link l : resourceLinks) {
@@ -346,16 +342,15 @@ public class ReflectingConverter {
                 actions.put(a.name(), annotationToAction(a));
             }
         }
-		if (parentField != null) {
-			Siren4JSubEntity subentity = parentField
-					.getAnnotation(Siren4JSubEntity.class);
-			if (subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
-				for (Siren4JAction a : subentity.actions()) {
-					actions.put(a.name(), annotationToAction(a));
-				}
-			}
-		}
-        
+        if (parentField != null) {
+            Siren4JSubEntity subentity = parentField.getAnnotation(Siren4JSubEntity.class);
+            if (subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
+                for (Siren4JAction a : subentity.actions()) {
+                    actions.put(a.name(), annotationToAction(a));
+                }
+            }
+        }
+
         Collection<Action> resourceLinks = obj instanceof Resource ? ((Resource) obj).getEntityActions() : null;
         if (resourceLinks != null) {
             for (Action a : resourceLinks) {
@@ -469,29 +464,29 @@ public class ReflectingConverter {
             inc = fieldInclude.value();
         }
         try {
-			Object val = field.get(obj);
-			switch (inc) {
-			    case NON_EMPTY:
-			        if (val != null) {
-			            if (String.class.equals(field.getType())) {
-			                skip = StringUtils.isBlank((String) val);
-			            } else if (CollectionResource.class.equals(field.getType())) {
-			                skip = ((CollectionResource<?>) val).isEmpty();
-			            }
-			        } else {
-			            skip = true;
-			        }
-			        break;
-			    case NON_NULL:
-			        if (val == null) {
-			            skip = true;
-			        }
-			        break;
-			    case ALWAYS:
-			}
-		} catch (Exception e) {
-			throw new Siren4JRuntimeException(e);
-		} 
+            Object val = field.get(obj);
+            switch (inc) {
+                case NON_EMPTY:
+                    if (val != null) {
+                        if (String.class.equals(field.getType())) {
+                            skip = StringUtils.isBlank((String) val);
+                        } else if (CollectionResource.class.equals(field.getType())) {
+                            skip = ((CollectionResource<?>) val).isEmpty();
+                        }
+                    } else {
+                        skip = true;
+                    }
+                    break;
+                case NON_NULL:
+                    if (val == null) {
+                        skip = true;
+                    }
+                    break;
+                case ALWAYS:
+            }
+        } catch (Exception e) {
+            throw new Siren4JRuntimeException(e);
+        }
         return skip;
     }
 
@@ -521,17 +516,17 @@ public class ReflectingConverter {
      */
     public boolean isCollection(Object obj, Field field) {
         try {
-			Object val = field.get(obj);
-			boolean isCollResource = false;
-			if (val != null) {
-			    isCollResource = CollectionResource.class.equals(val.getClass());
-			}
-			return (!isCollResource && !field.getType().equals(CollectionResource.class))
-			    && (Collection.class.equals(field.getType()) || ArrayUtils.contains(field.getType().getInterfaces(),
-			        Collection.class));
-		} catch (Exception e) {
-			throw new Siren4JRuntimeException(e);
-		} 
+            Object val = field.get(obj);
+            boolean isCollResource = false;
+            if (val != null) {
+                isCollResource = CollectionResource.class.equals(val.getClass());
+            }
+            return (!isCollResource && !field.getType().equals(CollectionResource.class))
+                && (Collection.class.equals(field.getType()) || ArrayUtils.contains(field.getType().getInterfaces(),
+                    Collection.class));
+        } catch (Exception e) {
+            throw new Siren4JRuntimeException(e);
+        }
     }
 
     /**

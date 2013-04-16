@@ -31,6 +31,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.error.Siren4JRuntimeException;
+import com.google.code.siren4j.util.ReflectionUtils;
 
 /**
  * All Siren4J components should be derived from the <code>BaseBuilder</code> class. This
@@ -170,7 +171,8 @@ public abstract class BaseBuilder<T> {
     private void callMethod(Object obj, Step step) throws SecurityException, NoSuchMethodException,
         IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         Class<?> clazz = obj.getClass();
-        Method method = clazz.getDeclaredMethod(step.getMethodName(), step.getArgTypes());
+        Method method = ReflectionUtils.findMethod(clazz, step.getMethodName(), step.getArgTypes());
+        
         method.invoke(obj, step.getArguments());
     }
     

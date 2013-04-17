@@ -37,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
+import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.converter.ReflectedInfo;
 import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
@@ -135,6 +136,10 @@ public class ReflectionUtils {
                                 String effectiveName = propAnno != null 
                                     ? StringUtils.defaultIfEmpty(propAnno.name(), f.getName())
                                         : f.getName();
+                                Siren4JSubEntity subAnno = f.getAnnotation(Siren4JSubEntity.class);
+                                if(subAnno != null && !ArrayUtils.isEmpty(subAnno.rel())) {
+                                    effectiveName = subAnno.rel().length == 1 ? subAnno.rel()[0] : ArrayUtils.toString(subAnno.rel());
+                                }
                                 exposed.add(new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName));
                             }
                         }
@@ -400,6 +405,40 @@ public class ReflectionUtils {
             }
         }
         return result;
+    }
+
+    /**
+     * Sets the fields value, first by attempting to call the setter method if it exists and then
+     * falling back to setting the field directly.
+     * @param obj the object instance to set the value on, cannot be <code>null</code>.
+     * @param info the fields reflected info object, cannot be <code>null</code>.
+     * @param value the value to set on the field, may be <code>null</code>.
+     * @throws Siren4JException upon reflection error.
+     */
+    public static void setFieldValue(Object obj, ReflectedInfo info, Object value) throws Siren4JException {
+        if (obj == null) {
+            throw new IllegalArgumentException("obj cannot be null");
+        }
+        if (info == null) {
+            throw new IllegalArgumentException("info cannot be null");
+        }
+        if (info.getSetter() != null) {
+            Method setter = info.getSetter();
+            setter.setAccessible(true);
+            try {
+                setter.invoke(obj, new Object[] { value });
+            } catch (Exception e) {
+                throw new Siren4JException(e);
+            }
+        } else {
+            // No setter set field directly
+            try {
+                info.getField().set(obj, value);
+            } catch (Exception e) {
+                throw new Siren4JException(e);
+            }
+        }
+    
     }
 
 }

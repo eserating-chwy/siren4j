@@ -24,8 +24,6 @@
 package com.google.code.siren4j.converter;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -60,9 +58,10 @@ import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.meta.FieldType;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.resource.Resource;
+import com.google.code.siren4j.util.ComponentUtils;
 import com.google.code.siren4j.util.ReflectionUtils;
 
-public class ReflectingConverter {
+public class ReflectingConverter implements ResourceConverter {
 
     private static Logger LOG = LoggerFactory.getLogger(ReflectingConverter.class);
     
@@ -86,7 +85,7 @@ public class ReflectingConverter {
      * @return the converter, never <code>null</code>.
      * @throws Siren4JException 
      */
-    public static ReflectingConverter newInstance(ResourceRegistry registry) throws Siren4JException {
+    public static ResourceConverter newInstance(ResourceRegistry registry) throws Siren4JException {
        return new ReflectingConverter(registry);
     }
     
@@ -96,32 +95,33 @@ public class ReflectingConverter {
      * @return the converter, never <code>null</code>.
      * @throws Siren4JException 
      */
-    public static ReflectingConverter newInstance() throws Siren4JException {
+    public static ResourceConverter newInstance() throws Siren4JException {
         return new ReflectingConverter(null);
     }
 
-    /**
-     * Converts a <code>Resource</code> object into a Siren Entity. Reflection is used to determine properties, sub enities
-     * ,actions and links. Annotations are also used to figure out the values for class names and references as well as for
-     * adding actions and links.
-     * 
-     * @param resource
-     * @return
-     * @throws Siren4JConversionException
+    /* (non-Javadoc)
+     * @see com.google.code.siren4j.converter.ResourceConverter#toEntity(java.lang.Object)
      */
-    public Entity toEntity(Resource resource) throws Siren4JConversionException {
+    public Entity toEntity(Object obj) throws Siren4JConversionException {
         try {
-            return toEntity(resource, null, null, null);
+            return toEntity(obj, null, null, null);
         } catch (Siren4JException e) {
             throw new Siren4JConversionException(e);
         }
     }
 
-    public Resource toResource(Entity entity) throws Siren4JConversionException, Siren4JException {
+    /* (non-Javadoc)
+     * @see com.google.code.siren4j.converter.ResourceConverter#toObject(com.google.code.siren4j.component.Entity)
+     */
+    public Object toObject(Entity entity) throws Siren4JConversionException {
         if (registry == null) {
             LOG.warn("No ResourceRegistry set, using default which "
                 + "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
-            registry = ResourceRegistryImpl.newInstance((String[]) null);
+            try {
+                registry = ResourceRegistryImpl.newInstance((String[]) null);
+            } catch (Siren4JException e) {
+                throw new Siren4JRuntimeException(e);
+            }
         }
         Resource resource = null;
         if (entity != null) {
@@ -142,41 +142,102 @@ public class ReflectingConverter {
                 throw new Siren4JConversionException(e);
             }
             // Set properties
-            if(!MapUtils.isEmpty(entity.getProperties())) {
-                for(String key :entity.getProperties().keySet()) {
-                    ReflectedInfo info = ReflectionUtils.getFieldInfoByEffectiveName(fieldInfo, key);
-                    if(info != null) {
-                        Object val = entity.getProperties().get(key);
-                        if(info.getSetter() != null) {
-                            Method setter = info.getSetter();
-                            setter.setAccessible(true);
-                            try {
-                                setter.invoke(obj, new Object[]{val});
-                            } catch (Exception e) {
-                                throw new Siren4JConversionException(e);
-                            } 
-                        } else {
-                            // No setter set field directly
-                            try {
-                                info.getField().set(obj, val);
-                            } catch (Exception e) {
-                                throw new Siren4JConversionException(e);
-                            } 
-                        }
-                    } else {
-                        //Houston we have a problem!!
-                        throw new Siren4JConversionException("Unable to find field: " + key + " for class: " + clazz.getName());
-                    }
-                }
-            }
+            handleSetProperties(obj, clazz, entity, fieldInfo);
             // Set sub entities
-            
+            handleSetSubEntities(obj, clazz, entity, fieldInfo);
             
             resource = (Resource)obj;
         }
         return resource;
     }
-
+    
+    /**
+     * Sets field value for an entity's property field.
+     * @param obj assumed not <code>null</code>.
+     * @param clazz assumed not <code>null</code>.
+     * @param entity assumed not <code>null</code>.
+     * @param fieldInfo assumed not <code>null</code>.
+     * @throws Siren4JConversionException
+     */
+    private void handleSetProperties(Object obj, Class<?> clazz, Entity entity, List<ReflectedInfo> fieldInfo) throws Siren4JConversionException{
+        if(!MapUtils.isEmpty(entity.getProperties())) {
+            for(String key :entity.getProperties().keySet()) {
+                ReflectedInfo info = ReflectionUtils.getFieldInfoByEffectiveName(fieldInfo, key);
+                if(info != null) {
+                    Object val = entity.getProperties().get(key);
+                    try {
+                        ReflectionUtils.setFieldValue(obj, info, val);
+                    } catch (Siren4JException e) {
+                        throw new Siren4JConversionException(e);
+                    }                       
+                } else {
+                    //Houston we have a problem!!
+                    throw new Siren4JConversionException("Unable to find field: " + key + " for class: " + clazz.getName());
+                }
+            }
+        } 
+    }
+    
+    /**
+     * Sets field value for an entity's sub entities field.
+     * @param obj assumed not <code>null</code>.
+     * @param clazz assumed not <code>null</code>.
+     * @param entity assumed not <code>null</code>.
+     * @param fieldInfo assumed not <code>null</code>.
+     * @throws Siren4JConversionException
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void handleSetSubEntities(Object obj, Class<?> clazz, Entity entity, List<ReflectedInfo> fieldInfo) throws Siren4JConversionException{
+        if(!CollectionUtils.isEmpty(entity.getEntities())) {
+            for(Entity ent : entity.getEntities()) {
+               //Skip embedded as we can't deal with them.
+               if(StringUtils.isNotBlank(ent.getHref())) {
+                   continue;
+               }
+               String[] rel = ent.getRel(); 
+               if(ArrayUtils.isEmpty(rel)) {
+                   throw new Siren4JConversionException("No relationship set on sub entity. Can't go on.");
+               }
+               String fieldKey = rel.length == 1 ? rel[0] : ArrayUtils.toString(rel);
+               ReflectedInfo info = ReflectionUtils.getFieldInfoByEffectiveName(fieldInfo, fieldKey);
+               if(info != null) {
+                   try {
+                    Object subObj = toObject(ent);
+                    if(subObj != null) {
+                        if(subObj.getClass().equals(CollectionResource.class)) {
+                            ReflectionUtils.setFieldValue(obj, info, subObj);
+                            continue; // If subObj is collection resource then continue
+                                      // or it will get wrapped into another collection which we don't want.
+                        }
+                        if(isCollection(obj, info.getField())) {
+                            //If we are a collection we need to add each subObj via the add method
+                            //and not a setter. So we need to grab the collection from the field value.
+                            try {
+                                Collection coll = (Collection)info.getField().get(obj);
+                                if(coll == null) {
+                                    //In the highly unlikely event that no collection is set on the
+                                    //field value we will create a new collection here.
+                                    coll = new CollectionResource();
+                                    ReflectionUtils.setFieldValue(obj, info, coll);
+                                }
+                                coll.add(subObj);
+                            } catch (Exception e) {
+                                throw new Siren4JConversionException(e);
+                            } 
+                        } else {
+                            ReflectionUtils.setFieldValue(obj, info, subObj);
+                        }
+                    }
+                } catch (Siren4JException e) {
+                    throw new Siren4JConversionException(e);
+                }
+               } else {
+                   throw new Siren4JConversionException("Unable to find field: " + fieldKey + " for class: " + clazz.getName());
+               }
+            }
+        }
+    }
+    
     /**
      * The recursive method that actually does the work of converting from a resource to an entity.
      * 
@@ -215,7 +276,6 @@ public class ReflectingConverter {
         Siren4JSubEntity parentSubAnno = parentField != null ? parentField.getAnnotation(Siren4JSubEntity.class) : null;
 
         if (parentSubAnno != null) {
-            cname = StringUtils.defaultIfEmpty(parentSubAnno.name(), cname);
             uri = StringUtils.defaultIfEmpty(parentSubAnno.uri(), uri);
             //Determine if the entity is an embeddedLink
             embeddedLink = parentSubAnno.embeddedLink();
@@ -231,8 +291,8 @@ public class ReflectingConverter {
 
         builder.setEntityClass(getEntityClass(obj, cname));
         if (parentSubAnno != null) {
-
-            builder.setRelationship(isStringArrayEmpty(parentSubAnno.rel()) ? new String[] { cname } : parentSubAnno.rel());
+            String fname = parentField != null ? parentField.getName() : cname;
+            builder.setRelationship(ComponentUtils.isStringArrayEmpty(parentSubAnno.rel()) ? new String[] { fname } : parentSubAnno.rel());
         }
         if (embeddedLink) {
             builder.setHref(resolvedUri);
@@ -339,6 +399,9 @@ public class ReflectingConverter {
      * the token resolved uri. Assumed not blank.
      */
     private void handleSelfLink(EntityBuilder builder, String resolvedUri) {
+        if(StringUtils.isBlank(resolvedUri)) {
+            return;
+        }
         Link link = LinkBuilder.newInstance().setRelationship(Link.RELATIONSHIP_SELF).setHref(resolvedUri).build();
         builder.addLink(link);
     }
@@ -607,27 +670,6 @@ public class ReflectingConverter {
         } catch (Exception e) {
             throw new Siren4JRuntimeException(e);
         }
-    }
-
-    /**
-     * Determine if the string array is empty. It is considered empty if zero length or all items are blank strings;
-     * 
-     * @param arr
-     * @return
-     */
-    private boolean isStringArrayEmpty(String[] arr) {
-        boolean empty = true;
-        if (arr != null) {
-            if (arr.length > 0) {
-                for (String s : arr) {
-                    if (StringUtils.isNotBlank(s)) {
-                        empty = false;
-                        break;
-                    }
-                }
-            }
-        }
-        return empty;
     }
 
 }

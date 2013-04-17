@@ -30,7 +30,7 @@ import com.google.code.siren4j.annotations.Siren4JSubEntity;
  */
 @Siren4JEntity(name = "siren4J.collectionResource")
 public class CollectionResource<T> extends BaseResource implements Collection<T> {
-    @Siren4JSubEntity
+    @Siren4JSubEntity(rel = "item")
     private Collection<T> items = new ArrayList<T>();
     private long offset;
     private long limit;

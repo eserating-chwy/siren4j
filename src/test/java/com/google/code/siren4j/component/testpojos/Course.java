@@ -49,7 +49,7 @@ public class Course extends BasePojo {
     @Siren4JSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}/{offset}")
     private Collection<Author> authors;
 
-    @Siren4JSubEntity(rel = "authors2", uri = "/authors?courseid={parent.courseid}/{[offset]}")
+    @Siren4JSubEntity(uri = "/authors?courseid={parent.courseid}/{[offset]}")
     private Collection<Author> authors2;
 
     public String getCourseid() {

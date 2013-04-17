@@ -39,7 +39,6 @@ import java.lang.annotation.Target;
  *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
  *       </thead>
  *       <tbody>
- *          <tr><td>name</td><td>no</td><td>Unique name for the subentity.</td></tr>
  *          <tr><td>rel</td><td>no</td><td>Array of strings that indicate the subentites relationship with its parent.</td></tr>
  *          <tr><td>uri</td><td>no</td><td>URI pattern to self</td></tr>
  *          <tr><td>links</td><td>no</td><td>One or more {@link Siren4JLink} annotations.</td></tr>
@@ -57,8 +56,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JSubEntity {
-    String name() default "";
-
     String[] rel() default {};
 
     String uri() default "";

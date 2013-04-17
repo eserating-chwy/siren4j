@@ -44,13 +44,12 @@ import com.google.code.siren4j.component.testpojos.Comment;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
 import com.google.code.siren4j.component.testpojos.Course;
 import com.google.code.siren4j.resource.CollectionResource;
-import com.google.code.siren4j.resource.Resource;
 import com.google.code.siren4j.util.ComponentUtils;
 
 public class ReflectingConverterTest {
 
     @Test
-    @Ignore
+    //@Ignore
     public void testToEntity() throws Exception {
 
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
@@ -60,7 +59,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+     //@Ignore
     public void testSubEntityRelOverride() throws Exception {
         // If rel specified in sub entity annotation, it should be used by the
         // sub entity.
@@ -181,6 +180,14 @@ public class ReflectingConverterTest {
 
     }
     
+    @Test
+    //@Ignore
+    public void testSubEntityUsesFieldnameForRel() throws Exception {
+        Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
+        Entity authorsEnt = ComponentUtils.getSubEntityByRel(ent, "authors");
+        assertNotNull("Expected subentity with 'authors' relationship to exist.", authorsEnt);
+    }
+    
 
     @Test
      @Ignore
@@ -208,11 +215,11 @@ public class ReflectingConverterTest {
     
     @Test
     public void testToResource() throws Exception {
-        Comment comment = getTestComment("12", "testCourseID1", "X113", "This course is great.");
-        Entity ent = ReflectingConverter.newInstance().toEntity(comment);
+        Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
         
         ResourceRegistry reg = ResourceRegistryImpl.newInstance("com.google.code.siren4j");
-        Resource result = ReflectingConverter.newInstance(reg).toResource(ent);
+        Object result = ReflectingConverter.newInstance(reg).toObject(ent);
+        System.out.println(ReflectingConverter.newInstance().toEntity((Course)result).toString());
     }
 
     private Course getTestCourse() {

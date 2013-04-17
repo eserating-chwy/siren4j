@@ -119,4 +119,25 @@ public class ComponentUtils {
         return action;
     }
 
+    /**
+     * Determine if the string array is empty. It is considered empty if zero length or all items are blank strings;
+     * 
+     * @param arr
+     * @return
+     */
+    public static boolean isStringArrayEmpty(String[] arr) {
+        boolean empty = true;
+        if (arr != null) {
+            if (arr.length > 0) {
+                for (String s : arr) {
+                    if (StringUtils.isNotBlank(s)) {
+                        empty = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return empty;
+    }
+
 }

@@ -23,7 +23,7 @@ import com.google.code.siren4j.error.Siren4JException;
  * {@link Siren4JEntity} annotation. The name is used as the classname. The names therefore must be
  * unique on the classpath. If two of the same named resources are found then an exception will be thrown during
  * classpath scanning. This is required for the 
- * {@link ReflectingConverter#toResource(com.google.code.siren4j.component.Entity)} method so
+ * {@link ReflectingConverter#toObject(com.google.code.siren4j.component.Entity)} method so
  * it can figure out which classes to reconstitute.
  *
  */

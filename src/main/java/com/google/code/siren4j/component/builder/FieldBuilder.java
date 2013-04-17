@@ -80,8 +80,13 @@ public class FieldBuilder extends BaseBuilder<Field> {
         return this;
     }
 
-    public FieldBuilder setStep(int step) {
-        addStep("setStep", new Object[] { step }, new Class[] { int.class });
+    public FieldBuilder setStep(Integer step) {
+        addStep("setStep", new Object[] { step }, new Class[] { Integer.class });
+        return this;
+    }
+    
+    public FieldBuilder setPlaceholder(String placeholder) {
+        addStep("setPlaceholder", new Object[] { placeholder });
         return this;
     }
 

@@ -27,22 +27,64 @@ import java.util.List;
 
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
+/**
+ * Represents a Siren Action. Actions show available behaviors an entity exposes.
+ */
 public interface Action {
-
+    
+    /**
+     * A string that identifies the action to be performed. (Required).
+     * @return never <code>null</code> or empty.
+     */
     public String getName();
-
+    
+    /**
+     * Describes the nature of an action based on the current representation. 
+     * Possible values are implementation-dependent and should be documented. 
+     * (Optional).
+     * @return a list of strings, may be <code>null</code> or empty.
+     */
     public List<String> getActionClass();
-
+    
+    /**
+     * An enumerated attribute mapping to a protocol method. 
+     * For HTTP, these values may be GET, PUT, POST, DELETE, or PATCH. Defaults
+     * to GET (Optional).
+     * @return never <code>null</code>.
+     * @see Method
+     */
     public Method getMethod();
-
+    
+    /**
+     * The URI of the action. (Required).
+     * @return never <code>null</code>.
+     */
     public String getHref();
-
+    
+    /**
+     * Sets the value of the href.
+     * @param href cannot be <code>null</code> or empty.
+     */
     public void setHref(String href);
-
+    
+    /**
+     * Descriptive text about the action. (Optional).
+     * @return may be <code>null</code> or empty.
+     */
     public String getTitle();
-
+    
+    /**
+     * The encoding type for the request. When omitted and the fields attribute exists,
+     * the default value is <code>application/x-www-form-urlencoded</code>. (Optional).
+     * @return never <code>null</code> or empty.
+     */
     public String getType();
-
+    
+    /**
+     * A collection of fields, expressed as an array of objects in JSON Siren such 
+     * as { "fields" : [{ ... }] }. See Fields. (Optional).
+     * @return
+     */
     public List<Field> getFields();
 
 }

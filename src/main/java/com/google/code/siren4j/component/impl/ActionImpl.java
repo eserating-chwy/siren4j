@@ -48,7 +48,7 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     private String title;
 
-    private String type;
+    private String type = "application/x-www-form-urlencoded";
 
     private List<Field> fields;
 

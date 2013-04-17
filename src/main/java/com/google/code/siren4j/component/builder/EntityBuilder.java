@@ -116,6 +116,21 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     }
     
     /**
+     * Sets the title of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param title cannot be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
+    public EntityBuilder setTitle(String title) {
+        if(StringUtils.isBlank(title)) {
+            throw new IllegalArgumentException("title cannot be null or empty.");
+        }
+        addStep("setTitle", new Object[] { title });
+        return this;
+    }
+    
+    /**
      * Set the href of the entity to be built. This method can be called many times
      * but only the value of the last call is used in the built entity. This is a required property if this entity is an embedded link, as specified
      * by the Siren specification. If set then this entity will be considered an embedded link.

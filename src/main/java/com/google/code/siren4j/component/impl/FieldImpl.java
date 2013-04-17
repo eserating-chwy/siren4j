@@ -38,7 +38,7 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     private String name;
 
-    private FieldType type;
+    private FieldType type = FieldType.TEXT;
 
     private String value;
 
@@ -55,8 +55,9 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
     @JsonInclude(Include.NON_DEFAULT)
     private int maxLength = -1;
 
-    @JsonInclude(Include.NON_DEFAULT)
-    private int step = -1;
+    private Integer step;
+    
+    private String placeholder;
 
     /*
      * (non-Javadoc)
@@ -137,15 +138,22 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
         this.maxLength = maxLength;
     }
 
-    public int getStep() {
+    public Integer getStep() {
         return step;
     }
 
-    public void setStep(int step) {
+    public void setStep(Integer step) {
         this.step = step;
     }
-
     
+    public String getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
+    }
+
     @Override
     public int hashCode() {
         HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();

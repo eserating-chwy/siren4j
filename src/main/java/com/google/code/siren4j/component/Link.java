@@ -23,14 +23,27 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component;
 
+/**
+ * Links represent navigational transitions. In JSON Siren, links are represented as an
+ * array inside the entity, such as { "links": [{ "rel": [ "self" ], "href": "http://api.x.io/orders/42"}] }
+ */
 public interface Link {
 
     public static final String RELATIONSHIP_SELF = "self";
     public static final String RELATIONSHIP_NEXT = "next";
     public static final String RELATIONSHIP_PREVIOUS = "previous";
-
+    
+    /**
+     * Defines the relationship of the link to its entity, per Web Linking (RFC5899).
+     * (Required).
+     * @return never <code>null</code> or empty.
+     */
     public String[] getRel();
-
+    
+    /**
+     * The URI of the linked resource. Required.
+     * @return never <code>null</code> or empty.
+     */
     public String getHref();
 
     /**

@@ -43,12 +43,22 @@ public class ActionBuilder extends BaseBuilder<Action> {
     private ActionBuilder() {
 
     }
-
+    /**
+     * Retrieve a new instance of an <code>ActionBuilder</code>.
+     * @return new instance, never <code>null</code>.
+     */
     public static ActionBuilder newInstance() {
         return new ActionBuilder();
     }
-
+    /**
+     * Sets an actions name value.
+     * @param name cannot be <code>null</code> or empty.
+     * @return
+     */
     public ActionBuilder setName(String name) {
+        if(StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("name cannot be null or empty.");
+        }
         addStep("setName", new Object[] { name });
         return this;
     }
@@ -64,6 +74,9 @@ public class ActionBuilder extends BaseBuilder<Action> {
     }
 
     public ActionBuilder setHref(String href) {
+        if(StringUtils.isBlank(href)) {
+            throw new IllegalArgumentException("href cannot be null or empty.");
+        }
         addStep("setHref", new Object[] { href });
         return this;
     }

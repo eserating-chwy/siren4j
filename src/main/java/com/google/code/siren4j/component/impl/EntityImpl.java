@@ -38,7 +38,7 @@ import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
 
 @JsonInclude(Include.NON_NULL)
-@JsonPropertyOrder({ "class", "rel", "href", "properties", "entities", "actions", "links" })
+@JsonPropertyOrder({ "class", "rel", "href", "title", "properties", "entities", "actions", "links" })
 public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     @JsonProperty(value = "class")
@@ -47,6 +47,8 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
     private String[] rel;
 
     private String href;
+    
+    private String title;
 
     private Map<String, Object> properties;
 
@@ -141,8 +143,17 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     public void setHref(String href) {
         this.href = href;
-    }
+    }   
     
+    
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public int hashCode() {
         HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();

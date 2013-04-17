@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Indicates property inclusion.
- *
+ * @see Include
  */
 @Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)

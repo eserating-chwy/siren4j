@@ -24,25 +24,85 @@
 package com.google.code.siren4j.component;
 
 import com.google.code.siren4j.meta.FieldType;
-
+/**
+ * Fields represent controls inside of actions.
+ */
 public interface Field {
-
+    
+    /**
+     * A name describing the control. (Required).
+     * @return never <code>null</code> or empty.
+     */
     public String getName();
-
+    
+    /**
+     * The field type. This may include any of the input types specified in HTML5.
+     * default value is {@link FieldType.TEXT}. see {@link FieldType} for other allowed values (Optional).
+     * @return never <code>null</code>. 
+     */
     public FieldType getType();
-
+    
+    /**
+     * A value assigned to the field. (Optional).
+     * @return may be <code>null</code> or empty.
+     */
     public String getValue();
-
+    
+    /**
+     * The pattern specifies a regular expression which needs to match the fields value
+     * in order for validation to be considered as passed.
+     * @return may be <code>null</code> or empty.
+     */
     public String getPattern();
-
+    
+    /**
+     * Indicates if the field is required upon action submission.
+     * @return <code>true</code> if required.
+     */
     public boolean isRequired();
-
+    
+    /**
+     * Specifies the minimum value for the following field types:
+     * number, range, date, datetime, datetime-local, month, time and week.
+     * @return -1 is considered as a not set state.
+     */
     public int getMin();
-
+     
+    /**
+     * Specifies the maximum value for the following field types:
+     * number, range, date, datetime, datetime-local, month, time and week.
+     * @return -1 is considered as a not set state.
+     */
     public int getMax();
-
+    
+    /**
+     * The maxlength attribute limits the number of characters that text field can accept.
+     * @return -1 is considered as a not set state and means no limit on length.
+     */
     public int getMaxLength();
-
-    public int getStep();
+    
+    /**
+     * The step attribute specifies the legal number intervals for an <input> element.
+     *
+     * Example: if step="3", legal numbers could be -3, 0, 3, 6, etc.
+     * 
+     * Used for the following field types:
+     * number, range, date, datetime, datetime-local, month, time and week.
+     * @return may be <code>null</code> if not set.
+     */
+    public Integer getStep();
+    
+    /**
+     * The placeholder attribute specifies a short hint that describes the expected value
+     * of an input field (e.g. a sample value or a short description of the expected format).
+     *
+     * The hint is displayed in the input field when it is empty, and disappears when the field 
+     * gets focus.
+     * 
+     * Used for the following field types:
+     * text, search, url, tel, email, and password
+     * @return may be <code>null</code> or empty.
+     */
+    public String getPlaceholder();
 
 }

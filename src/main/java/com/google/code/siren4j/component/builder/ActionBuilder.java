@@ -64,12 +64,12 @@ public class ActionBuilder extends BaseBuilder<Action> {
     }
 
     public ActionBuilder setActionClass(String... actionClass) {
-        addStep("setActionClass", new Object[] { actionClass });
+        addStep("setActionClass", new Object[] { actionClass }, new Class<?>[] {String[].class});
         return this;
     }
 
     public ActionBuilder setMethod(Method method) {
-        addStep("setMethod", new Object[] { method });
+        addStep("setMethod", new Object[] { method }, new Class<?>[] {Method.class});
         return this;
     }
 
@@ -82,12 +82,12 @@ public class ActionBuilder extends BaseBuilder<Action> {
     }
 
     public ActionBuilder setTitle(String title) {
-        addStep("setTitle", new Object[] { title });
+        addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
         return this;
     }
 
     public ActionBuilder setType(String type) {
-        addStep("setType", new Object[] { type });
+        addStep("setType", new Object[] { type }, new Class<?>[] {String.class});
         return this;
     }
 

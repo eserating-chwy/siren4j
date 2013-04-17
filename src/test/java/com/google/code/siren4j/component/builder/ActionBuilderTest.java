@@ -40,7 +40,7 @@ public class ActionBuilderTest {
 	}
 	
 	@Test 
-	@Ignore
+	//@Ignore
 	public void  testSettingOptionalFieldNull() throws Exception {
         ActionBuilder builder = ActionBuilder.newInstance();
         

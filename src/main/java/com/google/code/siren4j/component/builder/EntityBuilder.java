@@ -89,14 +89,11 @@ public class EntityBuilder extends BaseBuilder<Entity> {
      * Set the entity class of the entity to be built. This method can be called many times
      * but only the value of the last call is used in the built entity. This is an optional property as specified
      * by the Siren specification.
-     * @param entityClass cannot be <code>null</code> or empty.
+     * @param entityClass may be <code>null</code> or empty.
      * @return <code>this</code> builder, never <code>null</code>.
      */
     public EntityBuilder setEntityClass(String... entityClass) {
-    	if(ArrayUtils.isEmpty(entityClass)) {
-    		throw new IllegalArgumentException("entityClass cannot be null or empty.");
-    	}
-        addStep("setEntityClass", new Object[] { entityClass });
+    	addStep("setEntityClass", new Object[] { entityClass }, new Class<?>[] {String[].class});
         return this;
     }
     
@@ -104,14 +101,11 @@ public class EntityBuilder extends BaseBuilder<Entity> {
      * Sets the relationship of the entity to be built. Generally only used for sub entities. This method can be called many times
      * but only the value of the last call is used in the built entity. This is an optional property as specified
      * by the Siren specification.
-     * @param rel cannot be <code>null</code> or empty.
+     * @param rel may be <code>null</code> or empty.
      * @return <code>this</code> builder, never <code>null</code>.
      */
     public EntityBuilder setRelationship(String... rel) {
-    	if(ArrayUtils.isEmpty(rel)) {
-    		throw new IllegalArgumentException("rel cannot be null or empty.");
-    	}
-    	addStep("setRel", new Object[] { rel });
+    	addStep("setRel", new Object[] { rel }, new Class<?>[] {String[].class});
         return this;
     }
     
@@ -119,14 +113,11 @@ public class EntityBuilder extends BaseBuilder<Entity> {
      * Sets the title of the entity to be built. This method can be called many times
      * but only the value of the last call is used in the built entity. This is an optional property as specified
      * by the Siren specification.
-     * @param title cannot be <code>null</code> or empty.
+     * @param title may be <code>null</code> or empty.
      * @return <code>this</code> builder, never <code>null</code>.
      */
     public EntityBuilder setTitle(String title) {
-        if(StringUtils.isBlank(title)) {
-            throw new IllegalArgumentException("title cannot be null or empty.");
-        }
-        addStep("setTitle", new Object[] { title });
+        addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
         return this;
     }
     

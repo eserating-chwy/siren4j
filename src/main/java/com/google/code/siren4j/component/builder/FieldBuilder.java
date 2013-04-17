@@ -41,22 +41,25 @@ public class FieldBuilder extends BaseBuilder<Field> {
     }
 
     public FieldBuilder setName(String name) {
+        if(StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("name cannot be null or empty.");
+        }
         addStep("setName", new Object[] { name });
         return this;
     }
 
     public FieldBuilder setType(FieldType type) {
-        addStep("setType", new Object[] { type });
+        addStep("setType", new Object[] { type }, new Class<?>[] {FieldType.class});
         return this;
     }
 
     public FieldBuilder setValue(String value) {
-        addStep("setValue", new Object[] { value });
+        addStep("setValue", new Object[] { value }, new Class<?>[] {String.class});
         return this;
     }
 
     public FieldBuilder setPattern(String pattern) {
-        addStep("setPattern", new Object[] { pattern });
+        addStep("setPattern", new Object[] { pattern }, new Class<?>[] {String.class});
         return this;
     }
 
@@ -86,7 +89,7 @@ public class FieldBuilder extends BaseBuilder<Field> {
     }
     
     public FieldBuilder setPlaceholder(String placeholder) {
-        addStep("setPlaceholder", new Object[] { placeholder });
+        addStep("setPlaceholder", new Object[] { placeholder }, new Class<?>[] {String.class});
         return this;
     }
 

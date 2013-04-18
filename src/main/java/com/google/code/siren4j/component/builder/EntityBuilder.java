@@ -148,7 +148,7 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     	if(StringUtils.isBlank(name)) {
     		throw new IllegalArgumentException("name cannot be null or empty.");
     	}
-        addStep("_addProperty", new Object[] { name, value }, true);
+        addStep("_addProperty", new Object[] { name, value }, new Class<?>[]{String.class, Object.class}, true);
         return this;
     }
     
@@ -275,34 +275,7 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     void _addProperty(String name, Object value) {
         properties.put(name, value);
     }
-
-    void _addProperty(String name, String value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Integer value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Long value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Float value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Double value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Boolean value) {
-        properties.put(name, value);
-    }
-
-    void _addProperty(String name, Date value) {
-        properties.put(name, value);
-    }
+    
 
     @Override
     protected void postProcess(Entity obj) {

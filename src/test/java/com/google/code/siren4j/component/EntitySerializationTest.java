@@ -19,6 +19,7 @@
 package com.google.code.siren4j.component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
@@ -37,7 +39,13 @@ import com.google.code.siren4j.component.builder.EntityBuilder;
 import com.google.code.siren4j.component.builder.FieldBuilder;
 import com.google.code.siren4j.component.builder.LinkBuilder;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
+import com.google.code.siren4j.component.testpojos.Review;
+import com.google.code.siren4j.component.testpojos.Video;
+import com.google.code.siren4j.component.testpojos.Video.Rating;
+import com.google.code.siren4j.converter.ReflectingConverter;
+import com.google.code.siren4j.converter.ResourceConverter;
 import com.google.code.siren4j.meta.FieldType;
+import com.google.code.siren4j.resource.CollectionResource;
 
 public class EntitySerializationTest {
 
@@ -47,10 +55,49 @@ public class EntitySerializationTest {
     }
     
     @Test
+    @Ignore
     public void testEntityToJsonSerialization() throws Exception {
 	Entity orders = createTestEntity();
-	ObjectMapper mapper = new ObjectMapper();
-	System.out.println(mapper.writeValueAsString(orders));
+	System.out.println(orders.toString());
+    }
+    
+    @Test
+    public void testVideoSerialize() throws Exception {
+        
+        CollectionResource<Review> reviews = new CollectionResource<Review>();
+        Review rev1 = new Review();
+        rev1.setId("1");
+        rev1.setReviewer("Fred");
+        rev1.setBody("I loved it!!");
+        rev1.setReviewdate(new Date());
+        reviews.add(rev1);
+        
+        Review rev2 = new Review();
+        rev2.setId("1");
+        rev2.setReviewer("John");
+        rev2.setBody("Overwelmed!!!!");
+        rev2.setReviewdate(new Date());
+        reviews.add(rev2);
+        
+        Video video = new Video();
+        video.setId("z1977");
+        video.setName("Star Wars");
+        video.setDescription("An epic science fiction space opera");
+        video.setRating(Rating.PG);
+        video.setGenre("scifi");
+        video.setReviews(reviews);
+        
+        ResourceConverter converter = ReflectingConverter.newInstance();
+        Entity videoEntity = converter.toEntity(video);
+        System.out.println(videoEntity.toString());
+        Object obj = converter.toObject(videoEntity);
+        Entity entityRestored = converter.toEntity(obj);
+        System.out.println(entityRestored.toString());
+        
+        reviews.setOverrideUri("/override");
+        Entity revEnt = converter.toEntity(reviews);
+        
+        System.out.println(revEnt.toString());
     }
     
     private Entity createTestEntity() {

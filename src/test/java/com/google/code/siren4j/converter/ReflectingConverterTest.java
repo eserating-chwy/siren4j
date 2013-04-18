@@ -181,6 +181,11 @@ public class ReflectingConverterTest {
     }
     
     @Test
+    public void testEnumProperties() throws Exception {
+        
+    }
+    
+    @Test
     //@Ignore
     public void testSubEntityUsesFieldnameForRel() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());

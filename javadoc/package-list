@@ -1,0 +1,10 @@
+com.google.code.siren4j.annotations
+com.google.code.siren4j.component
+com.google.code.siren4j.component.builder
+com.google.code.siren4j.component.impl
+com.google.code.siren4j.converter
+com.google.code.siren4j.error
+com.google.code.siren4j.jackson
+com.google.code.siren4j.meta
+com.google.code.siren4j.resource
+com.google.code.siren4j.util

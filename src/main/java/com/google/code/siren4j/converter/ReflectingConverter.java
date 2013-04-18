@@ -299,7 +299,8 @@ public class ReflectingConverter implements ResourceConverter {
         } else {
             for (ReflectedInfo info : fieldInfo) {
                 Field currentField = info.getField();
-                if (ArrayUtils.contains(ReflectionUtils.propertyTypes, currentField.getType())) {
+                boolean isEnum = currentField.getType().isEnum();
+                if (isEnum || ArrayUtils.contains(ReflectionUtils.propertyTypes, currentField.getType())) {
                     // Property
                     if (!skipProperty(obj, currentField)) {
                         String propName = currentField.getName();

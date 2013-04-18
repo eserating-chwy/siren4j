@@ -41,7 +41,9 @@ import com.google.code.siren4j.component.builder.LinkBuilder;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Comment;
+import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
+import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.component.testpojos.Course;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.util.ComponentUtils;
@@ -49,7 +51,7 @@ import com.google.code.siren4j.util.ComponentUtils;
 public class ReflectingConverterTest {
 
     @Test
-    //@Ignore
+    @Ignore
     public void testToEntity() throws Exception {
 
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
@@ -59,7 +61,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     //@Ignore
+    //@Ignore
     public void testSubEntityRelOverride() throws Exception {
         // If rel specified in sub entity annotation, it should be used by the
         // sub entity.
@@ -69,12 +71,12 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testSubEntityOverrideLinks() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
-        Entity subEnt = ComponentUtils.getSubEntityByRel(ent, "courseComment");
+        Entity subEnt = ComponentUtils.getSubEntityByRel(ent, "firstComment");
 
-        assertNotNull("Should have found sub entity with rel equal to 'courseComment'", subEnt);
+        assertNotNull("Should have found sub entity with rel equal to 'firstComment'", subEnt);
 
         Link courseLink = ComponentUtils.getLinkByRel(subEnt, "course");
         assertEquals("/courses/testCourseID1/overridden", courseLink.getHref());
@@ -85,12 +87,12 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testSubEntityOverrideActions() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
-        Entity subEnt = ComponentUtils.getSubEntityByRel(ent, "courseComment");
+        Entity subEnt = ComponentUtils.getSubEntityByRel(ent, "firstComment");
 
-        assertNotNull("Should have found sub entity with rel equal to 'courseComment'", subEnt);
+        assertNotNull("Should have found sub entity with rel equal to 'firstComment'", subEnt);
 
         Action deleteAction = ComponentUtils.getActionByName(subEnt, "Delete");
         assertEquals("/comments/14/overridden", deleteAction.getHref());
@@ -101,7 +103,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testDynamicLinksOverride() throws Exception {
         Course course = getTestCourse();
         String overriddenHref = "/overridden";
@@ -116,7 +118,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testDynamicActionOverride() throws Exception {
         Course course = getTestCourse();
         String overridenHref = "/overridden";
@@ -131,7 +133,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testNoResolveTokens() throws Exception {
         // tokens with square brackets around the key should not be resolved to
         // the value
@@ -151,7 +153,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testResolveTokens() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
         Entity authorsEnt = ComponentUtils.getSubEntityByRel(ent, "authors");
@@ -167,7 +169,7 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testOverrideEmbeddedLink() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
 
@@ -175,14 +177,22 @@ public class ReflectingConverterTest {
     }
 
     @Test
-     @Ignore
+    //@Ignore
     public void testOverrideRelationship() throws Exception {
-
+        
     }
     
     @Test
+    //@Ignore
     public void testEnumProperties() throws Exception {
-        
+        Video video = new Video();
+        video.setId("z1977");
+        video.setName("Star Wars");
+        video.setDescription("An epic science fiction space opera");
+        video.setRating(Rating.PG);
+        video.setGenre("scifi");
+        Entity ent = ReflectingConverter.newInstance().toEntity(video);
+        assertEquals(Rating.PG, ent.getProperties().get("rating"));
     }
     
     @Test
@@ -195,7 +205,7 @@ public class ReflectingConverterTest {
     
 
     @Test
-     @Ignore
+    //@Ignore
     public void testPropertyNameOverride() throws Exception {
         Comment comment = getTestComment("12", "testCourseID1", "X113", "This course is great.");
         Entity ent = ReflectingConverter.newInstance().toEntity(comment);

@@ -5,7 +5,7 @@
   <groupId>com.google.code</groupId>
   <artifactId>Siren4J</artifactId>
   <packaging>jar</packaging>
-  <version>0.0.1-Alpha-SNAPSHOT</version>
+  <version>0.0.2-Alpha-SNAPSHOT</version>
   
   <name>Siren4J</name>
   <url>http://maven.apache.org</url>

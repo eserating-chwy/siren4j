@@ -37,7 +37,6 @@ import java.lang.annotation.Target;
  *       </thead>
  *       <tbody>
  *          <tr><td>name</td><td>no</td><td>Tells serialization to use this name instead of the field name.</td></tr>
- *          <tr><td>type</td><td>no</td><td>Indicates field type, defaults to {@link Type.SIMPLE}.</td></tr>
  *       </tbody>
  *     </table>     
  *     
@@ -49,12 +48,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JProperty {
-    String name();
-
-    Type type() default Type.SIMPLE;
-
-    public enum Type {
-        EMBEDDED_ENTITY, ENTITY_LINK, SIMPLE
-    }
+    String name();    
 
 }

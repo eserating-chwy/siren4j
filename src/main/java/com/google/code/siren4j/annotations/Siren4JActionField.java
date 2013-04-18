@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 /**
- * Annotation to define an action.
+ * Annotation to define a field for an action.
  * 
  * <pre>
  * <code>

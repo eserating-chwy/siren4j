@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation to define a sub-entity. Typically used on a resource collection field, but can also be on
- * a single type entity field. Values set in this annotation override values set by the enities own
+ * a single type entity field. Values set in this annotation override values set by the entities own
  * {@link Siren4JEnity} annotation.
  * 
  * <pre>

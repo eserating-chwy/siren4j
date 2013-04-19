@@ -23,10 +23,14 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.code.siren4j.component.impl.LinkImpl;
+
 /**
  * Links represent navigational transitions. In JSON Siren, links are represented as an
  * array inside the entity, such as { "links": [{ "rel": [ "self" ], "href": "http://api.x.io/orders/42"}] }
  */
+@JsonDeserialize(as = LinkImpl.class)
 public interface Link {
 
     public static final String RELATIONSHIP_SELF = "self";

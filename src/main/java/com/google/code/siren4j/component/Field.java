@@ -23,10 +23,13 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.code.siren4j.component.impl.FieldImpl;
 import com.google.code.siren4j.meta.FieldType;
 /**
  * Fields represent controls inside of actions.
  */
+@JsonDeserialize(as = FieldImpl.class)
 public interface Field {
     
     /**

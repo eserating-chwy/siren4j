@@ -26,6 +26,9 @@ package com.google.code.siren4j.component;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.code.siren4j.component.impl.EntityImpl;
+
 /**
  * <pre>
  * An Entity is a URI-addressable resource that has properties and actions associated with it. 
@@ -39,6 +42,7 @@ import java.util.Map;
  * </pre>
  *
  */
+@JsonDeserialize(as = EntityImpl.class)
 public interface Entity {
     
     /**

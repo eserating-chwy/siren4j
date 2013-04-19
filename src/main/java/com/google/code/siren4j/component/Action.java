@@ -25,11 +25,14 @@ package com.google.code.siren4j.component;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.google.code.siren4j.component.impl.ActionImpl;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
 /**
  * Represents a Siren Action. Actions show available behaviors an entity exposes.
  */
+@JsonDeserialize(as = ActionImpl.class)
 public interface Action {
     
     /**

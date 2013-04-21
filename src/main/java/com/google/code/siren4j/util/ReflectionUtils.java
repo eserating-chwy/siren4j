@@ -61,7 +61,10 @@ public class ReflectionUtils {
      */
     public static Cache<String, Method> findMethodCache = 
         CacheBuilder.newBuilder().maximumSize(2000).build();
-
+    
+    /**
+     * List of types considered as Siren properties, generally simple types.
+     */
     public static final Class<?>[] propertyTypes = new Class<?>[] { int.class, Integer.class, long.class, Long.class,
         double.class, Double.class, float.class, Float.class, short.class, Short.class, byte.class, Byte.class,
         boolean.class, Boolean.class, String.class, Date.class, int[].class, Integer[].class, long[].class, Long[].class,

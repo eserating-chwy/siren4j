@@ -23,8 +23,8 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -384,8 +384,11 @@ public class ReflectingConverter implements ResourceConverter {
     private String resolveUri(String rawUri, Object obj, List<ReflectedInfo> fieldInfo, Field parentField,
         Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Siren4JException {
         String resolvedUri = null;
+        URI baseUri = null;
         if (obj instanceof Resource) {
-            String override = ((Resource) obj).getOverrideUri();
+            Resource resource = (Resource)obj;
+            baseUri = resource.getBaseUri();
+            String override = resource.getOverrideUri();
             if (StringUtils.isNotBlank(override)) {
                 resolvedUri = override;
             }
@@ -396,6 +399,13 @@ public class ReflectingConverter implements ResourceConverter {
             // Now resolve others
             resolvedUri = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(obj, resolvedUri,
                 fieldInfo, false));
+        }
+        if(baseUri != null && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
+           StringBuffer sb = new StringBuffer();
+           String uriString = baseUri.toString();
+           sb.append(uriString.endsWith("/") ? uriString.substring(0, uriString.length() - 1) : uriString);
+           sb.append(resolvedUri.startsWith("/") ? resolvedUri : "/" + resolvedUri);
+           resolvedUri = sb.toString();
         }
         return resolvedUri;
     }

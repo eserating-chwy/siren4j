@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -263,6 +264,16 @@ public class ReflectingConverterTest {
         Object result = ReflectingConverter.newInstance(reg).toObject(ent);
         System.out.println("ToResource: ");
         System.out.println(ReflectingConverter.newInstance().toEntity((Course)result).toString());
+    }
+    
+    @Test
+    public void testBaseUri() throws Exception {
+        Course course = getTestCourse();
+        URI base = new URI("http://myhost:8080/rest/");
+        course.setBaseUri(base);
+        Entity ent = ReflectingConverter.newInstance().toEntity(course);
+        System.out.println("testBaseUri: ");
+        System.out.println(ent.toString());
     }
 
     private Course getTestCourse() {

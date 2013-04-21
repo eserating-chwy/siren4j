@@ -18,6 +18,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.resource;
 
+import java.net.URI;
 import java.util.Collection;
 
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
@@ -34,6 +35,8 @@ public abstract class BaseResource implements Resource {
     protected Collection<Link> entityLinks;
     @Siren4JPropertyIgnore
     protected Collection<Action> entityActions;
+    @Siren4JPropertyIgnore
+    protected URI baseUri;
 
     public void setOverrideUri(String uri) {
         overrideUri = uri;
@@ -66,5 +69,15 @@ public abstract class BaseResource implements Resource {
     public void setEntityActions(Collection<Action> entityActions) {
         this.entityActions = entityActions;
     }
+
+    public URI getBaseUri() {
+        return baseUri;
+    }
+
+    public void setBaseUri(URI baseUri) {
+        this.baseUri = baseUri;
+    }
+    
+    
 
 }

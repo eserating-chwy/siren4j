@@ -18,6 +18,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.resource;
 
+import java.net.URI;
 import java.util.Collection;
 
 import com.google.code.siren4j.component.Action;
@@ -86,5 +87,19 @@ public interface Resource {
      * @return actions may be <code>null</code> or empty.
      */
     public Collection<Action> getEntityActions();
+    
+    /**
+     * Gets the base uri for this resource. Generally Set by the webservice.
+     * If not <code>null</code>, will be prefixed to all resolved href/uri's when
+     * converted.
+     * @return the base uri, may be <code>null</code>.
+     */
+    public URI getBaseUri();
+    
+    /**
+     * The base uri to prefix the href/uri's.
+     * @param base may be <code>null</code>y.
+     */
+    public void setBaseUri(URI base);
 
 }

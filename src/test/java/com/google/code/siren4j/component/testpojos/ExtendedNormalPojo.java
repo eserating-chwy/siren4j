@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 
-@Siren4JEntity(name = "extendedNormalPojo", uri = "/test/pojo/{id}")
+@Siren4JEntity(uri = "/test/pojo/{id}")
 public class ExtendedNormalPojo extends NormalPojo {
   
     public ExtendedNormalPojo() {

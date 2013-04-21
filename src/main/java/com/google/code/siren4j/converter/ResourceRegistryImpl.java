@@ -147,7 +147,7 @@ public class ResourceRegistryImpl implements ResourceRegistry {
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(Siren4JEntity.class);
         for(Class<?> c : types) {
             Siren4JEntity anno = c.getAnnotation(Siren4JEntity.class);
-            putEntry(anno.name(), c, false);
+            putEntry(StringUtils.defaultIfEmpty(anno.name(), c.getName()), c, false);
         }
     }
     

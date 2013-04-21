@@ -29,8 +29,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Field;
 
@@ -38,7 +38,7 @@ import com.google.code.siren4j.component.Field;
 public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     private String name;
-
+    
     @JsonProperty(value = "class")
     private List<String> actionClass;
 

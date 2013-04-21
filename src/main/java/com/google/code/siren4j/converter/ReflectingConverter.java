@@ -23,6 +23,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -273,7 +274,10 @@ public class ReflectingConverter implements ResourceConverter {
             uri = StringUtils.defaultIfEmpty(entityAnno.uri(), uri);
         }
 
-        Siren4JSubEntity parentSubAnno = parentField != null ? parentField.getAnnotation(Siren4JSubEntity.class) : null;
+        Siren4JSubEntity parentSubAnno = null;
+        if(parentField != null && parentFieldInfo != null) {
+            parentSubAnno = getSubEntityAnnotation(parentField, parentFieldInfo);
+        }
 
         if (parentSubAnno != null) {
             uri = StringUtils.defaultIfEmpty(parentSubAnno.uri(), uri);
@@ -299,8 +303,13 @@ public class ReflectingConverter implements ResourceConverter {
         } else {
             for (ReflectedInfo info : fieldInfo) {
                 Field currentField = info.getField();
-                boolean isEnum = currentField.getType().isEnum();
-                if (isEnum || ArrayUtils.contains(ReflectionUtils.propertyTypes, currentField.getType())) {
+                Object fieldVal = null;
+                try {
+                    fieldVal = currentField.get(obj);
+                } catch (Exception e) {
+                   throw new Siren4JConversionException(e);
+                }
+                if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal)) {
                     // Property
                     if (!skipProperty(obj, currentField)) {
                         String propName = currentField.getName();
@@ -340,7 +349,7 @@ public class ReflectingConverter implements ResourceConverter {
     private void handleSubEntity(EntityBuilder builder, Object obj, Field currentField, List<ReflectedInfo> fieldInfo)
         throws Siren4JException {
 
-        Siren4JSubEntity subAnno = currentField.getAnnotation(Siren4JSubEntity.class);
+        Siren4JSubEntity subAnno = getSubEntityAnnotation(currentField, fieldInfo);
         if (subAnno != null) {
             if (isCollection(obj, currentField)) {
                 Collection<?> coll = (Collection<?>) ReflectionUtils.getFieldValue(currentField, obj);
@@ -389,6 +398,25 @@ public class ReflectingConverter implements ResourceConverter {
                 fieldInfo, false));
         }
         return resolvedUri;
+    }
+    
+    /**
+     * Helper to retrieve a sub entity annotation from either the field itself or the getter.
+     * If an annotation exists on both, then the field wins.
+     * @param currentField assumed not <code>null</code>.
+     * @param fieldInfo assumed not <code>null</code>.
+     * @return the annotation if found else <code>null</code>.
+     */
+    private Siren4JSubEntity getSubEntityAnnotation(Field currentField, List<ReflectedInfo> fieldInfo) {
+        Siren4JSubEntity result = null;
+        result = currentField.getAnnotation(Siren4JSubEntity.class);
+        if(result == null && fieldInfo != null) {
+            ReflectedInfo info = ReflectionUtils.getFieldInfoByName(fieldInfo, currentField.getName());
+            if(info != null && info.getGetter() != null) {
+                result = info.getGetter().getAnnotation(Siren4JSubEntity.class);
+            }
+        }
+        return result;
     }
 
     /**

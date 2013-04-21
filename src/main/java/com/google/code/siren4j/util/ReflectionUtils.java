@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,7 +64,9 @@ public class ReflectionUtils {
 
     public static final Class<?>[] propertyTypes = new Class<?>[] { int.class, Integer.class, long.class, Long.class,
         double.class, Double.class, float.class, Float.class, short.class, Short.class, byte.class, Byte.class,
-        boolean.class, Boolean.class, String.class, Date.class };
+        boolean.class, Boolean.class, String.class, Date.class, int[].class, Integer[].class, long[].class, Long[].class,
+        double[].class, Double[].class, float[].class, Float[].class, short[].class, Short[].class, byte[].class, Byte[].class,
+        boolean[].class, Boolean[].class, String[].class, Date[].class };
 
     private ReflectionUtils() {
 
@@ -103,7 +106,7 @@ public class ReflectionUtils {
         String fName = stripGetterPrefix(method.getName());
         Field field = null;
         try {
-            field = clazz.getDeclaredField(fName);
+            field = findField(clazz,fName);
         } catch (Exception ignore) {
         }
         return field;
@@ -367,7 +370,30 @@ public class ReflectionUtils {
         } else {
             return method;
         }
-    }    
+    }
+    
+    public static Field findField(Class<?> clazz, String fieldName) 
+        throws NoSuchFieldException {
+        Field field = null;
+        try {
+            field = clazz.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            
+        }
+        if(field == null) {
+           Class<?> superClazz = clazz.getSuperclass();
+           if(superClazz != null) {
+               field = findField(superClazz, fieldName);
+           }
+           if(field == null) {
+               throw new NoSuchFieldException("Field: " + fieldName);
+           } else {
+               return field;
+           }
+        } else {
+            return field;
+        }
+    }
     
     private static String makeFindMethodCacheKey(Class<?> clazz, String methodName, Class<?>[] parameterTypes) {
         StringBuilder key = new StringBuilder();
@@ -400,6 +426,32 @@ public class ReflectionUtils {
         ReflectedInfo result = null;
         for(ReflectedInfo info : infoList) {
             if(name.equals(info.getEffectiveName())) {
+                result = info;
+                break;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Helper method to find the field info by its name from the passed in list of info.
+     * @param infoList cannot be <code>null</code>.
+     * @param name cannot be <code>null</code> or empty.
+     * @return the info or <code>null</code> if not found.
+     */
+    public static ReflectedInfo getFieldInfoByName(List<ReflectedInfo> infoList, String name) {
+        if(infoList == null) {
+            throw new IllegalArgumentException("infoList cannot be null.");
+        }
+        if(StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException("name cannot be null or empty.");
+        }
+        ReflectedInfo result = null;
+        for(ReflectedInfo info : infoList) {
+            if(info.getField() == null) {
+                continue; //should never happen.
+            }
+            if(name.equals(info.getField().getName())) {
                 result = info;
                 break;
             }
@@ -439,6 +491,40 @@ public class ReflectionUtils {
             }
         }
     
+    }
+    
+    @SuppressWarnings("rawtypes")
+    public static boolean isSirenProperty(Class<?> type, Object obj) {
+        boolean isProp = false;
+        
+        if(type.isEnum()) {
+            isProp = true;
+        } else if(ArrayUtils.contains(propertyTypes, type)) {
+            isProp = true;
+        } else if(obj != null && (Collection.class.equals(type) 
+            || ArrayUtils.contains(type.getInterfaces(),
+            Collection.class))){
+            //Try to determine value type
+            if(!((Collection)obj).isEmpty()) {
+                Object first = ((Collection)obj).iterator().next();
+                if(ArrayUtils.contains(propertyTypes, first.getClass())) {
+                    isProp = true;
+                }
+            }
+        } else if(obj != null && (Map.class.equals(type) 
+            || ArrayUtils.contains(type.getInterfaces(),
+            Map.class))){
+            //Try to determine value types of key and value
+            if(!((Map)obj).isEmpty()) {
+                Object firstKey = ((Map)obj).keySet().iterator().next();
+                Object firstVal = ((Map)obj).get(firstKey);
+                if(ArrayUtils.contains(propertyTypes, firstKey.getClass()) 
+                    && ArrayUtils.contains(propertyTypes, firstVal.getClass())) {
+                    isProp = true;
+                }
+            }
+        }
+        return isProp;
     }
 
 }

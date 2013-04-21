@@ -23,16 +23,22 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
@@ -41,25 +47,46 @@ import com.google.code.siren4j.component.builder.LinkBuilder;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Comment;
-import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
-import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.component.testpojos.Course;
+import com.google.code.siren4j.component.testpojos.ExtendedNormalPojo;
+import com.google.code.siren4j.component.testpojos.Video;
+import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.util.ComponentUtils;
 
 public class ReflectingConverterTest {
 
     @Test
-    @Ignore
-    public void testToEntity() throws Exception {
+    //@Ignore
+    public void testToJacksonThereAndBackEntity() throws Exception {
 
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
-
-        System.out.println(ent.toString());
-
+        String there = ent.toString();
+        
+        
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        Entity back = mapper.readValue(there, Entity.class);
+        assertEquals(ent.toString(), back.toString());
     }
-
+    
+    @Test
+    public void testNonResourceClass() throws Exception {
+        ExtendedNormalPojo pojo = new ExtendedNormalPojo();
+        pojo.setId(12);
+        pojo.setName("Test pojo 1");
+        pojo.setLastmodify(new Date());
+        Collection<String> refs = new CollectionResource<String>();
+        refs.add("Foo");
+        refs.add("Bar");
+        pojo.setRefs(refs);
+        
+        Entity ent = ReflectingConverter.newInstance().toEntity(pojo);
+        System.out.println("Normal pojo:");
+        System.out.println(ent.toString());
+    }
+    
     @Test
     //@Ignore
     public void testSubEntityRelOverride() throws Exception {
@@ -172,7 +199,7 @@ public class ReflectingConverterTest {
     //@Ignore
     public void testOverrideEmbeddedLink() throws Exception {
         Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
-
+        System.out.println("Test override embedded Link:");
         System.out.println(ent.toString());
     }
 
@@ -234,6 +261,7 @@ public class ReflectingConverterTest {
         
         ResourceRegistry reg = ResourceRegistryImpl.newInstance("com.google.code.siren4j");
         Object result = ReflectingConverter.newInstance(reg).toObject(ent);
+        System.out.println("ToResource: ");
         System.out.println(ReflectingConverter.newInstance().toEntity((Course)result).toString());
     }
 
@@ -266,6 +294,19 @@ public class ReflectingConverterTest {
 
         course.setLastComment(getTestComment("12", "testCourseID1", "X113", "This course is great."));
         course.setFirstComment(getTestComment("14", "testCourseID1", "X115", "This course is too easy."));
+        
+        Collection<Integer> basicColl = new ArrayList<Integer>();
+        basicColl.add(56);
+        basicColl.add(10);
+        basicColl.add(15);
+        course.setBasicCollection(basicColl);
+        
+        Map<String, Boolean> boolMap = new HashMap<String, Boolean>();
+        boolMap.put("firstEntry", true);
+        boolMap.put("secondEntry", false);
+        
+        course.setBoolMap(boolMap);
+        
         course.setEmbedComment(getTestComment("16", "testCourseID1", "X116", "This comment is embedded."));
 
         return course;

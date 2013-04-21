@@ -2,6 +2,7 @@ package com.google.code.siren4j.component.testpojos;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import com.google.code.siren4j.annotations.Siren4JAction;
 import com.google.code.siren4j.annotations.Siren4JActionField;
@@ -51,6 +52,20 @@ public class Course extends BasePojo {
 
     @Siren4JSubEntity(uri = "/authors?courseid={parent.courseid}/{[offset]}")
     private Collection<Author> authors2;
+    
+    private String[] allowedTypes = new String[]{"Online", "Classroom", "External"};
+    
+    private Collection<Integer> basicCollection;
+    
+    private Map<String, Boolean> boolMap;
+
+    public Map<String, Boolean> getBoolMap() {
+        return boolMap;
+    }
+
+    public void setBoolMap(Map<String, Boolean> boolMap) {
+        this.boolMap = boolMap;
+    }
 
     public String getCourseid() {
         return courseid;
@@ -134,6 +149,22 @@ public class Course extends BasePojo {
 
     public void setEmbedComment(Comment embedComment) {
         this.embedComment = embedComment;
+    }
+
+    public String[] getAllowedTypes() {
+        return allowedTypes;
+    }
+
+    public void setAllowedTypes(String[] allowedTypes) {
+        this.allowedTypes = allowedTypes;
+    }
+
+    public Collection<Integer> getBasicCollection() {
+        return basicCollection;
+    }
+
+    public void setBasicCollection(Collection<Integer> basicCollection) {
+        this.basicCollection = basicCollection;
     }
     
     

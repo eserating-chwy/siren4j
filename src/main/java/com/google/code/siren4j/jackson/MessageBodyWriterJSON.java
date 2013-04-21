@@ -1,5 +1,7 @@
 package com.google.code.siren4j.jackson;
 
+import java.text.SimpleDateFormat;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 
@@ -31,6 +33,7 @@ public class MessageBodyWriterJSON extends JacksonJsonProvider {
     public ObjectMapper locateMapper(Class<?> type, MediaType mediaType) {
         ObjectMapper mapper = super.locateMapper(type, mediaType);
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
         return mapper;
     }
 

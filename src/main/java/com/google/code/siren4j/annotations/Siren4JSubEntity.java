@@ -52,7 +52,7 @@ import java.lang.annotation.Target;
  * </pre>
  *
  */
-@Target(ElementType.FIELD)
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JSubEntity {

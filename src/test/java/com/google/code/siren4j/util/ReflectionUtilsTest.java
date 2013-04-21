@@ -21,6 +21,8 @@ package com.google.code.siren4j.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -71,6 +73,20 @@ public class ReflectionUtilsTest {
 		assertTrue(keys.contains("world"));
 		
 		
+	}
+	
+	@Test
+	public void testIsSirenProperty() {
+	    assertTrue(ReflectionUtils.isSirenProperty(String.class, null));
+	    assertTrue(ReflectionUtils.isSirenProperty(String[].class, null));
+	    assertTrue(ReflectionUtils.isSirenProperty(int.class, null));
+            assertTrue(ReflectionUtils.isSirenProperty(int[].class, null));
+            assertTrue(ReflectionUtils.isSirenProperty(Integer.class, null));
+            assertTrue(ReflectionUtils.isSirenProperty(Integer[].class, null));
+            List coll = new ArrayList<String>();
+            coll.add("String");
+            assertTrue(ReflectionUtils.isSirenProperty(List.class, coll));
+	    
 	}
 
 }

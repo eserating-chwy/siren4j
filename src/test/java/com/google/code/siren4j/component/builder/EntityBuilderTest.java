@@ -25,6 +25,11 @@ package com.google.code.siren4j.component.builder;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -48,15 +53,27 @@ public class EntityBuilderTest {
 				.setRelationship(Link.RELATIONSHIP_SELF)
 				.setHref("/self/link")
 				.build();
+		Collection<Integer> coll = new ArrayList<Integer>();
+		coll.add(4);
+		coll.add(5);
+		coll.add(6);
+		
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("key1", "foo");
+		map.put("key2", "bar");
 		Entity result = builder
 				.setEntityClass("test")
 				.addProperty("foo", "hello")
 				.addProperty("number", 1)
+				.addProperty("array", new String[] {"hey", "this", "is", "array"})
+				.addProperty("collection", coll)
+				.addProperty("map", map)
 				.addLink(selfLink)
 				.build();
 		assertEquals("test", result.getEntityClass()[0]);
-		assertEquals(2, result.getProperties().size());
+		assertEquals(5, result.getProperties().size());
 		assertTrue(result.getProperties().containsKey("number"));
+		System.out.println(result.toString());
 	}
 	
 	

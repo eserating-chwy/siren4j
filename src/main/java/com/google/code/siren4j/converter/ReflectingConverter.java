@@ -265,7 +265,7 @@ public class ReflectingConverter implements ResourceConverter {
         boolean embeddedLink = false;
         List<ReflectedInfo> fieldInfo = ReflectionUtils.getExposedFieldInfo(clazz);
 
-        String cname = parentField != null ? parentField.getName() : null;
+        String cname = null;
         String uri = "";
 
         Siren4JEntity entityAnno = (Siren4JEntity) clazz.getAnnotation(Siren4JEntity.class);

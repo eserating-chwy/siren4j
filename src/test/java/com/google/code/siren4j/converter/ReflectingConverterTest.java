@@ -51,6 +51,7 @@ import com.google.code.siren4j.component.testpojos.Comment;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
 import com.google.code.siren4j.component.testpojos.Course;
 import com.google.code.siren4j.component.testpojos.ExtendedNormalPojo;
+import com.google.code.siren4j.component.testpojos.NoNamePojo;
 import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.resource.CollectionResource;
@@ -254,6 +255,18 @@ public class ReflectingConverterTest {
         long elapsed = end.getTime() - start.getTime();
         System.out.println("Elapsed time: " + elapsed + " milliseconds");
 
+    }
+    
+    @Test
+    public void testCollectionResourceTopLevelEntity() throws Exception {
+        
+        CollectionResource<NoNamePojo> coll = new CollectionResource<NoNamePojo>();
+        coll.add(new NoNamePojo("id1", "foo", "bar"));
+        coll.add(new NoNamePojo("id2", "hello", "world"));
+        Entity ent = ReflectingConverter.newInstance().toEntity(coll);
+        System.out.println("testCollectionResourceTopLevelEntity:");
+        System.out.println(ent.toString());
+        
     }
     
     @Test

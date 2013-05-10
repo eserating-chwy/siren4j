@@ -18,12 +18,12 @@
  *********************************************************************************************/
 package com.google.code.siren4j.resource;
 
-import java.net.URI;
 import java.util.Collection;
 
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Link;
+
 
 public abstract class BaseResource implements Resource {
 
@@ -36,7 +36,9 @@ public abstract class BaseResource implements Resource {
     @Siren4JPropertyIgnore
     protected Collection<Action> entityActions;
     @Siren4JPropertyIgnore
-    protected URI baseUri;
+    protected Boolean fullyQualified;
+    @Siren4JPropertyIgnore
+    protected String baseUri;
 
     public void setOverrideUri(String uri) {
         overrideUri = uri;
@@ -70,13 +72,23 @@ public abstract class BaseResource implements Resource {
         this.entityActions = entityActions;
     }
 
-    public URI getBaseUri() {
+    public String getBaseUri() {
         return baseUri;
     }
 
-    public void setBaseUri(URI baseUri) {
+    public void setBaseUri(String baseUri) {
         this.baseUri = baseUri;
     }
+
+    public Boolean isFullyQualifiedLinks() {
+        return fullyQualified;
+    }
+
+    public void setFullyQualifiedLinks(Boolean fullyQualified) {
+        this.fullyQualified = fullyQualified;        
+    }
+    
+    
     
     
 

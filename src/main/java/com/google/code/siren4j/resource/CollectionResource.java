@@ -23,21 +23,25 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.annotations.Siren4JInclude;
+import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 
 /**
  * Class representing a collection of resources.
  */
+
 @Siren4JEntity(name = "siren4J.collectionResource")
 public class CollectionResource<T> extends BaseResource implements Collection<T> {
     @Siren4JSubEntity(rel = "item")
     private Collection<T> items = new ArrayList<T>();
     private long offset;
     private long limit;
-    private long total;
+    @Siren4JInclude(Include.NON_NULL)
+    private Long total;
 
     public Collection<T> getItems() {
-        return items;
+        return getCollection();
     }
 
     public void setItems(Collection<T> items) {
@@ -51,8 +55,8 @@ public class CollectionResource<T> extends BaseResource implements Collection<T>
     }
 
     public boolean isEmpty() {
-        return items == null || items.isEmpty();
-    }
+        return getCollection().isEmpty();
+    }    
 
     public long getOffset() {
         return offset;
@@ -70,11 +74,11 @@ public class CollectionResource<T> extends BaseResource implements Collection<T>
         this.limit = limit;
     }
 
-    public long getTotal() {
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(long total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 

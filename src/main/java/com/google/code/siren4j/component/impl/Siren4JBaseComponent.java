@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.google.code.siren4j.Siren4J;
 
 
 
@@ -19,7 +20,7 @@ public abstract class Siren4JBaseComponent {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ"));
+            mapper.setDateFormat(new SimpleDateFormat(Siren4J.DEFAULT_DATE_FORMAT));
             out = mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

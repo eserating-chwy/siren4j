@@ -282,8 +282,8 @@ public class ReflectingConverterTest {
     @Test
     public void testBaseUri() throws Exception {
         Course course = getTestCourse();
-        URI base = new URI("http://myhost:8080/rest/");
-        course.setBaseUri(base);
+        course.setBaseUri("http://myhost:8080/rest/");
+        course.setFullyQualifiedLinks(true);
         Entity ent = ReflectingConverter.newInstance().toEntity(course);
         System.out.println("testBaseUri: ");
         System.out.println(ent.toString());

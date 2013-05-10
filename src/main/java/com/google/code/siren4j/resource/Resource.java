@@ -18,7 +18,6 @@
  *********************************************************************************************/
 package com.google.code.siren4j.resource;
 
-import java.net.URI;
 import java.util.Collection;
 
 import com.google.code.siren4j.component.Action;
@@ -94,12 +93,22 @@ public interface Resource {
      * converted.
      * @return the base uri, may be <code>null</code>.
      */
-    public URI getBaseUri();
+    public String getBaseUri();
     
     /**
      * The base uri to prefix the href/uri's.
-     * @param base may be <code>null</code>y.
+     * @param base may be <code>null</code> or empty.
      */
-    public void setBaseUri(URI base);
+    public void setBaseUri(String base);
+    
+    /**
+     * If <code>true</code> and the baseUri is set, then the link
+     * will be generated as fully qualified. Defaults to <code>null</code> which
+     * will act as <code>false</code> but allows us to tell if it was intentionally set.
+     * @return
+     */
+    public Boolean isFullyQualifiedLinks();
+    
+    public void setFullyQualifiedLinks(Boolean fullyQualified);
 
 }

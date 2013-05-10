@@ -24,7 +24,6 @@
 package com.google.code.siren4j.converter;
 
 import java.lang.reflect.Field;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -103,7 +102,7 @@ public class ReflectingConverter implements ResourceConverter {
     /* (non-Javadoc)
      * @see com.google.code.siren4j.converter.ResourceConverter#toEntity(java.lang.Object)
      */
-    public Entity toEntity(Object obj) throws Siren4JConversionException {
+    public Entity toEntity(Object obj) {
         try {
             return toEntity(obj, null, null, null);
         } catch (Siren4JException e) {
@@ -114,7 +113,7 @@ public class ReflectingConverter implements ResourceConverter {
     /* (non-Javadoc)
      * @see com.google.code.siren4j.converter.ResourceConverter#toObject(com.google.code.siren4j.component.Entity)
      */
-    public Object toObject(Entity entity) throws Siren4JConversionException {
+    public Object toObject(Entity entity) {
         if (registry == null) {
             LOG.warn("No ResourceRegistry set, using default which "
                 + "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
@@ -267,6 +266,18 @@ public class ReflectingConverter implements ResourceConverter {
 
         String cname = null;
         String uri = "";
+        
+        //Propagate baseUri and fullyQualified setting from parent if needed
+        if(parentObj != null && parentObj instanceof Resource && obj instanceof Resource) {
+            Resource parentResource = (Resource)parentObj;
+            Resource resource = (Resource)obj;
+            if(StringUtils.isNotBlank(parentResource.getBaseUri())){
+                resource.setBaseUri(parentResource.getBaseUri());
+            }
+            if(parentResource.isFullyQualifiedLinks() != null) {
+                resource.setFullyQualifiedLinks(parentResource.isFullyQualifiedLinks());
+            }
+        }
 
         Siren4JEntity entityAnno = (Siren4JEntity) clazz.getAnnotation(Siren4JEntity.class);
         if (entityAnno != null) {
@@ -328,7 +339,10 @@ public class ReflectingConverter implements ResourceConverter {
                     }
                 }
             }
-            handleSelfLink(builder, resolvedUri);
+            if(obj instanceof Resource) {
+                handleBaseUriLink(builder, ((Resource)obj).getBaseUri());
+            }
+            handleSelfLink(builder, resolvedUri);            
             handleEntityLinks(builder, obj, fieldInfo, parentField, parentObj, parentFieldInfo);
             handleEntityActions(builder, obj, fieldInfo, parentField, parentObj, parentFieldInfo);
         }
@@ -384,10 +398,12 @@ public class ReflectingConverter implements ResourceConverter {
     private String resolveUri(String rawUri, Object obj, List<ReflectedInfo> fieldInfo, Field parentField,
         Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Siren4JException {
         String resolvedUri = null;
-        URI baseUri = null;
+        String baseUri = null;
+        boolean fullyQualified = false;
         if (obj instanceof Resource) {
             Resource resource = (Resource)obj;
             baseUri = resource.getBaseUri();
+            fullyQualified = resource.isFullyQualifiedLinks() == null ? false : resource.isFullyQualifiedLinks();
             String override = resource.getOverrideUri();
             if (StringUtils.isNotBlank(override)) {
                 resolvedUri = override;
@@ -400,10 +416,10 @@ public class ReflectingConverter implements ResourceConverter {
             resolvedUri = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(obj, resolvedUri,
                 fieldInfo, false));
         }
-        if(baseUri != null && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
+        if(fullyQualified && StringUtils.isNotBlank(baseUri) 
+            && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
            StringBuffer sb = new StringBuffer();
-           String uriString = baseUri.toString();
-           sb.append(uriString.endsWith("/") ? uriString.substring(0, uriString.length() - 1) : uriString);
+           sb.append(baseUri.endsWith("/") ? baseUri.substring(0, baseUri.length() - 1) : baseUri);
            sb.append(resolvedUri.startsWith("/") ? resolvedUri : "/" + resolvedUri);
            resolvedUri = sb.toString();
         }
@@ -442,6 +458,22 @@ public class ReflectingConverter implements ResourceConverter {
             return;
         }
         Link link = LinkBuilder.newInstance().setRelationship(Link.RELATIONSHIP_SELF).setHref(resolvedUri).build();
+        builder.addLink(link);
+    }
+    
+    /**
+     * Add the baseUri link to the entity if the baseUri is set on the entity.
+     * 
+     * @param builder
+     * assumed not <code>null</code>.
+     * @param resolvedUri
+     * the token resolved uri. Assumed not blank.
+     */
+    private void handleBaseUriLink(EntityBuilder builder, String baseUri) {
+        if(StringUtils.isBlank(baseUri)) {
+            return;
+        }
+        Link link = LinkBuilder.newInstance().setRelationship(Link.RELATIONSHIP_BASEURI).setHref(baseUri).build();
         builder.addLink(link);
     }
 

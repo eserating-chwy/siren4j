@@ -33,9 +33,12 @@ import com.google.code.siren4j.component.impl.LinkImpl;
 @JsonDeserialize(as = LinkImpl.class)
 public interface Link {
 
+    public static final String RELATIONSHIP_FIRST = "first";
+    public static final String RELATIONSHIP_LAST = "last";
     public static final String RELATIONSHIP_SELF = "self";
     public static final String RELATIONSHIP_NEXT = "next";
     public static final String RELATIONSHIP_PREVIOUS = "previous";
+    public static final String RELATIONSHIP_BASEURI = "baseUri";
     
     /**
      * Defines the relationship of the link to its entity, per Web Linking (RFC5899).

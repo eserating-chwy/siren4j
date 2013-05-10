@@ -1,7 +1,6 @@
 package com.google.code.siren4j.converter;
 
 import com.google.code.siren4j.component.Entity;
-import com.google.code.siren4j.error.Siren4JConversionException;
 
 public interface ResourceConverter {
 
@@ -12,10 +11,9 @@ public interface ResourceConverter {
      * 
      * @param obj
      * @return
-     * @throws Siren4JConversionException
      */
-    public abstract Entity toEntity(Object obj) throws Siren4JConversionException;
+    public abstract Entity toEntity(Object obj);
 
-    public abstract Object toObject(Entity entity) throws Siren4JConversionException;
+    public abstract Object toObject(Entity entity);
 
 }

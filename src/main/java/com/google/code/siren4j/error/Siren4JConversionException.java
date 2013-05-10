@@ -27,7 +27,7 @@ package com.google.code.siren4j.error;
  * Thrown by a component converter upon error.
  *
  */
-public class Siren4JConversionException extends Siren4JException {
+public class Siren4JConversionException extends Siren4JRuntimeException {
 
 	private static final long serialVersionUID = 8003075870865797238L;
 

@@ -45,9 +45,9 @@ public interface Action {
      * Describes the nature of an action based on the current representation. 
      * Possible values are implementation-dependent and should be documented. 
      * (Optional).
-     * @return a list of strings, may be <code>null</code> or empty.
+     * @return an array of strings, may be <code>null</code> or empty.
      */
-    public List<String> getActionClass();
+    public String[] getActionClass();
     
     /**
      * An enumerated attribute mapping to a protocol method. 

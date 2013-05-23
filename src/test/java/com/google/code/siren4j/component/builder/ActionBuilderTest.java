@@ -23,7 +23,6 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.builder;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.code.siren4j.component.Action;
@@ -39,8 +38,7 @@ public class ActionBuilderTest {
 		    .build();
 	}
 	
-	@Test 
-	//@Ignore
+	@Test
 	public void  testSettingOptionalFieldNull() throws Exception {
         ActionBuilder builder = ActionBuilder.newInstance();
         
@@ -48,6 +46,16 @@ public class ActionBuilderTest {
             .setHref("/some/path")
             .setTitle(null)
             .build();
+	}
+	
+	@Test
+	public void testSetActionClass() {
+	    Action action = ActionBuilder.newInstance()
+	    .setName("testAction")
+            .setHref("/some/path")
+	    .setActionClass("someClassName")
+	    .build();
+	    System.out.println(action.toString());
 	}
 
 }

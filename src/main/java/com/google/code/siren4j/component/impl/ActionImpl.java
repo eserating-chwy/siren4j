@@ -40,7 +40,7 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
     private String name;
     
     @JsonProperty(value = "class")
-    private List<String> actionClass;
+    private String[] actionClass;
 
     private Method method = Method.GET;
 
@@ -70,11 +70,11 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
      * 
      * @see com.google.code.siren4j.component.impl.Action#getActionClass()
      */
-    public List<String> getActionClass() {
+    public String[] getActionClass() {
         return actionClass;
     }
 
-    public void setActionClass(List<String> actionClass) {
+    public void setActionClass(String... actionClass) {
         this.actionClass = actionClass;
     }
 

@@ -141,6 +141,7 @@ public class ReflectingConverter implements ResourceConverter {
             } catch (Exception e) {
                 throw new Siren4JConversionException(e);
             }
+            
             // Set properties
             handleSetProperties(obj, clazz, entity, fieldInfo);
             // Set sub entities
@@ -170,7 +171,7 @@ public class ReflectingConverter implements ResourceConverter {
                     } catch (Siren4JException e) {
                         throw new Siren4JConversionException(e);
                     }                       
-                } else {
+                } else if(!(obj instanceof Collection && key.equals("size"))) {
                     //Houston we have a problem!!
                     throw new Siren4JConversionException("Unable to find field: " + key + " for class: " + clazz.getName());
                 }
@@ -259,11 +260,13 @@ public class ReflectingConverter implements ResourceConverter {
         if (obj == null) {
             return null;
         }
+        
         EntityBuilder builder = EntityBuilder.newInstance();
         Class<?> clazz = obj.getClass();
         boolean embeddedLink = false;
         List<ReflectedInfo> fieldInfo = ReflectionUtils.getExposedFieldInfo(clazz);
-
+        EntityContext context = new EntityContextImpl(obj, fieldInfo, parentField, parentObj, parentFieldInfo);
+        
         String cname = null;
         String uri = "";
         
@@ -302,12 +305,13 @@ public class ReflectingConverter implements ResourceConverter {
             }
         }
         // Handle uri overriding or token replacement
-        String resolvedUri = resolveUri(uri, obj, fieldInfo, parentField, parentObj, parentFieldInfo);
+        String resolvedUri = resolveUri(uri, context);
 
         builder.setEntityClass(getEntityClass(obj, cname));
         if (parentSubAnno != null) {
             String fname = parentField != null ? parentField.getName() : cname;
-            builder.setRelationship(ComponentUtils.isStringArrayEmpty(parentSubAnno.rel()) ? new String[] { fname } : parentSubAnno.rel());
+            builder.setRelationship(ComponentUtils.isStringArrayEmpty(parentSubAnno.rel()) 
+                ? new String[] { fname } : parentSubAnno.rel());
         }
         if (embeddedLink) {
             builder.setHref(resolvedUri);
@@ -339,12 +343,15 @@ public class ReflectingConverter implements ResourceConverter {
                     }
                 }
             }
+            if(obj instanceof Collection) {
+                builder.addProperty("size", ((Collection<?>)obj).size());
+            }
             if(obj instanceof Resource) {
                 handleBaseUriLink(builder, ((Resource)obj).getBaseUri());
             }
             handleSelfLink(builder, resolvedUri);            
-            handleEntityLinks(builder, obj, fieldInfo, parentField, parentObj, parentFieldInfo);
-            handleEntityActions(builder, obj, fieldInfo, parentField, parentObj, parentFieldInfo);
+            handleEntityLinks(builder, context);
+            handleEntityActions(builder, context);
         }
         return builder.build();
     }
@@ -387,21 +394,16 @@ public class ReflectingConverter implements ResourceConverter {
      * 
      * @param rawUri
      * assumed not <code>null</code> or .
-     * @param obj
-     * @param fieldInfo
-     * @param parentField
-     * @param parentObj
-     * @param parentFieldInfo
+     * @param context
      * @return uri with tokens resolved.
      * @throws Siren4JException
      */
-    private String resolveUri(String rawUri, Object obj, List<ReflectedInfo> fieldInfo, Field parentField,
-        Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Siren4JException {
+    private String resolveUri(String rawUri, EntityContext context) throws Siren4JException {
         String resolvedUri = null;
         String baseUri = null;
         boolean fullyQualified = false;
-        if (obj instanceof Resource) {
-            Resource resource = (Resource)obj;
+        if (context.getCurrentObject() instanceof Resource) {
+            Resource resource = (Resource)context.getCurrentObject();
             baseUri = resource.getBaseUri();
             fullyQualified = resource.isFullyQualifiedLinks() == null ? false : resource.isFullyQualifiedLinks();
             String override = resource.getOverrideUri();
@@ -411,10 +413,11 @@ public class ReflectingConverter implements ResourceConverter {
         }
         if (resolvedUri == null) {
             // First resolve parents
-            resolvedUri = ReflectionUtils.replaceFieldTokens(parentObj, rawUri, parentFieldInfo, true);
+            resolvedUri = ReflectionUtils.replaceFieldTokens(
+                context.getParentObject(), rawUri, context.getParentFieldInfo(), true);
             // Now resolve others
-            resolvedUri = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(obj, resolvedUri,
-                fieldInfo, false));
+            resolvedUri = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(
+                context.getCurrentObject(), resolvedUri, context.getCurrentFieldInfo(), false));
         }
         if(fullyQualified && StringUtils.isNotBlank(baseUri) 
             && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
@@ -484,22 +487,13 @@ public class ReflectingConverter implements ResourceConverter {
      * 
      * @param builder
      * assumed not <code>null</code>.
-     * @param obj
-     * assumed not <code>null</code>.
-     * @param fieldInfo
-     * assumed not <code>null</code>.
-     * @param parentField
-     * assumed not <code>null</code>.
-     * @param parentObj
-     * assumed not <code>null</code>.
-     * @param parentFieldInfo
+     * @param context
      * assumed not <code>null</code>.
      * @throws Exception
      */
-    private void handleEntityLinks(EntityBuilder builder, Object obj, List<ReflectedInfo> fieldInfo, Field parentField,
-        Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Siren4JException {
+    private void handleEntityLinks(EntityBuilder builder, EntityContext context) throws Siren4JException {
 
-        Class<?> clazz = obj.getClass();
+        Class<?> clazz = context.getCurrentObject().getClass();
         Map<String, Link> links = new HashMap<String, Link>();
         /* Caution!! Order matters when adding to the links map */
 
@@ -509,8 +503,8 @@ public class ReflectingConverter implements ResourceConverter {
                 links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
             }
         }
-        if (parentField != null) {
-            Siren4JSubEntity subentity = parentField.getAnnotation(Siren4JSubEntity.class);
+        if (context.getParentField() != null) {
+            Siren4JSubEntity subentity = context.getParentField().getAnnotation(Siren4JSubEntity.class);
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.links())) {
                 for (Siren4JLink l : subentity.links()) {
                     links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
@@ -518,14 +512,15 @@ public class ReflectingConverter implements ResourceConverter {
             }
         }
 
-        Collection<Link> resourceLinks = obj instanceof Resource ? ((Resource) obj).getEntityLinks() : null;
+        Collection<Link> resourceLinks = context.getCurrentObject() instanceof Resource 
+            ? ((Resource) context.getCurrentObject()).getEntityLinks() : null;
         if (resourceLinks != null) {
             for (Link l : resourceLinks) {
                 links.put(ArrayUtils.toString(l.getRel()), l);
             }
         }
         for (Link l : links.values()) {
-            l.setHref(resolveUri(l.getHref(), obj, fieldInfo, parentField, parentObj, parentFieldInfo));
+            l.setHref(resolveUri(l.getHref(), context));
             builder.addLink(l);
         }
 
@@ -537,16 +532,11 @@ public class ReflectingConverter implements ResourceConverter {
      * bound in.
      * 
      * @param builder
-     * @param obj
-     * @param fieldInfo
-     * @param parentField
-     * @param parentObj
-     * @param parentFieldInfo
+     * @param context
      * @throws Exception
      */
-    private void handleEntityActions(EntityBuilder builder, Object obj, List<ReflectedInfo> fieldInfo, Field parentField,
-        Object parentObj, List<ReflectedInfo> parentFieldInfo) throws Siren4JException {
-        Class<?> clazz = obj.getClass();
+    private void handleEntityActions(EntityBuilder builder, EntityContext context) throws Siren4JException {
+        Class<?> clazz = context.getCurrentObject().getClass();
         Map<String, Action> actions = new HashMap<String, Action>();
         /* Caution!! Order matters when adding to the actions map */
 
@@ -556,8 +546,8 @@ public class ReflectingConverter implements ResourceConverter {
                 actions.put(a.name(), annotationToAction(a));
             }
         }
-        if (parentField != null) {
-            Siren4JSubEntity subentity = parentField.getAnnotation(Siren4JSubEntity.class);
+        if (context.getParentField() != null) {
+            Siren4JSubEntity subentity = context.getParentField().getAnnotation(Siren4JSubEntity.class);
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
                 for (Siren4JAction a : subentity.actions()) {
                     actions.put(a.name(), annotationToAction(a));
@@ -565,14 +555,15 @@ public class ReflectingConverter implements ResourceConverter {
             }
         }
 
-        Collection<Action> resourceLinks = obj instanceof Resource ? ((Resource) obj).getEntityActions() : null;
+        Collection<Action> resourceLinks = context.getCurrentObject() instanceof Resource 
+            ? ((Resource) context.getCurrentObject()).getEntityActions() : null;
         if (resourceLinks != null) {
             for (Action a : resourceLinks) {
                 actions.put(a.getName(), a);
             }
         }
         for (Action a : actions.values()) {
-            a.setHref(resolveUri(a.getHref(), obj, fieldInfo, parentField, parentObj, parentFieldInfo));
+            a.setHref(resolveUri(a.getHref(), context));
             builder.addAction(a);
         }
     }

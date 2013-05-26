@@ -12,7 +12,7 @@
   <groupId>com.googlecode.siren4j</groupId>
   <artifactId>siren4j</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.4</version>
+  <version>1.0.5-SNAPSHOT</version>
   
   <name>Siren4J</name>
   <description>This is a java library to help with the creation and use of Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more detail on the specification.</description>
@@ -31,7 +31,7 @@
     <url>https://code.google.com/p/siren4j/</url>
     <connection>scm:hg:https://code.google.com/p/siren4j/</connection>
     <developerConnection>scm:hg:https://code.google.com/p/siren4j/</developerConnection>
-    <tag>siren4j-1.0.4</tag>
+    <tag>HEAD</tag>
   </scm>
   <developers>
     <developer>

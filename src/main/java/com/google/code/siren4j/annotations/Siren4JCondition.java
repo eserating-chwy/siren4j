@@ -22,7 +22,30 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.google.code.siren4j.component.impl.ActionImpl.Method;
 /**
+ * Used with {@link Siren4JAction} and {@link Siren4JLink} to allow logic to include/exclude an
+ * action or link based on the value in a field or returned from a method.
+ * Only no argument methods can be called.
+ * <code>
+ * <pre>
+ *    condition = &#064;Siren4JCondition(name = "somefield", logic=Is.TRUE) 
+ *    
+ *    <table border="1">
+ *       <thead>
+ *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
+ *       </thead>
+ *       <tbody>
+ *          <tr><td>name</td><td>yes</td><td>Name of the field or method to be eveluated.</td></tr>
+ *          <tr><td>logic</td><td>no</td><td>The logic type see {@link Is}, defaults to {@link Is.TRUE}</td></tr>
+ *          <tr><td>type</td><td>no</td><td>The condition type see {@link Type}, defaults to {@link Type.FIELD}</td></tr>
+ *          </tbody>
+ *     </table>
+ * </pre>
+ * </code>
+ * 
+ * 
  * @since 1.0.4
  *
  */

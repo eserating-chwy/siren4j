@@ -60,5 +60,12 @@ public interface Link {
      * cannot be <code>null</code> or empty.
      */
     public void setHref(String href);
+    
+    /**
+     * Display text for the link. (Optional).
+     * @since 1.0.4
+     * @return may be <code>null</code> or empty.
+     */
+    public String getTitle();
 
 }

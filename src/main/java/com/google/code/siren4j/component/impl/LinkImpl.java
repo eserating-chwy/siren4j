@@ -37,6 +37,8 @@ public class LinkImpl extends Siren4JBaseComponent implements Link {
     private String[] rel;
 
     private String href;
+    
+    private String title;
 
     /*
      * (non-Javadoc)
@@ -65,6 +67,14 @@ public class LinkImpl extends Siren4JBaseComponent implements Link {
             throw new IllegalArgumentException("href cannot be null or empty.");
         }
         this.href = href;
+    }        
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

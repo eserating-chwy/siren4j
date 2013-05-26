@@ -22,38 +22,36 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
 /**
- * Annotation to for adding links to entities.
- * 
- * <pre>
- * <code>
- * Usage:
- * 
- *      &#064;Siren4JLink(rel = "user", href = "/users/{userid}")
- * 
- *     <table border="1">
- *       <thead>
- *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
- *       </thead>
- *       <tbody>
- *          <tr><td>rel</td><td>yes</td><td>Array of string to indicate link relationship to its parent.</td></tr>
- *          <tr><td>href</td><td>yes</td><td>The links URI pattern.</td></tr>
- *          <tr><td>condition</td><td>no</td><td>A condition must evaluate to <code>true</code> for the action to be rendered.</td></tr>
- *       </tbody>
- *     </table>     
- *     
- * </code>
- * </pre>
+ * @since 1.0.4
  *
  */
 @Target({ ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
-public @interface Siren4JLink {
-    String[] rel();
-
-    String href();
+public @interface Siren4JCondition {
+    Is logic() default Is.TRUE;
+    Type type() default Type.FIELD;
+    String name();    
     
-    Siren4JCondition condition() default @Siren4JCondition(name="null");
+    /**
+     * The condition logic type.
+     */
+    public enum Is {
+        EMPTY,
+        FALSE,
+        TRUE,
+        NULL,
+        NOTEMPTY,
+        NOTNULL
+    }
+    
+    /**
+     * The condition type enum to indicate from where the value to be eveluated
+     * comes from.
+     */
+    public enum Type {
+        FIELD,
+        METHOD
+    }
 }

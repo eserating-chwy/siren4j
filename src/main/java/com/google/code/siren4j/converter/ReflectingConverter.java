@@ -24,6 +24,7 @@
 package com.google.code.siren4j.converter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.code.siren4j.annotations.Siren4JAction;
 import com.google.code.siren4j.annotations.Siren4JActionField;
+import com.google.code.siren4j.annotations.Siren4JCondition;
+import com.google.code.siren4j.annotations.Siren4JCondition.Type;
 import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
@@ -52,6 +55,8 @@ import com.google.code.siren4j.component.builder.ActionBuilder;
 import com.google.code.siren4j.component.builder.EntityBuilder;
 import com.google.code.siren4j.component.builder.FieldBuilder;
 import com.google.code.siren4j.component.builder.LinkBuilder;
+import com.google.code.siren4j.condition.Condition;
+import com.google.code.siren4j.condition.ConditionFactory;
 import com.google.code.siren4j.error.Siren4JConversionException;
 import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
@@ -500,14 +505,18 @@ public class ReflectingConverter implements ResourceConverter {
         Siren4JEntity entity = clazz.getAnnotation(Siren4JEntity.class);
         if (entity != null && ArrayUtils.isNotEmpty(entity.links())) {
             for (Siren4JLink l : entity.links()) {
-                links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                if(evaluateConditional(l.condition(), context)) {
+                    links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                }
             }
         }
         if (context.getParentField() != null) {
             Siren4JSubEntity subentity = context.getParentField().getAnnotation(Siren4JSubEntity.class);
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.links())) {
                 for (Siren4JLink l : subentity.links()) {
-                    links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                    if(evaluateConditional(l.condition(), context)) {
+                        links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                    }
                 }
             }
         }
@@ -543,14 +552,18 @@ public class ReflectingConverter implements ResourceConverter {
         Siren4JEntity entity = clazz.getAnnotation(Siren4JEntity.class);
         if (entity != null && ArrayUtils.isNotEmpty(entity.actions())) {
             for (Siren4JAction a : entity.actions()) {
-                actions.put(a.name(), annotationToAction(a));
+                if(evaluateConditional(a.condition(), context)) {
+                    actions.put(a.name(), annotationToAction(a));
+                }
             }
         }
         if (context.getParentField() != null) {
             Siren4JSubEntity subentity = context.getParentField().getAnnotation(Siren4JSubEntity.class);
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
                 for (Siren4JAction a : subentity.actions()) {
-                    actions.put(a.name(), annotationToAction(a));
+                    if(evaluateConditional(a.condition(), context)) {
+                        actions.put(a.name(), annotationToAction(a));
+                    }
                 }
             }
         }
@@ -566,6 +579,61 @@ public class ReflectingConverter implements ResourceConverter {
             a.setHref(resolveUri(a.getHref(), context));
             builder.addAction(a);
         }
+    }
+    
+    /**
+     * Evaluates a value against its specified conditional.
+     * @param condition
+     * @param context
+     * @return
+     */
+    private boolean evaluateConditional(Siren4JCondition condition, EntityContext context) {
+        boolean result = true;
+        if (condition != null && !("null".equals(condition.name()))) {
+            result = false;
+            Object val = null;
+            ConditionFactory factory = ConditionFactory.getInstance();
+            Condition cond = factory.getCondition(condition.logic());
+            Object obj = condition.name().startsWith("parent.") 
+                ? context.getParentObject() 
+                    : context.getCurrentObject();
+            String name = condition.name().startsWith("parent.") 
+                ? condition.name().substring(7) 
+                    : condition.name();
+            if(obj == null) {
+                throw new Siren4JRuntimeException(
+                    "No object found. Conditional probably references a parent but does not have a parent: " + condition.name());
+            }
+            if (condition.type().equals(Type.METHOD)) {
+                try {
+                    Method method = ReflectionUtils.findMethod(obj.getClass(), name,
+                        null);
+                    if (method != null) {
+                        method.setAccessible(true);
+                        val = method.invoke(obj, new Object[] {});
+                        result = cond.evaluate(val);
+                    } else {
+                        throw new Siren4JException("Method referenced in condition does not exist: " + condition.name());
+                    }
+                } catch (Exception e) {
+                    throw new Siren4JRuntimeException(e);
+                }
+            } else {
+                try {
+                    Field field = ReflectionUtils.findField(obj.getClass(), name);
+                    if (field != null) {
+                        field.setAccessible(true);
+                        val = field.get(obj);
+                        result = cond.evaluate(val);
+                    } else {
+                        throw new Siren4JException("Field referenced in condition does not exist: " + condition.name());
+                    }
+                } catch (Exception e) {
+                    throw new Siren4JRuntimeException(e);
+                }
+            }
+        }
+        return result;
     }
 
     /**

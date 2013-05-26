@@ -56,6 +56,11 @@ public class LinkBuilder extends BaseBuilder<Link> {
         addStep("setHref", new Object[] { href });
         return this;
     }
+    
+    public LinkBuilder setTitle(String title) {
+        addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
+        return this;
+    }
 
     @Override
     protected Link createInstance() {

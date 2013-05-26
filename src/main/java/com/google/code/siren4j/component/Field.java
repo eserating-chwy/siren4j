@@ -39,6 +39,13 @@ public interface Field {
     public String getName();
     
     /**
+     * Display text for the field. (Optional).
+     * @since 1.0.4
+     * @return may be <code>null</code> or empty.
+     */
+    public String getTitle();
+    
+    /**
      * The field type. This may include any of the input types specified in HTML5.
      * default value is {@link FieldType.TEXT}. see {@link FieldType} for other allowed values (Optional).
      * @return never <code>null</code>. 

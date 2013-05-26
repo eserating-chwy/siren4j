@@ -37,6 +37,8 @@ import com.google.code.siren4j.meta.FieldType;
 public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     private String name;
+    
+    private String title;
 
     private FieldType type = FieldType.TEXT;
 
@@ -152,6 +154,14 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     public void setPlaceholder(String placeholder) {
         this.placeholder = placeholder;
+    }    
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

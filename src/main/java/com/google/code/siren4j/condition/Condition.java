@@ -16,44 +16,15 @@
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *********************************************************************************************/
-package com.google.code.siren4j.annotations;
+package com.google.code.siren4j.condition;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-/**
- * Annotation to for adding links to entities.
- * 
- * <pre>
- * <code>
- * Usage:
- * 
- *      &#064;Siren4JLink(rel = "user", href = "/users/{userid}")
- * 
- *     <table border="1">
- *       <thead>
- *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
- *       </thead>
- *       <tbody>
- *          <tr><td>rel</td><td>yes</td><td>Array of string to indicate link relationship to its parent.</td></tr>
- *          <tr><td>href</td><td>yes</td><td>The links URI pattern.</td></tr>
- *          <tr><td>condition</td><td>no</td><td>A condition must evaluate to <code>true</code> for the action to be rendered.</td></tr>
- *       </tbody>
- *     </table>     
- *     
- * </code>
- * </pre>
- *
- */
-@Target({ ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
-@com.google.code.siren4j.annotations.Siren4JAnnotation
-public @interface Siren4JLink {
-    String[] rel();
-
-    String href();
+public interface Condition {
     
-    Siren4JCondition condition() default @Siren4JCondition(name="null");
+    /**
+     * Evaluates the passed in object to see if it satisfies the condition.
+     * @param obj may be <code>null</code>.
+     * @return <code>true</code> if the passed in object satisfies the condition.
+     */
+    public boolean evaluate(Object obj);
+
 }

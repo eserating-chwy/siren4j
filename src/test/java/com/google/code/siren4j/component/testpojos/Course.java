@@ -6,6 +6,9 @@ import java.util.Map;
 
 import com.google.code.siren4j.annotations.Siren4JAction;
 import com.google.code.siren4j.annotations.Siren4JActionField;
+import com.google.code.siren4j.annotations.Siren4JCondition;
+import com.google.code.siren4j.annotations.Siren4JCondition.Is;
+import com.google.code.siren4j.annotations.Siren4JCondition.Type;
 import com.google.code.siren4j.annotations.Siren4JEntity;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
@@ -16,7 +19,9 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
 @Siren4JInclude(Include.NON_NULL)
 @Siren4JEntity(name = "course", uri = "/courses/{courseid}", links = { @Siren4JLink(rel = "reviews",
     href = "/courseReviews/course/{courseid}") }, actions = { @Siren4JAction(name = "addReview", method = Method.POST,
-    href = "/courseReviews/course/{courseid}", fields = {
+       href = "/courseReviews/course/{courseid}", 
+       condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD), 
+       fields = {
         @Siren4JActionField(name = "userid", type = "text", required = true),
         @Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250) }) })
 public class Course extends BasePojo {
@@ -35,8 +40,10 @@ public class Course extends BasePojo {
 
     @Siren4JSubEntity(links = { @Siren4JLink(rel = "course", href = "/courses/{courseid}/overridden"),
         @Siren4JLink(rel = "foo", href = "/foo/{title}") }, actions = {
-        @Siren4JAction(name = "Delete", method = Method.DELETE, href = "/comments/{id}/overridden"),
-        @Siren4JAction(name = "Reject", method = Method.PUT, href = "/comments/{id}/reject") })
+           @Siren4JAction(name = "Delete", method = Method.DELETE, href = "/comments/{id}/overridden"),
+           @Siren4JAction(name = "Reject", method = Method.PUT, href = "/comments/{id}/reject",
+               condition = @Siren4JCondition(name = "parent.getDescription", logic = Is.NOTEMPTY, type = Type.METHOD)
+               ) })
     private Comment firstComment;
 
     @Siren4JSubEntity()

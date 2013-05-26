@@ -25,9 +25,9 @@ package com.google.code.siren4j.converter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -200,9 +200,22 @@ public class ReflectingConverterTest {
     @Test
     //@Ignore
     public void testOverrideEmbeddedLink() throws Exception {
-        Entity ent = ReflectingConverter.newInstance().toEntity(getTestCourse());
+        Course testCourse = getTestCourse();
+        testCourse.setDescription("");
+        Entity ent = ReflectingConverter.newInstance().toEntity(testCourse);
         System.out.println("Test override embedded Link:");
         System.out.println(ent.toString());
+    }
+    
+    @Test
+    //@Ignore
+    public void testCondition() throws Exception {
+        Course testCourse = getTestCourse();
+        testCourse.setDescription("");
+        Entity ent = ReflectingConverter.newInstance().toEntity(testCourse);
+        System.out.println("Test condition:");
+        System.out.println(ent.toString());
+        assertNull(ent.getActions());
     }
 
     @Test

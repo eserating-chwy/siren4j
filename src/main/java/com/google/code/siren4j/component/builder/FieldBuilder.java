@@ -52,6 +52,11 @@ public class FieldBuilder extends BaseBuilder<Field> {
         addStep("setType", new Object[] { type }, new Class<?>[] {FieldType.class});
         return this;
     }
+    
+    public FieldBuilder setTitle(String title) {
+        addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
+        return this;
+    }
 
     public FieldBuilder setValue(String value) {
         addStep("setValue", new Object[] { value }, new Class<?>[] {String.class});

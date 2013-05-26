@@ -139,5 +139,23 @@ public class ComponentUtils {
         }
         return empty;
     }
+    
+    public static boolean isNumeric(Object obj) {
+        Class<?> clazz = obj.getClass();
+        boolean numeric = false;
+        if(clazz.isPrimitive()) {
+            numeric = 
+                clazz.equals(byte.class) ||
+                clazz.equals(short.class) ||
+                clazz.equals(int.class) ||
+                clazz.equals(long.class) ||
+                clazz.equals(float.class) ||
+                clazz.equals(double.class);
+                
+        } else {
+            numeric = obj instanceof Number;
+        }
+        return numeric;
+    }
 
 }

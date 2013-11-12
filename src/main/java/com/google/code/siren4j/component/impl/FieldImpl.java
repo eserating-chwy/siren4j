@@ -25,12 +25,15 @@ package com.google.code.siren4j.component.impl;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Field;
+import com.google.code.siren4j.meta.FieldOption;
 import com.google.code.siren4j.meta.FieldType;
 
 @JsonInclude(Include.NON_NULL)
@@ -47,6 +50,10 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
     private boolean required;
 
     private String pattern;
+
+    private List<FieldOption> options;
+
+    private String optionsURL;
 
     @JsonInclude(Include.NON_DEFAULT)
     private int max = -1;
@@ -162,6 +169,32 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<FieldOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<FieldOption> options) {
+        this.options = options;
+    }
+
+    public void addOption(FieldOption option) {
+        if(option != null) {
+            if(options == null) {
+                options = new ArrayList<FieldOption>();
+            }
+            options.add(option);
+        }
+    }
+
+    @Override
+    public String getOptionsURL() {
+        return optionsURL;
+    }
+
+    public void setOptionsURL(String optionsURL) {
+        this.optionsURL = optionsURL;
     }
 
     @Override

@@ -40,9 +40,11 @@ public class LinkBuilderTest {
 		String path = "/some/path";
 		Link result = builder.setRelationship(Link.RELATIONSHIP_SELF)
 		.setHref(path)
+        .setTitle("someTitle")
 		.build();
 		
 		assertEquals(Link.RELATIONSHIP_SELF, result.getRel()[0]);
+        assertEquals("someTitle", result.getTitle());
 		assertEquals(path, result.getHref());
 		
 	}

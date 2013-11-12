@@ -38,9 +38,6 @@ import com.google.code.siren4j.component.Field;
 public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     private String name;
-    
-    @JsonProperty(value = "class")
-    private String[] actionClass;
 
     private Method method = Method.GET;
 
@@ -63,19 +60,6 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.code.siren4j.component.impl.Action#getActionClass()
-     */
-    public String[] getActionClass() {
-        return actionClass;
-    }
-
-    public void setActionClass(String... actionClass) {
-        this.actionClass = actionClass;
     }
 
     /*

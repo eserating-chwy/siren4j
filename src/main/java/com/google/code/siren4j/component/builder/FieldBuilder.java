@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import com.google.code.siren4j.component.Field;
 import com.google.code.siren4j.component.impl.FieldImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
+import com.google.code.siren4j.meta.FieldOption;
 import com.google.code.siren4j.meta.FieldType;
 
 public class FieldBuilder extends BaseBuilder<Field> {
@@ -38,6 +39,18 @@ public class FieldBuilder extends BaseBuilder<Field> {
 
     public static FieldBuilder newInstance() {
         return new FieldBuilder();
+    }
+
+    /**
+     * Set the component class of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param componentClass may be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
+    public FieldBuilder setComponentClass(String... componentClass) {
+        addStep("setComponentClass", new Object[] { componentClass }, new Class<?>[] {String[].class});
+        return this;
     }
 
     public FieldBuilder setName(String name) {
@@ -53,6 +66,21 @@ public class FieldBuilder extends BaseBuilder<Field> {
         return this;
     }
     
+
+    public FieldBuilder addOption(FieldOption option) {
+        addStep("addOption", new Object[] { option }, new Class<?>[] {FieldOption.class});
+        return this;
+    }
+
+    public FieldBuilder addOption(String title, String value, boolean isDefault) {
+        return addOption(new FieldOption(title, value, isDefault));
+    }
+
+    public FieldBuilder setOptionsURL(String url) {
+        addStep("setOptionsURL", new Object[] { url }, new Class<?>[] {String.class});
+        return this;
+    }
+	
     public FieldBuilder setTitle(String title) {
         addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
         return this;

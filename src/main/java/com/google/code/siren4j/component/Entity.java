@@ -43,16 +43,8 @@ import com.google.code.siren4j.component.impl.EntityImpl;
  *
  */
 @JsonDeserialize(as = EntityImpl.class)
-public interface Entity {
-    
-    /**
-     * Describes the nature of an entity's content based on the current representation. 
-     * Possible values are implementation-dependent and should be documented. 
-     * Is an array of strings. (Optional).
-     * @return array of strings may be <code>null</code> or empty.
-     */
-    public String[] getEntityClass();
-    
+public interface Entity extends Component{
+
     /**
      * A set of key-value pairs that describe the state of an entity. 
      * In JSON Siren, this is an object such as { "name": "Kevin", "age": 30 }. (Optional).

@@ -37,6 +37,7 @@ import java.lang.annotation.Target;
  *       </thead>
  *       <tbody>
  *          <tr><td>name</td><td>yes</td><td>Unique name for the field.</td></tr>
+ *          <tr><td>fieldClass</td><td>no</td><td>Array of string to classify the field.</td></tr>
  *          <tr><td>type</td><td>no</td><td>HTML5 form field type, see below for allowed types.</td></tr>
  *          <tr><td>value</td><td>no</td><td>Default value for the field.</td></tr>
  *          <tr><td>pattern</td><td>no</td><td>HTML5 validation pattern.</td></tr>
@@ -46,6 +47,8 @@ import java.lang.annotation.Target;
  *          <tr><td>maxLength</td><td>no</td><td>Validation for maximum string length.</td></tr>
  *          <tr><td>step</td><td>no</td><td>The step attribute indicates the granularity that is
  *           expected (and required) of the value, by limiting the allowed values. Type must equal 'number'</td></tr>
+ *          <tr><td>options</td><td>no</td><td>One or more {@link Siren4JFieldOption} annotation</td></tr>
+ *          <tr><td>optionsURL</td><td>no</td><td>URL that points to web resource that return options.</td></tr>
  *       </tbody>
  *     </table>
  *     
@@ -65,6 +68,8 @@ import java.lang.annotation.Target;
 public @interface Siren4JActionField {
     String name();
 
+    String[] fieldClass() default {};
+
     String type() default "";
 
     String value() default "";
@@ -80,4 +85,8 @@ public @interface Siren4JActionField {
     int maxLength() default -1;
 
     int step() default -1;
+
+    Siren4JFieldOption[] options() default {};
+
+    String optionsURL() default "";
 }

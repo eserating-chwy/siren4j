@@ -41,9 +41,6 @@ import com.google.code.siren4j.component.Link;
 @JsonPropertyOrder({ "class", "rel", "href", "title", "properties", "entities", "actions", "links" })
 public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
-    @JsonProperty(value = "class")
-    private String[] entityClass;
-
     private String[] rel;
 
     private String href;
@@ -57,19 +54,6 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
     private List<Link> links;
 
     private List<Action> actions;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.code.siren4j.component.impl.Entity#getEntityClass()
-     */
-    public String[] getEntityClass() {
-        return entityClass;
-    }
-
-    public void setEntityClass(String... entityClass) {
-        this.entityClass = entityClass;
-    }
 
     /*
      * (non-Javadoc)
@@ -158,7 +142,7 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
     public int hashCode() {
         HashCodeBuilder hashCodeBuilder = new HashCodeBuilder();
         hashCodeBuilder.append(rel)
-            .append(entityClass)
+            .append(componentClass)
             .append(href);
         return hashCodeBuilder.toHashCode();
     }
@@ -177,7 +161,7 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
         EntityImpl other = (EntityImpl) obj;
         EqualsBuilder equalsBuilder = new EqualsBuilder();
         equalsBuilder.append(rel, other.rel)
-            .append(entityClass, other.entityClass)
+            .append(componentClass, other.componentClass)
             .append(href, href);
         return equalsBuilder.isEquals();
     }

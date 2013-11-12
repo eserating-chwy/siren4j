@@ -31,7 +31,7 @@ import com.google.code.siren4j.component.impl.LinkImpl;
  * array inside the entity, such as { "links": [{ "rel": [ "self" ], "href": "http://api.x.io/orders/42"}] }
  */
 @JsonDeserialize(as = LinkImpl.class)
-public interface Link {
+public interface Link extends Component{
 
     public static final String RELATIONSHIP_FIRST = "first";
     public static final String RELATIONSHIP_LAST = "last";

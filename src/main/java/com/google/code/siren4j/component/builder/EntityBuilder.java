@@ -83,16 +83,16 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     public static EntityBuilder newInstance() {
         return new EntityBuilder();
     }
-    
+
     /**
-     * Set the entity class of the entity to be built. This method can be called many times
+     * Set the component class of the entity to be built. This method can be called many times
      * but only the value of the last call is used in the built entity. This is an optional property as specified
      * by the Siren specification.
-     * @param entityClass may be <code>null</code> or empty.
+     * @param componentClass may be <code>null</code> or empty.
      * @return <code>this</code> builder, never <code>null</code>.
      */
-    public EntityBuilder setEntityClass(String... entityClass) {
-    	addStep("setEntityClass", new Object[] { entityClass }, new Class<?>[] {String[].class});
+    public EntityBuilder setComponentClass(String... componentClass) {
+        addStep("setComponentClass", new Object[] { componentClass }, new Class<?>[] {String[].class});
         return this;
     }
     

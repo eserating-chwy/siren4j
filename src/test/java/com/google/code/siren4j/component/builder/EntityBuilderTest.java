@@ -62,7 +62,7 @@ public class EntityBuilderTest {
 		map.put("key1", "foo");
 		map.put("key2", "bar");
 		Entity result = builder
-				.setEntityClass("test")
+				.setComponentClass("test")
 				.addProperty("foo", "hello")
 				.addProperty("number", 1)
 				.addProperty("array", new String[] {"hey", "this", "is", "array"})
@@ -70,7 +70,7 @@ public class EntityBuilderTest {
 				.addProperty("map", map)
 				.addLink(selfLink)
 				.build();
-		assertEquals("test", result.getEntityClass()[0]);
+		assertEquals("test", result.getComponentClass()[0]);
 		assertEquals(5, result.getProperties().size());
 		assertTrue(result.getProperties().containsKey("number"));
 		System.out.println(result.toString());

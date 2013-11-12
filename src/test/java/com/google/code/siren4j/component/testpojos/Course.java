@@ -10,6 +10,7 @@ import com.google.code.siren4j.annotations.Siren4JCondition;
 import com.google.code.siren4j.annotations.Siren4JCondition.Is;
 import com.google.code.siren4j.annotations.Siren4JCondition.Type;
 import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
@@ -23,6 +24,11 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
        condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD), 
        fields = {
         @Siren4JActionField(name = "userid", type = "text", required = true),
+        @Siren4JActionField(name = "hasoptions", type = "checkbox", required = true,
+                options = {
+                        @Siren4JFieldOption(title = "option1", value = "foo"),
+                        @Siren4JFieldOption(title = "option2", value = "foo2", optionDefault = true)
+                }),
         @Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250) }) })
 public class Course extends BasePojo {
 

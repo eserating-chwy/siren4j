@@ -49,12 +49,13 @@ public class FieldBuilderTest {
 		Field result = builder.setName(fieldName)
 		    .setType(fieldType)
 		    .setValue(fieldValue)
+            .addOption("foo", "bar", false)
 		    .build();
 		
 		assertEquals(fieldName, result.getName());
 		assertEquals(fieldType, result.getType());
 		assertEquals(fieldValue, result.getValue());
-		
+		System.out.println(result.toString());
 	}
 	
 	@Test

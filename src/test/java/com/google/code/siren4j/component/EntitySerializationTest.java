@@ -182,7 +182,7 @@ public class EntitySerializationTest {
 	    List<Entity> entities, List<Link> links, List<Action> actions) {
 	EntityBuilder builder = EntityBuilder.newInstance();
 	if(!ArrayUtils.isEmpty(entityClass)) {
-	    builder.setEntityClass(entityClass);
+	    builder.setComponentClass(entityClass);
 	}
 	if(!ArrayUtils.isEmpty(rel)) {
 	    builder.setRelationship(rel);
@@ -237,7 +237,7 @@ public class EntitySerializationTest {
 	    builder.addFields(fields);
 	}
 	if(ArrayUtils.isEmpty(actionClass)) {
-	    builder.setActionClass(actionClass);
+	    builder.setComponentClass(actionClass);
 	}
 	return builder.build();
 	

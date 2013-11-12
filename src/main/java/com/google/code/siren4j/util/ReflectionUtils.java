@@ -120,7 +120,7 @@ public class ReflectionUtils {
      * Retrieve all fields deemed as Exposed, i.e. they are public or have a public accessor method or are marked by an
      * annotation to be exposed.
      * 
-     * @param obj cannot be <code>null</code>.
+     * @param clazz cannot be <code>null</code>.
      * @return
      */
     public static List<ReflectedInfo> getExposedFieldInfo(final Class<?> clazz) {

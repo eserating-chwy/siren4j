@@ -23,27 +23,22 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component;
 
+import java.util.List;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.code.siren4j.component.impl.FieldImpl;
+import com.google.code.siren4j.meta.FieldOption;
 import com.google.code.siren4j.meta.FieldType;
 /**
  * Fields represent controls inside of actions.
  */
 @JsonDeserialize(as = FieldImpl.class)
-public interface Field {
+public interface Field extends Component {
     
     /**
      * A name describing the control. (Required).
      * @return never <code>null</code> or empty.
      */
     public String getName();
-    
-    /**
-     * Display text for the field. (Optional).
-     * @since 1.0.4
-     * @return may be <code>null</code> or empty.
-     */
-    public String getTitle();
     
     /**
      * The field type. This may include any of the input types specified in HTML5.
@@ -114,5 +109,17 @@ public interface Field {
      * @return may be <code>null</code> or empty.
      */
     public String getPlaceholder();
+
+    /**
+     * Option values for the fields.
+     * @return may be <code>null</code> or empty.
+     */
+    public List<FieldOption> getOptions();
+
+    /**
+     *  A url that points to a web resource that will return a list of options.
+     * @return  may be <code>null</code> or empty.
+     */
+    public String getOptionsURL();
 
 }

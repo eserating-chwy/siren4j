@@ -2,6 +2,7 @@ package com.google.code.siren4j.component.impl;
 
 import java.text.SimpleDateFormat;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -10,6 +11,17 @@ import com.google.code.siren4j.Siren4J;
 
 
 public abstract class Siren4JBaseComponent {
+
+    @JsonProperty(value = "class")
+    protected String[] componentClass;
+
+    public String[] getComponentClass() {
+        return componentClass;
+    }
+
+    public void setComponentClass(String[] componentClass) {
+        this.componentClass = componentClass;
+    }
 
     /**
      * Uses Jackson to serialize into a json string.

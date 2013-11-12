@@ -1,5 +1,9 @@
-bin
-target
-.settings
-.project
-.classpath
+glob:bin/*
+glob:target/*
+glob:.settings/*
+glob:.project
+glob:.classpath
+glob:.idea/*
+glob:build/*
+glob:atlassian-ide-plugin.xml
+glob:*.iml

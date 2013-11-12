@@ -43,6 +43,7 @@ import com.google.code.siren4j.annotations.Siren4JActionField;
 import com.google.code.siren4j.annotations.Siren4JCondition;
 import com.google.code.siren4j.annotations.Siren4JCondition.Type;
 import com.google.code.siren4j.annotations.Siren4JEntity;
+import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
@@ -60,6 +61,7 @@ import com.google.code.siren4j.condition.ConditionFactory;
 import com.google.code.siren4j.error.Siren4JConversionException;
 import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
+import com.google.code.siren4j.meta.FieldOption;
 import com.google.code.siren4j.meta.FieldType;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.resource.Resource;
@@ -130,7 +132,7 @@ public class ReflectingConverter implements ResourceConverter {
         }
         Resource resource = null;
         if (entity != null) {
-            String[] eClass = entity.getEntityClass();
+            String[] eClass = entity.getComponentClass();
             if (eClass == null || eClass.length == 0) {
                 throw new Siren4JConversionException(
                     "No entity class defined, won't be able to match to Java class. Can't go on.");
@@ -312,7 +314,7 @@ public class ReflectingConverter implements ResourceConverter {
         // Handle uri overriding or token replacement
         String resolvedUri = resolveUri(uri, context);
 
-        builder.setEntityClass(getEntityClass(obj, cname));
+        builder.setComponentClass(getEntityClass(obj, cname));
         if (parentSubAnno != null) {
             String fname = parentField != null ? parentField.getName() : cname;
             builder.setRelationship(ComponentUtils.isStringArrayEmpty(parentSubAnno.rel()) 
@@ -472,9 +474,8 @@ public class ReflectingConverter implements ResourceConverter {
     /**
      * Add the baseUri link to the entity if the baseUri is set on the entity.
      * 
-     * @param builder
-     * assumed not <code>null</code>.
-     * @param resolvedUri
+     * @param builder assumed not <code>null</code>.
+     * @param baseUri
      * the token resolved uri. Assumed not blank.
      */
     private void handleBaseUriLink(EntityBuilder builder, String baseUri) {
@@ -645,7 +646,14 @@ public class ReflectingConverter implements ResourceConverter {
      * @return new link, never <code>null</code>.
      */
     private Link annotationToLink(Siren4JLink linkAnno) {
-        return LinkBuilder.newInstance().setRelationship(linkAnno.rel()).setHref(linkAnno.href()).build();
+        LinkBuilder builder = LinkBuilder.newInstance().setRelationship(linkAnno.rel()).setHref(linkAnno.href());
+        if(StringUtils.isNotBlank(linkAnno.title())) {
+            builder.setTitle(linkAnno.title());
+        }
+        if (ArrayUtils.isNotEmpty(linkAnno.linkClass())) {
+            builder.setComponentClass(linkAnno.linkClass());
+        }
+        return builder.build();
     }
 
     /**
@@ -660,7 +668,7 @@ public class ReflectingConverter implements ResourceConverter {
         ActionBuilder builder = ActionBuilder.newInstance();
         builder.setName(actionAnno.name()).setHref(actionAnno.href()).setMethod(actionAnno.method());
         if (ArrayUtils.isNotEmpty(actionAnno.actionClass())) {
-            builder.setActionClass(actionAnno.actionClass());
+            builder.setComponentClass(actionAnno.actionClass());
         }
         if (StringUtils.isNotBlank(actionAnno.title())) {
             builder.setTitle(actionAnno.title());
@@ -686,6 +694,9 @@ public class ReflectingConverter implements ResourceConverter {
     private com.google.code.siren4j.component.Field annotationToField(Siren4JActionField fieldAnno) {
         FieldBuilder builder = FieldBuilder.newInstance();
         builder.setName(fieldAnno.name());
+        if (ArrayUtils.isNotEmpty(fieldAnno.fieldClass())) {
+            builder.setComponentClass(fieldAnno.fieldClass());
+        }
         if (fieldAnno.max() > -1) {
             builder.setMax(fieldAnno.max());
         }
@@ -709,6 +720,22 @@ public class ReflectingConverter implements ResourceConverter {
         }
         if (StringUtils.isNotBlank(fieldAnno.value())) {
             builder.setValue(fieldAnno.value());
+        }
+        if (ArrayUtils.isNotEmpty(fieldAnno.options())) {
+            for(Siren4JFieldOption optAnno : fieldAnno.options()) {
+                FieldOption opt = new FieldOption();
+                if(StringUtils.isNotBlank(optAnno.title())) {
+                    opt.setTitle(optAnno.title());
+                }
+                if(StringUtils.isNotBlank(optAnno.value())) {
+                    opt.setValue(optAnno.value());
+                }
+                opt.setOptionDefault(optAnno.optionDefault());
+                builder.addOption(opt);
+            }
+        }
+        if (StringUtils.isNotBlank(fieldAnno.optionsURL())) {
+            builder.setOptionsURL(fieldAnno.optionsURL());
         }
         return builder.build();
     }

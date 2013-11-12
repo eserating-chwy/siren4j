@@ -41,6 +41,18 @@ public class LinkBuilder extends BaseBuilder<Link> {
         return new LinkBuilder();
     }
 
+    /**
+     * Set the component class of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param componentClass may be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
+    public LinkBuilder setComponentClass(String... componentClass) {
+        addStep("setComponentClass", new Object[] { componentClass }, new Class<?>[] {String[].class});
+        return this;
+    }
+
     public LinkBuilder setRelationship(String... rel) {
         if(ComponentUtils.isStringArrayEmpty(rel)) {
             throw new IllegalArgumentException("rel cannot be null or empty. Required property.");

@@ -50,6 +50,19 @@ public class ActionBuilder extends BaseBuilder<Action> {
     public static ActionBuilder newInstance() {
         return new ActionBuilder();
     }
+
+    /**
+     * Set the component class of the entity to be built. This method can be called many times
+     * but only the value of the last call is used in the built entity. This is an optional property as specified
+     * by the Siren specification.
+     * @param componentClass may be <code>null</code> or empty.
+     * @return <code>this</code> builder, never <code>null</code>.
+     */
+    public ActionBuilder setComponentClass(String... componentClass) {
+        addStep("setComponentClass", new Object[] { componentClass }, new Class<?>[] {String[].class});
+        return this;
+    }
+
     /**
      * Sets an actions name value.
      * @param name cannot be <code>null</code> or empty.
@@ -60,11 +73,6 @@ public class ActionBuilder extends BaseBuilder<Action> {
             throw new IllegalArgumentException("name cannot be null or empty.");
         }
         addStep("setName", new Object[] { name });
-        return this;
-    }
-
-    public ActionBuilder setActionClass(String... actionClass) {
-        addStep("setActionClass", new Object[] { actionClass }, new Class<?>[] {String[].class});
         return this;
     }
 

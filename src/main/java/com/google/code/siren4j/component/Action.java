@@ -33,22 +33,14 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
  * Represents a Siren Action. Actions show available behaviors an entity exposes.
  */
 @JsonDeserialize(as = ActionImpl.class)
-public interface Action {
+public interface Action extends Component{
     
     /**
      * A string that identifies the action to be performed. (Required).
      * @return never <code>null</code> or empty.
      */
     public String getName();
-    
-    /**
-     * Describes the nature of an action based on the current representation. 
-     * Possible values are implementation-dependent and should be documented. 
-     * (Optional).
-     * @return an array of strings, may be <code>null</code> or empty.
-     */
-    public String[] getActionClass();
-    
+
     /**
      * An enumerated attribute mapping to a protocol method. 
      * For HTTP, these values may be GET, PUT, POST, DELETE, or PATCH. Defaults

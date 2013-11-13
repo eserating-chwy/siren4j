@@ -14,6 +14,7 @@ import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
+import com.google.code.siren4j.annotations.Siren4JOptionData;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
@@ -27,7 +28,12 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
         @Siren4JActionField(name = "hasoptions", type = "checkbox", required = true,
                 options = {
                         @Siren4JFieldOption(title = "option1", value = "foo"),
-                        @Siren4JFieldOption(title = "option2", value = "foo2", optionDefault = true)
+                        @Siren4JFieldOption(title = "option2", value = "foo2", optionDefault = true,
+                           data = {
+                                   @Siren4JOptionData(key = "key1", value = "value1"),
+                                   @Siren4JOptionData(key = "key2", value = "value2")
+                           }
+                        )
                 }),
         @Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250) }) })
 public class Course extends BasePojo {

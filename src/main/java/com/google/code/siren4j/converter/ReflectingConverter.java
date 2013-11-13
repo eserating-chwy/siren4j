@@ -47,6 +47,7 @@ import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
+import com.google.code.siren4j.annotations.Siren4JOptionData;
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.Action;
@@ -507,7 +508,7 @@ public class ReflectingConverter implements ResourceConverter {
         if (entity != null && ArrayUtils.isNotEmpty(entity.links())) {
             for (Siren4JLink l : entity.links()) {
                 if(evaluateConditional(l.condition(), context)) {
-                    links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                    links.put(ArrayUtils.toString(l.rel()), annotationToLink(l, context));
                 }
             }
         }
@@ -516,7 +517,7 @@ public class ReflectingConverter implements ResourceConverter {
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.links())) {
                 for (Siren4JLink l : subentity.links()) {
                     if(evaluateConditional(l.condition(), context)) {
-                        links.put(ArrayUtils.toString(l.rel()), annotationToLink(l));
+                        links.put(ArrayUtils.toString(l.rel()), annotationToLink(l, context));
                     }
                 }
             }
@@ -554,7 +555,7 @@ public class ReflectingConverter implements ResourceConverter {
         if (entity != null && ArrayUtils.isNotEmpty(entity.actions())) {
             for (Siren4JAction a : entity.actions()) {
                 if(evaluateConditional(a.condition(), context)) {
-                    actions.put(a.name(), annotationToAction(a));
+                    actions.put(a.name(), annotationToAction(a, context));
                 }
             }
         }
@@ -563,7 +564,7 @@ public class ReflectingConverter implements ResourceConverter {
             if (subentity != null && ArrayUtils.isNotEmpty(subentity.actions())) {
                 for (Siren4JAction a : subentity.actions()) {
                     if(evaluateConditional(a.condition(), context)) {
-                        actions.put(a.name(), annotationToAction(a));
+                        actions.put(a.name(), annotationToAction(a, context));
                     }
                 }
             }
@@ -645,7 +646,7 @@ public class ReflectingConverter implements ResourceConverter {
      * assumed not <code>null</code>.
      * @return new link, never <code>null</code>.
      */
-    private Link annotationToLink(Siren4JLink linkAnno) {
+    private Link annotationToLink(Siren4JLink linkAnno, EntityContext context) {
         LinkBuilder builder = LinkBuilder.newInstance().setRelationship(linkAnno.rel()).setHref(linkAnno.href());
         if(StringUtils.isNotBlank(linkAnno.title())) {
             builder.setTitle(linkAnno.title());
@@ -664,7 +665,7 @@ public class ReflectingConverter implements ResourceConverter {
      * assumed not <code>null</code>.
      * @return new action, never <code>null</code>.
      */
-    private Action annotationToAction(Siren4JAction actionAnno) {
+    private Action annotationToAction(Siren4JAction actionAnno, EntityContext context) throws Siren4JException {
         ActionBuilder builder = ActionBuilder.newInstance();
         builder.setName(actionAnno.name()).setHref(actionAnno.href()).setMethod(actionAnno.method());
         if (ArrayUtils.isNotEmpty(actionAnno.actionClass())) {
@@ -678,7 +679,7 @@ public class ReflectingConverter implements ResourceConverter {
         }
         if (ArrayUtils.isNotEmpty(actionAnno.fields())) {
             for (Siren4JActionField f : actionAnno.fields()) {
-                builder.addField(annotationToField(f));
+                builder.addField(annotationToField(f, context));
             }
         }
         return builder.build();
@@ -691,7 +692,8 @@ public class ReflectingConverter implements ResourceConverter {
      * assumed not <code>null</code>.
      * @return new field, never <code>null</code>.
      */
-    private com.google.code.siren4j.component.Field annotationToField(Siren4JActionField fieldAnno) {
+    private com.google.code.siren4j.component.Field annotationToField(Siren4JActionField fieldAnno, EntityContext context)
+            throws Siren4JException {
         FieldBuilder builder = FieldBuilder.newInstance();
         builder.setName(fieldAnno.name());
         if (ArrayUtils.isNotEmpty(fieldAnno.fieldClass())) {
@@ -731,11 +733,16 @@ public class ReflectingConverter implements ResourceConverter {
                     opt.setValue(optAnno.value());
                 }
                 opt.setOptionDefault(optAnno.optionDefault());
+                if(ArrayUtils.isNotEmpty(optAnno.data())) {
+                   for(Siren4JOptionData data : optAnno.data()) {
+                      opt.putData(data.key(), data.value());
+                   }
+                }
                 builder.addOption(opt);
             }
         }
         if (StringUtils.isNotBlank(fieldAnno.optionsURL())) {
-            builder.setOptionsURL(fieldAnno.optionsURL());
+            builder.setOptionsURL(resolveUri(fieldAnno.optionsURL(), context));
         }
         if (StringUtils.isNotBlank(fieldAnno.placeHolder())) {
             builder.setPlaceholder(fieldAnno.placeHolder());
@@ -797,7 +804,8 @@ public class ReflectingConverter implements ResourceConverter {
      * Determine entity class by first using the name set on the Siren entity and then if not found using the actual class
      * name, though it is preferable to use the first option to not tie to a language specific class.
      * 
-     * @param clazz
+     * @param obj
+     * @param name
      * @return
      */
     public String[] getEntityClass(Object obj, String name) {

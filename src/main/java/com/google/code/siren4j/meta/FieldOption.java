@@ -18,16 +18,33 @@
  *********************************************************************************************/
 package com.google.code.siren4j.meta;
 
+import java.util.HashMap;
+import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * FieldOption object
+ * Field option is used to provide a list of choices available for a field that the client can  use to set the
+ * field value.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class FieldOption {
+
+    /**
+     * The title is the display string that can be displayed. (Optional)
+     */
     private String title;
+
+    /**
+     * The value for this option. (Optional if title or data are not null)
+     */
     private String value;
+
+    /**
+     * Extra meta data that may be useful for the client to use or display to make the right choice for this field.
+     * (Optional)
+     */
+    private Map<String, String> data;
     @JsonProperty(value = "default")
     private boolean optionDefault;
 
@@ -35,13 +52,22 @@ public class FieldOption {
     }
 
     public FieldOption(String title, String value, boolean optionDefault) {
+        this(title, value, optionDefault, null);
+    }
+
+    public FieldOption(String title, String value, boolean optionDefault, Map<String, String> data) {
         this.title = title;
         this.value = value;
         this.optionDefault = optionDefault;
+        this.data = data;
     }
 
     public FieldOption(String title, String value) {
        this(title, value, false);
+    }
+
+    public FieldOption(String title, String value, Map<String, String> data) {
+        this(title, value, false, data);
     }
 
     public String getTitle() {
@@ -66,5 +92,20 @@ public class FieldOption {
 
     public void setOptionDefault(boolean optionDefault) {
         this.optionDefault = optionDefault;
+    }
+
+    public Map<String, String> getData() {
+        return data;
+    }
+
+    public void setData(Map<String, String> data) {
+        this.data = data;
+    }
+
+    public void putData(String key, String value) {
+        if(data == null) {
+            data = new HashMap<String, String>();
+        }
+        data.put(key, value);
     }
 }

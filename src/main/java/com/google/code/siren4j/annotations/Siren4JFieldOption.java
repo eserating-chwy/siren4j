@@ -45,6 +45,7 @@ import java.lang.annotation.Target;
  *          <tr><td>title</td><td>no</td><td>The display name for the option</td></tr>
  *          <tr><td>value</td><td>no</td><td>The options value</td></tr>
  *          <tr><td>optionDefault</td><td>no</td><td>Flag to indicate this is the default option, defaults to false.</td></tr>
+ *          <tr><td>data</td><td>no</td><td>One or more {@link Siren4JOptionData} annotation</td></tr>
  *       </tbody>
  *     </table>
  *
@@ -59,4 +60,5 @@ public @interface Siren4JFieldOption {
     String title() default "";
     String value() default "";
     boolean optionDefault() default false;
+    Siren4JOptionData[] data() default {};
 }

@@ -23,6 +23,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.builder;
 
+import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.component.Field;
@@ -74,6 +75,10 @@ public class FieldBuilder extends BaseBuilder<Field> {
 
     public FieldBuilder addOption(String title, String value, boolean isDefault) {
         return addOption(new FieldOption(title, value, isDefault));
+    }
+
+    public FieldBuilder addOption(String title, String value, boolean isDefault, Map<String, String> data) {
+        return addOption(new FieldOption(title, value, isDefault, data));
     }
 
     public FieldBuilder setOptionsURL(String url) {

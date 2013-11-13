@@ -188,7 +188,6 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
         }
     }
 
-    @Override
     public String getOptionsURL() {
         return optionsURL;
     }

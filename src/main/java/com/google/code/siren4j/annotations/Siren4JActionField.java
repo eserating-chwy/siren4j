@@ -47,7 +47,9 @@ import java.lang.annotation.Target;
  *          <tr><td>maxLength</td><td>no</td><td>Validation for maximum string length.</td></tr>
  *          <tr><td>step</td><td>no</td><td>The step attribute indicates the granularity that is
  *           expected (and required) of the value, by limiting the allowed values. Type must equal 'number'</td></tr>
- *          <tr><td>options</td><td>no</td><td>One or more {@link Siren4JFieldOption} annotation</td></tr>
+ *          <tr><td>placeHolder</td><td>no</td><td>The placeholder attribute specifies a short hint that describes the expected value
+ * of an input field (e.g. a sample value or a short description of the expected format).</td></tr>
+            <tr><td>options</td><td>no</td><td>One or more {@link Siren4JFieldOption} annotation</td></tr>
  *          <tr><td>optionsURL</td><td>no</td><td>URL that points to web resource that return options.</td></tr>
  *       </tbody>
  *     </table>
@@ -86,7 +88,9 @@ public @interface Siren4JActionField {
 
     int step() default -1;
 
-    Siren4JFieldOption[] options() default {};
+    String placeHolder() default "";
+	
+	Siren4JFieldOption[] options() default {};
 
     String optionsURL() default "";
 }

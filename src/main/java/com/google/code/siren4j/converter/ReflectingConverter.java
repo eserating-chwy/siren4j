@@ -737,6 +737,9 @@ public class ReflectingConverter implements ResourceConverter {
         if (StringUtils.isNotBlank(fieldAnno.optionsURL())) {
             builder.setOptionsURL(fieldAnno.optionsURL());
         }
+        if (StringUtils.isNotBlank(fieldAnno.placeHolder())) {
+            builder.setPlaceholder(fieldAnno.placeHolder());
+        }
         return builder.build();
     }
 

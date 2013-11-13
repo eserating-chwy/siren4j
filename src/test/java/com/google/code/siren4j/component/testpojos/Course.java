@@ -31,7 +31,7 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
                         @Siren4JFieldOption(title = "option2", value = "foo2", optionDefault = true,
                            data = {
                                    @Siren4JOptionData(key = "key1", value = "value1"),
-                                   @Siren4JOptionData(key = "key2", value = "value2")
+                                   @Siren4JOptionData(key = "key2", value = "{courseid}")
                            }
                         )
                 }),

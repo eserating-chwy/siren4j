@@ -420,12 +420,7 @@ public class ReflectingConverter implements ResourceConverter {
             }
         }
         if (resolvedUri == null) {
-            // First resolve parents
-            resolvedUri = ReflectionUtils.replaceFieldTokens(
-                context.getParentObject(), rawUri, context.getParentFieldInfo(), true);
-            // Now resolve others
-            resolvedUri = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(
-                context.getCurrentObject(), resolvedUri, context.getCurrentFieldInfo(), false));
+            resolvedUri = handleTokenReplacement(rawUri, context);
         }
         if(fullyQualified && StringUtils.isNotBlank(baseUri) 
             && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
@@ -435,6 +430,24 @@ public class ReflectingConverter implements ResourceConverter {
            resolvedUri = sb.toString();
         }
         return resolvedUri;
+    }
+
+    /**
+     * Helper method to do token replacement for strings.
+     * @param str
+     * @param context
+     * @return
+     * @throws Siren4JException
+     */
+    private String handleTokenReplacement(String str, EntityContext context) throws Siren4JException {
+        String result = "";
+        // First resolve parents
+        result = ReflectionUtils.replaceFieldTokens(
+                context.getParentObject(), str, context.getParentFieldInfo(), true);
+        // Now resolve others
+        result = ReflectionUtils.flattenReservedTokens(ReflectionUtils.replaceFieldTokens(
+                context.getCurrentObject(), result, context.getCurrentFieldInfo(), false));
+        return result;
     }
     
     /**
@@ -735,7 +748,7 @@ public class ReflectingConverter implements ResourceConverter {
                 opt.setOptionDefault(optAnno.optionDefault());
                 if(ArrayUtils.isNotEmpty(optAnno.data())) {
                    for(Siren4JOptionData data : optAnno.data()) {
-                      opt.putData(data.key(), data.value());
+                      opt.putData(data.key(), handleTokenReplacement(data.value(), context));
                    }
                 }
                 builder.addOption(opt);

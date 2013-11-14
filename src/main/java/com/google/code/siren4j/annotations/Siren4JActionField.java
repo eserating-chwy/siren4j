@@ -90,7 +90,7 @@ public @interface Siren4JActionField {
 
     String placeHolder() default "";
 	
-	Siren4JFieldOption[] options() default {};
+    Siren4JFieldOption[] options() default {};
 
     String optionsURL() default "";
 }

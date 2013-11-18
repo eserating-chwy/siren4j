@@ -734,7 +734,7 @@ public class ReflectingConverter implements ResourceConverter {
             builder.setType(FieldType.valueOf(fieldAnno.type().toUpperCase()));
         }
         if (StringUtils.isNotBlank(fieldAnno.value())) {
-            builder.setValue(fieldAnno.value());
+            builder.setValue(handleTokenReplacement(fieldAnno.value(), context));
         }
         if (ArrayUtils.isNotEmpty(fieldAnno.options())) {
             for(Siren4JFieldOption optAnno : fieldAnno.options()) {
@@ -743,7 +743,7 @@ public class ReflectingConverter implements ResourceConverter {
                     opt.setTitle(optAnno.title());
                 }
                 if(StringUtils.isNotBlank(optAnno.value())) {
-                    opt.setValue(optAnno.value());
+                    opt.setValue(handleTokenReplacement(optAnno.value(), context));
                 }
                 opt.setOptionDefault(optAnno.optionDefault());
                 if(ArrayUtils.isNotEmpty(optAnno.data())) {

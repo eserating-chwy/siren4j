@@ -826,9 +826,11 @@ public class ReflectingConverter implements ResourceConverter {
         List<String> entityClass = new ArrayList<String>();
         entityClass.add(StringUtils.defaultString(name, clazz.getName()));
         if (obj instanceof CollectionResource) {
-            entityClass.add("collection");
+            String tag = getCollectionClassTag();
+            if(StringUtils.isNotBlank(tag)) {
+                entityClass.add(tag);
+            }
         }
-
         return entityClass.toArray(new String[] {});
     }
 
@@ -851,6 +853,16 @@ public class ReflectingConverter implements ResourceConverter {
         } catch (Exception e) {
             throw new Siren4JRuntimeException(e);
         }
+    }
+
+    /**
+     * Returns the collection tag to be added to a collection's class. The
+     * default is 'collection'. Can be overridden to change tag or set to return
+     * <code>null</code> or empty in which case no tag will be added.
+     * @return may be <code>null</code> or empty.
+     */
+    protected String getCollectionClassTag() {
+        return "collection";
     }
 
 }

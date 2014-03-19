@@ -122,6 +122,7 @@ public class ResourceRegistryImpl implements ResourceRegistry {
      * @param packages
      * @throws Siren4JException
      */
+    @SuppressWarnings("deprecation")
     private void init(String... packages) throws Siren4JException{
         LOG.info("Siren4J scanning classpath for resource entries...");
         Reflections reflections = null;
@@ -148,6 +149,10 @@ public class ResourceRegistryImpl implements ResourceRegistry {
         for(Class<?> c : types) {
             Siren4JEntity anno = c.getAnnotation(Siren4JEntity.class);
             putEntry(StringUtils.defaultIfEmpty(anno.name(), c.getName()), c, false);
+            // Always add the class name as an entry in the index if it does not already exist.
+            if(!containsEntityEntry(c.getName())) {
+                putEntry(StringUtils.defaultIfEmpty(c.getName(), c.getName()), c, false);
+            }
         }
     }
     

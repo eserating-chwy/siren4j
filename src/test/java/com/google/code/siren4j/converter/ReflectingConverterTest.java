@@ -28,6 +28,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -50,10 +51,12 @@ import com.google.code.siren4j.component.testpojos.Author;
 import com.google.code.siren4j.component.testpojos.Comment;
 import com.google.code.siren4j.component.testpojos.Comment.Status;
 import com.google.code.siren4j.component.testpojos.Course;
+import com.google.code.siren4j.component.testpojos.EntityClassAndNamePojo;
 import com.google.code.siren4j.component.testpojos.ExtendedNormalPojo;
 import com.google.code.siren4j.component.testpojos.NoNamePojo;
 import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Video.Rating;
+import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.util.ComponentUtils;
 
@@ -300,6 +303,12 @@ public class ReflectingConverterTest {
         Entity ent = ReflectingConverter.newInstance().toEntity(course);
         System.out.println("testBaseUri: ");
         System.out.println(ent.toString());
+    }
+    
+    @Test(expected = Siren4JRuntimeException.class)
+    public void testUsingBothEntityClassAndName() throws Exception {
+        EntityClassAndNamePojo pojo = new EntityClassAndNamePojo();        
+        Entity ent = ReflectingConverter.newInstance().toEntity(pojo);        
     }
 
     private Course getTestCourse() {

@@ -22,8 +22,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.google.code.siren4j.component.impl.ActionImpl.Method;
 /**
  * Used with {@link Siren4JAction} and {@link Siren4JLink} to allow logic to include/exclude an
  * action or link based on the value in a field or returned from a method.

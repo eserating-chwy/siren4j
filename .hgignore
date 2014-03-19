@@ -7,3 +7,4 @@ glob:.idea/*
 glob:build/*
 glob:atlassian-ide-plugin.xml
 glob:*.iml
+glob:release.properties

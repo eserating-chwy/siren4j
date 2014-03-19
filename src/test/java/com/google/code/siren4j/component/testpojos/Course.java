@@ -1,5 +1,6 @@
 package com.google.code.siren4j.component.testpojos;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -19,7 +20,7 @@ import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
 
 @Siren4JInclude(Include.NON_NULL)
-@Siren4JEntity(name = "course", uri = "/courses/{courseid}", links = { @Siren4JLink(rel = "reviews",
+@Siren4JEntity(entityClass = {"course", "test"}, uri = "/courses/{courseid}", links = { @Siren4JLink(rel = "reviews",
     href = "/courseReviews/course/{courseid}") }, actions = { @Siren4JAction(name = "addReview", method = Method.POST,
        href = "/courseReviews/course/{courseid}", 
        condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD), 
@@ -46,6 +47,7 @@ public class Course extends BasePojo {
     private String title;
     private String description;
     private String type;
+    private BigDecimal cost;
 
     @Siren4JSubEntity(rel = "lastComment")
     private Comment lastComment;
@@ -185,6 +187,16 @@ public class Course extends BasePojo {
     public void setBasicCollection(Collection<Integer> basicCollection) {
         this.basicCollection = basicCollection;
     }
+
+    public BigDecimal getCost() {
+        return cost;
+    }
+
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
+    
+    
     
     
 

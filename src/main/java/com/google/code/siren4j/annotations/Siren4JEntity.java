@@ -54,8 +54,10 @@ import java.lang.annotation.Target;
  *          <tr><th>Property</th><th>Required</th><th>Description</th></tr>
  *       </thead>
  *       <tbody>
- *          <tr><td>name</td><td>no</td><td>Unique name for the entity.</td></tr>
+ *          <tr><td>name</td><td>no</td><td>Unique name for the entity. (Deprecated) use entity class.</td></tr>
+ *          <tr><td>entityClass</td><td>no</td><td>Array of strings to classify the entity.</td></tr>
  *          <tr><td>uri</td><td>no</td><td>URI pattern to self</td></tr>
+ *          <tr><td>suppressClassProperty</td><td>no</td><td>If true, will suppress the $class property which is used for deserialization.</td></tr>
  *          <tr><td>links</td><td>no</td><td>One or more {@link Siren4JLink} annotations.</td></tr>
  *          <tr><td>actions</td><td>no</td><td>One or more {@link Siren4JAction} annotations.</td></tr>
  *       </tbody>
@@ -69,11 +71,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JEntity {
+    @Deprecated
     String name() default "";
-
+    
+    String[] entityClass() default {};
+    
+    boolean suppressClassProperty() default false;
+    
     String uri() default "";
 
     Siren4JLink[] links() default {};
 
     Siren4JAction[] actions() default {};
+    
 }

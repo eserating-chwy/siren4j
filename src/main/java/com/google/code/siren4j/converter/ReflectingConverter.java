@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.code.siren4j.Siren4J;
 import com.google.code.siren4j.annotations.Siren4JAction;
 import com.google.code.siren4j.annotations.Siren4JActionField;
 import com.google.code.siren4j.annotations.Siren4JCondition;
@@ -133,15 +134,20 @@ public class ReflectingConverter implements ResourceConverter {
         }
         Resource resource = null;
         if (entity != null) {
+            String sirenClass = (String)entity.getProperties().get(Siren4J.CLASS_RESERVED_PROPERTY);
             String[] eClass = entity.getComponentClass();
-            if (eClass == null || eClass.length == 0) {
+            if (StringUtils.isBlank(sirenClass) && (eClass == null || eClass.length == 0)) {
                 throw new Siren4JConversionException(
                     "No entity class defined, won't be able to match to Java class. Can't go on.");
             }
-            if (!registry.containsEntityEntry(eClass[0])) {
+            
+            if(StringUtils.isBlank(sirenClass)) {
+                sirenClass = eClass[0];
+            }
+            if (!registry.containsEntityEntry(sirenClass)) {
                 throw new Siren4JConversionException("No matching resource found in the registry. Can't go on.");
             }
-            Class<?> clazz = registry.getClassByEntityName(eClass[0]);
+            Class<?> clazz = registry.getClassByEntityName(sirenClass);
             List<ReflectedInfo> fieldInfo = ReflectionUtils.getExposedFieldInfo(clazz);
             Object obj = null;
             try {
@@ -171,6 +177,9 @@ public class ReflectingConverter implements ResourceConverter {
     private void handleSetProperties(Object obj, Class<?> clazz, Entity entity, List<ReflectedInfo> fieldInfo) throws Siren4JConversionException{
         if(!MapUtils.isEmpty(entity.getProperties())) {
             for(String key :entity.getProperties().keySet()) {
+                if(key.startsWith(Siren4J.CLASS_RESERVED_PROPERTY)) {
+                    continue;
+                }
                 ReflectedInfo info = ReflectionUtils.getFieldInfoByEffectiveName(fieldInfo, key);
                 if(info != null) {
                     Object val = entity.getProperties().get(key);
@@ -263,6 +272,7 @@ public class ReflectingConverter implements ResourceConverter {
      * @return the entity created from the resource. May be <code>null</code>.
      * @throws Exception
      */
+    @SuppressWarnings("deprecation")
     private Entity toEntity(Object obj, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo)
         throws Siren4JException {
         if (obj == null) {
@@ -271,6 +281,7 @@ public class ReflectingConverter implements ResourceConverter {
         
         EntityBuilder builder = EntityBuilder.newInstance();
         Class<?> clazz = obj.getClass();
+        
         boolean embeddedLink = false;
         List<ReflectedInfo> fieldInfo = ReflectionUtils.getExposedFieldInfo(clazz);
         EntityContext context = new EntityContextImpl(obj, fieldInfo, parentField, parentObj, parentFieldInfo);
@@ -289,11 +300,19 @@ public class ReflectingConverter implements ResourceConverter {
                 resource.setFullyQualifiedLinks(parentResource.isFullyQualifiedLinks());
             }
         }
-
+        boolean suppressClass = false;
         Siren4JEntity entityAnno = (Siren4JEntity) clazz.getAnnotation(Siren4JEntity.class);
+        if(StringUtils.isNotBlank(entityAnno.name()) && ArrayUtils.isNotEmpty(entityAnno.entityClass())) {
+            throw new Siren4JRuntimeException("Must only use one of 'name' or 'entityClass', not both."); 
+        }
         if (entityAnno != null) {
             cname = StringUtils.defaultIfEmpty(entityAnno.name(), cname);
             uri = StringUtils.defaultIfEmpty(entityAnno.uri(), uri);
+            suppressClass = entityAnno.suppressClassProperty();
+        }
+        
+        if(!suppressClass) {
+            builder.addProperty(Siren4J.CLASS_RESERVED_PROPERTY, clazz.getName());
         }
 
         Siren4JSubEntity parentSubAnno = null;
@@ -315,7 +334,7 @@ public class ReflectingConverter implements ResourceConverter {
         // Handle uri overriding or token replacement
         String resolvedUri = resolveUri(uri, context);
 
-        builder.setComponentClass(getEntityClass(obj, cname));
+        builder.setComponentClass(getEntityClass(obj, cname, entityAnno));
         if (parentSubAnno != null) {
             String fname = parentField != null ? parentField.getName() : cname;
             builder.setRelationship(ComponentUtils.isStringArrayEmpty(parentSubAnno.rel()) 
@@ -821,8 +840,14 @@ public class ReflectingConverter implements ResourceConverter {
      * @param name
      * @return
      */
-    public String[] getEntityClass(Object obj, String name) {
+    public String[] getEntityClass(Object obj, String name, Siren4JEntity entityAnno) {
         Class<?> clazz = obj.getClass();
+        String[] compClass = entityAnno.entityClass();
+        //If entity class specified then use it.
+        if(!ArrayUtils.isEmpty(compClass)) {
+            return compClass;    
+        }
+        //Else use name or class.
         List<String> entityClass = new ArrayList<String>();
         entityClass.add(StringUtils.defaultString(name, clazz.getName()));
         if (obj instanceof CollectionResource) {

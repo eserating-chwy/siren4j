@@ -22,6 +22,8 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -69,7 +71,7 @@ public class ReflectionUtils {
         double.class, Double.class, float.class, Float.class, short.class, Short.class, byte.class, Byte.class,
         boolean.class, Boolean.class, String.class, Date.class, int[].class, Integer[].class, long[].class, Long[].class,
         double[].class, Double[].class, float[].class, Float[].class, short[].class, Short[].class, byte[].class, Byte[].class,
-        boolean[].class, Boolean[].class, String[].class, Date[].class };
+        boolean[].class, Boolean[].class, String[].class, Date[].class, BigDecimal.class, BigInteger.class };
 
     private ReflectionUtils() {
 

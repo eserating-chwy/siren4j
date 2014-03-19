@@ -19,6 +19,11 @@ public class Siren4J {
      */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     
+    /**
+     * Constant for the reserved property that contains the entity class.
+     */
+    public static final String CLASS_RESERVED_PROPERTY = "$siren4j.class";
+    
     
     
 

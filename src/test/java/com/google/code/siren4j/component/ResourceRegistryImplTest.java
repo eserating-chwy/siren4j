@@ -13,7 +13,7 @@ public class ResourceRegistryImplTest {
     @Test
     public void testResourceRegistryScanning() throws Exception {
         ResourceRegistry registry = ResourceRegistryImpl.newInstance("com.google.code.siren4j");
-        assertNotNull(registry.getClassByEntityName("course"));
+        assertNotNull(registry.getClassByEntityName("foo"));
         assertNotNull(registry.getClassByEntityName("courseComment"));
         assertNotNull(registry.getClassByEntityName("author"));
         
@@ -26,7 +26,7 @@ public class ResourceRegistryImplTest {
     public void testOverwriteNotAllowed() throws Exception {
         ResourceRegistry registry = ResourceRegistryImpl.newInstance("com.google.code.siren4j");
         try {
-            registry.putEntry("course", Author.class, false);
+            registry.putEntry("foo", Author.class, false);
             fail("Expected Siren4JException for attempt at adding duplicate.");
         } catch (Exception e) {
             
@@ -36,8 +36,8 @@ public class ResourceRegistryImplTest {
     @Test
     public void testAddNewEntry() throws Exception {
         ResourceRegistry registry = ResourceRegistryImpl.newInstance("com.google.code.siren4j");
-        registry.putEntry("foo", Course.class, false);
-        Class<?> result = registry.getClassByEntityName("foo");
+        registry.putEntry("zoo", Course.class, false);
+        Class<?> result = registry.getClassByEntityName("zoo");
         assertEquals(Course.class, result);
     }
     

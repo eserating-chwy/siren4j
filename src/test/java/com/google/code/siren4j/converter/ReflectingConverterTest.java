@@ -54,6 +54,7 @@ import com.google.code.siren4j.component.testpojos.Course;
 import com.google.code.siren4j.component.testpojos.EntityClassAndNamePojo;
 import com.google.code.siren4j.component.testpojos.ExtendedNormalPojo;
 import com.google.code.siren4j.component.testpojos.NoNamePojo;
+import com.google.code.siren4j.component.testpojos.OverriddenCollection;
 import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
@@ -74,6 +75,12 @@ public class ReflectingConverterTest {
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         Entity back = mapper.readValue(there, Entity.class);
         assertEquals(ent.toString(), back.toString());
+    }
+    
+    @Test
+    public void testOverriddenCollectionToEntity() throws Exception {
+        OverriddenCollection resource = new OverriddenCollection();
+        Entity ent = ReflectingConverter.newInstance().toEntity(resource);
     }
     
     @Test

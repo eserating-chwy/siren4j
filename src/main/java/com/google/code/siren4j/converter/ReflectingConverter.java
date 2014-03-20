@@ -302,7 +302,7 @@ public class ReflectingConverter implements ResourceConverter {
         }
         boolean suppressClass = false;
         Siren4JEntity entityAnno = (Siren4JEntity) clazz.getAnnotation(Siren4JEntity.class);
-        if(StringUtils.isNotBlank(entityAnno.name()) && ArrayUtils.isNotEmpty(entityAnno.entityClass())) {
+        if(entityAnno != null && (StringUtils.isNotBlank(entityAnno.name()) && ArrayUtils.isNotEmpty(entityAnno.entityClass()))) {
             throw new Siren4JRuntimeException("Must only use one of 'name' or 'entityClass', not both."); 
         }
         if (entityAnno != null) {
@@ -842,9 +842,9 @@ public class ReflectingConverter implements ResourceConverter {
      */
     public String[] getEntityClass(Object obj, String name, Siren4JEntity entityAnno) {
         Class<?> clazz = obj.getClass();
-        String[] compClass = entityAnno.entityClass();
+        String[] compClass = entityAnno == null ? null : entityAnno.entityClass();
         //If entity class specified then use it.
-        if(!ArrayUtils.isEmpty(compClass)) {
+        if(compClass != null && !ArrayUtils.isEmpty(compClass)) {
             return compClass;    
         }
         //Else use name or class.

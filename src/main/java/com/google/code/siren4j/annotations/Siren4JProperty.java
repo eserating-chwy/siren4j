@@ -23,7 +23,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 /**
- * Annotation to add meta to a field and change serialization behavior.
+ * Annotation to add meta to a field and change serialization behavior. Adding this to a field
+ * will force it to be treated as a simple property, which if done for complex object may result in 
+ * undesired and Siren violating representations.
  * 
  * <pre>
  * <code>
@@ -48,6 +50,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JProperty {
-    String name();    
+    String name() default "";    
 
 }

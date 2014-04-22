@@ -93,7 +93,11 @@ public class ReflectingConverterTest {
         refs.add("Foo");
         refs.add("Bar");
         pojo.setRefs(refs);
-        
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("key1", "dog");
+        map.put("key2", "cat");
+        pojo.setTestMap(map);
+         
         Entity ent = ReflectingConverter.newInstance().toEntity(pojo);
         System.out.println("Normal pojo:");
         System.out.println(ent.toString());

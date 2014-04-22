@@ -290,16 +290,8 @@ public class ReflectingConverter implements ResourceConverter {
         String uri = "";
         
         //Propagate baseUri and fullyQualified setting from parent if needed
-        if(parentObj != null && parentObj instanceof Resource && obj instanceof Resource) {
-            Resource parentResource = (Resource)parentObj;
-            Resource resource = (Resource)obj;
-            if(StringUtils.isNotBlank(parentResource.getBaseUri())){
-                resource.setBaseUri(parentResource.getBaseUri());
-            }
-            if(parentResource.isFullyQualifiedLinks() != null) {
-                resource.setFullyQualifiedLinks(parentResource.isFullyQualifiedLinks());
-            }
-        }
+        propagateBaseUriAndQualifiedSetting(obj, parentObj);
+        
         boolean suppressClass = false;
         Siren4JEntity entityAnno = (Siren4JEntity) clazz.getAnnotation(Siren4JEntity.class);
         if(entityAnno != null && (StringUtils.isNotBlank(entityAnno.name()) && ArrayUtils.isNotEmpty(entityAnno.entityClass()))) {
@@ -361,7 +353,7 @@ public class ReflectingConverter implements ResourceConverter {
                             // Override field name from annotation
                             propName = propAnno.name();
                         }
-                        builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));
+                        handleAddProperty(builder, propName, currentField, obj);
                     }
                 } else {
                     // Sub Entity
@@ -381,6 +373,31 @@ public class ReflectingConverter implements ResourceConverter {
             handleEntityActions(builder, context);
         }
         return builder.build();
+    }
+
+    private void propagateBaseUriAndQualifiedSetting(Object obj, Object parentObj) {
+        if(parentObj != null && parentObj instanceof Resource && obj instanceof Resource) {
+            Resource parentResource = (Resource)parentObj;
+            Resource resource = (Resource)obj;
+            if(StringUtils.isNotBlank(parentResource.getBaseUri())){
+                resource.setBaseUri(parentResource.getBaseUri());
+            }
+            if(parentResource.isFullyQualifiedLinks() != null) {
+                resource.setFullyQualifiedLinks(parentResource.isFullyQualifiedLinks());
+            }
+        }
+    }
+    
+    /**
+     * Handles adding a property to an entity builder. Called by {@link ReflectingConverter#toEntity(Object, Field, Object, List)}
+     * for each property found.
+     * @param builder
+     * @param propName
+     * @param currentField
+     * @param obj
+     */
+    protected void handleAddProperty(EntityBuilder builder, String propName, Field currentField, Object obj) {
+        builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));    
     }
 
     /**

@@ -2,6 +2,7 @@ package com.google.code.siren4j.component.testpojos;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 public class NormalPojo {
    
@@ -9,6 +10,7 @@ public class NormalPojo {
     private String name;
     private Date lastmodify;
     private Collection<String> refs;
+    private Map<String, String> testMap;
     public int getId() {
         return id;
     }
@@ -33,6 +35,14 @@ public class NormalPojo {
     public void setRefs(Collection<String> refs) {
         this.refs = refs;
     }
+    public Map<String, String> getTestMap() {
+        return testMap;
+    }
+    public void setTestMap(Map<String, String> testMap) {
+        this.testMap = testMap;
+    }
+    
+    
     
     
 

@@ -499,10 +499,10 @@ public class ReflectionUtils {
     }
     
     @SuppressWarnings("rawtypes")
-    public static boolean isSirenProperty(Class<?> type, Object obj) {
+    public static boolean isSirenProperty(Class<?> type, Object obj, Field field) {
         boolean isProp = false;
         
-        Siren4JProperty anno = type.getAnnotation(Siren4JProperty.class);
+        Siren4JProperty anno = field.getAnnotation(Siren4JProperty.class);
         if(anno != null || type.isEnum()) {
             isProp = true;
         } else if(ArrayUtils.contains(propertyTypes, type)) {

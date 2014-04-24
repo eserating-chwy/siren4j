@@ -19,8 +19,10 @@
 package com.google.code.siren4j.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,13 +31,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
+import com.google.code.siren4j.component.impl.ActionImpl;
 import com.google.code.siren4j.component.testpojos.Course;
+import com.google.code.siren4j.component.testpojos.NormalPojo;
+import com.google.code.siren4j.component.testpojos.Review;
 import com.google.code.siren4j.converter.ReflectedInfo;
 
 public class ReflectionUtilsTest {
-	
-	
-	
+		
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
@@ -75,17 +78,26 @@ public class ReflectionUtilsTest {
 	}
 	
 	@Test
-	public void testIsSirenProperty() {
-	    assertTrue(ReflectionUtils.isSirenProperty(String.class, null));
-	    assertTrue(ReflectionUtils.isSirenProperty(String[].class, null));
-	    assertTrue(ReflectionUtils.isSirenProperty(int.class, null));
-            assertTrue(ReflectionUtils.isSirenProperty(int[].class, null));
-            assertTrue(ReflectionUtils.isSirenProperty(Integer.class, null));
-            assertTrue(ReflectionUtils.isSirenProperty(Integer[].class, null));
+	public void testIsSirenProperty() throws Exception{
+	    
+	    Field field = ActionImpl.class.getDeclaredField("name");
+	    assertTrue(ReflectionUtils.isSirenProperty(String.class, null, field));
+	    assertTrue(ReflectionUtils.isSirenProperty(String[].class, null, field));
+	    assertTrue(ReflectionUtils.isSirenProperty(int.class, null, field));
+            assertTrue(ReflectionUtils.isSirenProperty(int[].class, null, field));
+            assertTrue(ReflectionUtils.isSirenProperty(Integer.class, null, field));
+            assertTrue(ReflectionUtils.isSirenProperty(Integer[].class, null, field));
             List<String> coll = new ArrayList<String>();
             coll.add("String");
-            assertTrue(ReflectionUtils.isSirenProperty(List.class, coll));
+            assertTrue(ReflectionUtils.isSirenProperty(List.class, coll, field));
+            assertFalse(ReflectionUtils.isSirenProperty(NormalPojo.class, null, field));
+            
+            Field fieldWithPropAnno = Review.class.getDeclaredField("body");
+            assertTrue(ReflectionUtils.isSirenProperty(NormalPojo.class, null, fieldWithPropAnno));
+            
 	    
 	}
+	
+	
 
 }

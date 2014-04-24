@@ -77,14 +77,14 @@ public class ReflectingConverter implements ResourceConverter {
     private ResourceRegistry registry;
 
     /**
-     * Private ctor to prevent direct instantiation.
+     * Protected ctor to prevent direct instantiation.
      * @throws Siren4JException 
      */
-    private ReflectingConverter() throws Siren4JException {
+    protected ReflectingConverter() throws Siren4JException {
        this(null);
     }
     
-    private ReflectingConverter(ResourceRegistry registry) throws Siren4JException {
+    protected ReflectingConverter(ResourceRegistry registry) throws Siren4JException {
         this.registry = registry;
     }
 
@@ -273,7 +273,7 @@ public class ReflectingConverter implements ResourceConverter {
      * @throws Exception
      */
     @SuppressWarnings("deprecation")
-    private Entity toEntity(Object obj, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo)
+    protected Entity toEntity(Object obj, Field parentField, Object parentObj, List<ReflectedInfo> parentFieldInfo)
         throws Siren4JException {
         if (obj == null) {
             return null;
@@ -343,7 +343,7 @@ public class ReflectingConverter implements ResourceConverter {
                 } catch (Exception e) {
                    throw new Siren4JConversionException(e);
                 }
-                if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal)) {
+                if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal, currentField)) {
                     // Property
                     if (!skipProperty(obj, currentField)) {
                         String propName = currentField.getName();

@@ -1,10 +1,8 @@
-glob:bin/*
-glob:target/*
-glob:.settings/*
-glob:.project
-glob:.classpath
-glob:.idea/*
-glob:build/*
-glob:atlassian-ide-plugin.xml
+bin
+target
+.settings
+.project
+.classpath
+.idea
 glob:*.iml
-glob:release.properties
+glob:atlassian-ide-plugin.xml

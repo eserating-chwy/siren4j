@@ -1,0 +1,36 @@
+
+
+Collections:
+========================================
+
+Collection:
+---------------------------------
+{
+   "class": ["collectionName", "collection"],
+   "rel": ["collection"],
+   "entities": [
+      {
+         "rel": ["collectionEntry"],
+         "properties": {
+            "index": 0,
+            "value": "something"
+         }
+      }
+   ]
+}
+
+Map:
+-----------------------------------
+{
+   "class": ["mapName", "map"],
+   "rel": ["map"],
+   "entities": [
+      {
+         "rel": ["mapEntry"],
+         "properties": {
+            "key": "somekey",
+            "value": "something"
+         }
+      }
+   ]
+}

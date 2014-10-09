@@ -37,6 +37,7 @@ import java.lang.annotation.Target;
  *       </thead>
  *       <tbody>
  *          <tr><td>name</td><td>yes</td><td>Unique name for the field.</td></tr>
+ *          <tr><td>title</td><td>no</td><td>The display name for the field</td></tr>
  *          <tr><td>fieldClass</td><td>no</td><td>Array of string to classify the field.</td></tr>
  *          <tr><td>type</td><td>no</td><td>HTML5 form field type, see below for allowed types.</td></tr>
  *          <tr><td>value</td><td>no</td><td>Default value for the field.</td></tr>
@@ -55,8 +56,8 @@ import java.lang.annotation.Target;
  *     </table>
  *     
  *     <b>Allowed HTML5 field types:</b>
- *     hidden, text, search, tel, url, email, password, datetime, date, date, month, week, time, datetime-local,
- *     number, range, color, checkbox, radio, file, submit, image, reset, button
+ *     hidden, text, search, tel, url, email, password, datetime, date, month, week, time, datetime-local,
+ *     number, range, color, checkbox, radio, file, submit, image, button
  *     
  *     This annotation is used within a {@link Siren4JAction}.
  *     
@@ -69,6 +70,8 @@ import java.lang.annotation.Target;
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JActionField {
     String name();
+
+    String title() default "";
 
     String[] fieldClass() default {};
 

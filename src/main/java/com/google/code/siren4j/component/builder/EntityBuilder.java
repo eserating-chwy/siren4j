@@ -85,6 +85,16 @@ public class EntityBuilder extends BaseBuilder<Entity> {
     }
 
     /**
+     * Retrieve a new instance of an <code>EntityBuilder</code>. Added to allow this method to be used with
+     * static method importing.
+     * @since 1.1.0
+     * @return new instance, never <code>null</code>.
+     */
+    public static EntityBuilder createEntityBuilder() {
+        return newInstance();
+    }
+
+    /**
      * Set the component class of the entity to be built. This method can be called many times
      * but only the value of the last call is used in the built entity. This is an optional property as specified
      * by the Siren specification.
@@ -117,6 +127,11 @@ public class EntityBuilder extends BaseBuilder<Entity> {
      */
     public EntityBuilder setTitle(String title) {
         addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
+        return this;
+    }
+
+    public EntityBuilder setType(String type) {
+        addStep("setType", new Object[] { type }, new Class<?>[] {String.class});
         return this;
     }
     

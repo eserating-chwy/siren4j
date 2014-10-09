@@ -39,6 +39,7 @@ import java.lang.annotation.Target;
  *       <tbody>
  *          <tr><td>rel</td><td>yes</td><td>Array of string to indicate link relationship to its parent.</td></tr>
  *          <tr><td>href</td><td>yes</td><td>The links URI pattern.</td></tr>
+ *          <tr><td>type</td><td>no</td><td>Defines media type of the linked resource, per Web Linking (RFC5899)</td></tr>
  *          <tr><td>title</td><td>no</td><td>Display text for the link</td></tr>
  *          <tr><td>linkClass</td><td>no</td><td>Array of string to classify the link.</td></tr>
  *          <tr><td>condition</td><td>no</td><td>A condition must evaluate to <code>true</code> for the action to be rendered.</td></tr>
@@ -54,8 +55,8 @@ import java.lang.annotation.Target;
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JLink {
     String[] rel();
-
     String href();
+    String type() default "";
     String title() default "";
     String[] linkClass() default {};
     Siren4JCondition condition() default @Siren4JCondition(name="null");

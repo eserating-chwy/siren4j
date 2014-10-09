@@ -40,6 +40,8 @@ public class LinkImpl extends Siren4JBaseComponent implements Link {
     
     private String title;
 
+    private String type;
+
     /*
      * (non-Javadoc)
      * 
@@ -75,6 +77,14 @@ public class LinkImpl extends Siren4JBaseComponent implements Link {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

@@ -75,6 +75,16 @@ public class ReflectingConverter implements ResourceConverter {
     private ResourceRegistry registry;
 
     /**
+     * @since 1.1.0
+     */
+    private boolean errorOnMissingProperty;
+
+    /**
+     * @since 1.1.0
+     */
+    private boolean suppressBaseUriOnFullyQualified;
+
+    /**
      * Protected ctor to prevent direct instantiation.
      *
      * @throws Siren4JException
@@ -107,9 +117,39 @@ public class ReflectingConverter implements ResourceConverter {
         return new ReflectingConverter(null);
     }
 
-    /* (non-Javadoc)
-     * @see com.google.code.siren4j.converter.ResourceConverter#toEntity(java.lang.Object)
+    /**
+     * When set to <code>true</code> an exception will be thrown for missing target properties when
+     * converting from entity to object. Default is <code>false</code>
      */
+    public boolean isErrorOnMissingProperty() {
+        return errorOnMissingProperty;
+    }
+
+    /**
+     * When set to <code>true</code> an exception will be thrown for missing target properties when
+     * converting from entity to object.
+     * @param errorOnMissingProperty
+     */
+    public void setErrorOnMissingProperty(boolean errorOnMissingProperty) {
+        this.errorOnMissingProperty = errorOnMissingProperty;
+    }
+
+    public boolean isSuppressBaseUriOnFullyQualified() {
+        return suppressBaseUriOnFullyQualified;
+    }
+
+    /**
+     * If set to <code>true</code> will suppress base uri links if resource has fully qualified links set. Default
+     * is <code>false</code>.
+     * @param suppressBaseUriOnFullyQualified
+     */
+    public void setSuppressBaseUriOnFullyQualified(boolean suppressBaseUriOnFullyQualified) {
+        this.suppressBaseUriOnFullyQualified = suppressBaseUriOnFullyQualified;
+    }
+
+    /* (non-Javadoc)
+             * @see com.google.code.siren4j.converter.ResourceConverter#toEntity(java.lang.Object)
+             */
     public Entity toEntity(Object obj) {
         try {
             return toEntity(obj, null, null, null);
@@ -118,10 +158,14 @@ public class ReflectingConverter implements ResourceConverter {
         }
     }
 
+    public Object toObject(Entity entity) {
+        return toObject(entity, null);
+    }
+
     /* (non-Javadoc)
      * @see com.google.code.siren4j.converter.ResourceConverter#toObject(com.google.code.siren4j.component.Entity)
      */
-    public Object toObject(Entity entity) {
+    public Object toObject(Entity entity, Class targetClass) {
         if (registry == null) {
             LOG.warn("No ResourceRegistry set, using default which "
                     + "will scan the entire classpath. It would be better to set your own registry that filters by packages.");
@@ -133,7 +177,9 @@ public class ReflectingConverter implements ResourceConverter {
         }
         Resource resource = null;
         if (entity != null) {
-            String sirenClass = (String) entity.getProperties().get(Siren4J.CLASS_RESERVED_PROPERTY);
+            String sirenClass = targetClass != null
+                    ? targetClass.getName()
+                    : (String) entity.getProperties().get(Siren4J.CLASS_RESERVED_PROPERTY);
             String[] eClass = entity.getComponentClass();
             if (StringUtils.isBlank(sirenClass) && (eClass == null || eClass.length == 0)) {
                 throw new Siren4JConversionException(
@@ -192,7 +238,7 @@ public class ReflectingConverter implements ResourceConverter {
                     } catch (Siren4JException e) {
                         throw new Siren4JConversionException(e);
                     }
-                } else if (!(obj instanceof Collection && key.equals("size"))) {
+                } else if (isErrorOnMissingProperty() && !(obj instanceof Collection && key.equals("size"))) {
                     //Houston we have a problem!!
                     throw new Siren4JConversionException(
                             "Unable to find field: " + key + " for class: " + clazz.getName());
@@ -371,7 +417,12 @@ public class ReflectingConverter implements ResourceConverter {
                 builder.addProperty("size", ((Collection<?>) obj).size());
             }
             if (obj instanceof Resource) {
-                handleBaseUriLink(builder, ((Resource) obj).getBaseUri());
+                Resource res  = (Resource)obj;
+                boolean skipBaseUri = isSuppressBaseUriOnFullyQualified() && (res.isFullyQualifiedLinks()
+                        && res.getBaseUri() != null);
+                if(!skipBaseUri) {
+                    handleBaseUriLink(builder, res.getBaseUri());
+                }
             }
             handleSelfLink(builder, resolvedUri);
             handleEntityLinks(builder, context);

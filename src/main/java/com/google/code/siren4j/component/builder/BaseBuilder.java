@@ -180,7 +180,7 @@ public abstract class BaseBuilder<T> {
     
     /**
      * Attempts to determine the argument types based on the passed in object instances.
-     * @param argsassumed not <code>null</code>.
+     * @param args assumed not <code>null</code>.
      * @return array of argument types.
      */
     private Class<?>[] getTypes(Object[] args) {

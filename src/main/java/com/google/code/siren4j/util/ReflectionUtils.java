@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -513,8 +514,8 @@ public class ReflectionUtils {
                 Collection.class))) {
             //Try to determine value type
             if (!((Collection) obj).isEmpty()) {
-                Object first = ((Collection) obj).iterator().next();
-                if (ArrayUtils.contains(propertyTypes, first.getClass())) {
+                Object first = findFirstNonNull(((Collection) obj).iterator());
+                if (first == null || ArrayUtils.contains(propertyTypes, first.getClass())) {
                     isProp = true;
                 }
             }
@@ -523,15 +524,32 @@ public class ReflectionUtils {
                 Map.class))) {
             //Try to determine value types of key and value
             if (!((Map) obj).isEmpty()) {
-                Object firstKey = ((Map) obj).keySet().iterator().next();
-                Object firstVal = ((Map) obj).get(firstKey);
-                if (ArrayUtils.contains(propertyTypes, firstKey.getClass())
-                        && ArrayUtils.contains(propertyTypes, firstVal.getClass())) {
+                Object firstKey = findFirstNonNull(((Map) obj).keySet().iterator());
+                Object firstVal = findFirstNonNull(((Map) obj).entrySet().iterator());
+                if ((firstKey == null || ArrayUtils.contains(propertyTypes, firstKey.getClass()))
+                        && (firstVal == null || ArrayUtils.contains(propertyTypes, firstVal.getClass()))) {
                     isProp = true;
                 }
             }
         }
         return isProp;
+    }
+
+    /**
+     * Finds first non <code>null</code> value in an iterator, does return <code>null</code> if
+     * no non <code>null</code> values are found.
+     * @param it
+     * @return
+     */
+    private static Object findFirstNonNull(Iterator it) {
+        Object result = null;
+        while(it.hasNext()) {
+            result = it.next();
+            if(result != null) {
+                break;
+            }
+        }
+        return result;
     }
 
 }

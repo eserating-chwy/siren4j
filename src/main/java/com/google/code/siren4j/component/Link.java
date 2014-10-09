@@ -68,4 +68,11 @@ public interface Link extends Component{
      */
     public String getTitle();
 
+    /**
+     * Defines media type of the linked resource, per Web Linking (RFC5899). Optional.
+     * @since 1.1.0
+     * @return the media type, may be <code>null</code> or empty.
+     */
+    public String getType();
+
 }

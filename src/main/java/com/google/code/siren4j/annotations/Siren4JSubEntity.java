@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * Annotation to define a sub-entity. Typically used on a resource collection field, but can also be on
  * a single type entity field. Values set in this annotation override values set by the entities own
- * {@link Siren4JEnity} annotation.
+ * {@link Siren4JEntity} annotation.
  * 
  * <pre>
  * <code>
@@ -41,6 +41,7 @@ import java.lang.annotation.Target;
  *       <tbody>
  *          <tr><td>rel</td><td>no</td><td>Array of strings that indicate the subentites relationship with its parent.</td></tr>
  *          <tr><td>uri</td><td>no</td><td>URI pattern to self</td></tr>
+ *          <tr><td>type</td><td>no</td><td>Defines media type of the linked resource, per Web Linking (RFC5899). Used if embedded link.</td></tr>
  *          <tr><td>links</td><td>no</td><td>One or more {@link Siren4JLink} annotations.</td></tr>
  *          <tr><td>actions</td><td>no</td><td>One or more {@link Siren4JAction} annotations.</td></tr>
  *          <tr><td>embeddedLink</td><td>no</td><td>Marks the subentity as an embedded link, defaults to false.</td></tr>
@@ -57,12 +58,9 @@ import java.lang.annotation.Target;
 @com.google.code.siren4j.annotations.Siren4JAnnotation
 public @interface Siren4JSubEntity {
     String[] rel() default {};
-
     String uri() default "";
-
+    String type() default "";
     boolean embeddedLink() default false;
-
     Siren4JLink[] links() default {};
-
     Siren4JAction[] actions() default {};
 }

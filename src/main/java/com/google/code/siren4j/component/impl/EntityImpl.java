@@ -54,6 +54,8 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     private List<Action> actions;
 
+    private String type;
+
     /*
      * (non-Javadoc)
      * 
@@ -135,6 +137,14 @@ public class EntityImpl extends Siren4JBaseComponent implements Entity {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

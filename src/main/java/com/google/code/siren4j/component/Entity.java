@@ -87,6 +87,14 @@ public interface Entity extends Component{
      * @return may be <code>null</code> or empty.
      */
     public String getHref();
+
+    /**
+     * Defines media type of the linked resource, per Web Linking (RFC5899). Optional.
+     * Only needed for embedded link.
+     * @since 1.1.0
+     * @return the media type, may be <code>null</code> or empty.
+     */
+    public String getType();
     
     /**
      * Defines the relationship of the sub-entity to its parent, per Web Linking (RFC5899). 

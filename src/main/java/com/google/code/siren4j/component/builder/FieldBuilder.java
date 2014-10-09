@@ -38,8 +38,22 @@ public class FieldBuilder extends BaseBuilder<Field> {
 
     }
 
+    /**
+     * Retrieve a new instance of an <code>FieldBuilder</code>.
+     * @return new instance, never <code>null</code>.
+     */
     public static FieldBuilder newInstance() {
         return new FieldBuilder();
+    }
+
+    /**
+     * Retrieve a new instance of an <code>FieldBuilder</code>. Added to allow this method to be used with
+     * static method importing.
+     * @since 1.1.0
+     * @return new instance, never <code>null</code>.
+     */
+    public static FieldBuilder createFieldBuilder() {
+        return newInstance();
     }
 
     /**

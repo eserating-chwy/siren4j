@@ -37,8 +37,22 @@ public class LinkBuilder extends BaseBuilder<Link> {
 
     }
 
+    /**
+     * Retrieve a new instance of an <code>LinkBuilder</code>.
+     * @return new instance, never <code>null</code>.
+     */
     public static LinkBuilder newInstance() {
         return new LinkBuilder();
+    }
+
+    /**
+     * Retrieve a new instance of an <code>LinkBuilder</code>. Added to allow this method to be used with
+     * static method importing.
+     * @since 1.1.0
+     * @return new instance, never <code>null</code>.
+     */
+    public static LinkBuilder createLinkBuilder() {
+        return newInstance();
     }
 
     /**
@@ -71,6 +85,11 @@ public class LinkBuilder extends BaseBuilder<Link> {
     
     public LinkBuilder setTitle(String title) {
         addStep("setTitle", new Object[] { title }, new Class<?>[] {String.class});
+        return this;
+    }
+
+    public LinkBuilder setType(String type) {
+        addStep("setType", new Object[] { type }, new Class<?>[] {String.class});
         return this;
     }
 

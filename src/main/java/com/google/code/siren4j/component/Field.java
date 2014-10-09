@@ -39,6 +39,12 @@ public interface Field extends Component {
      * @return never <code>null</code> or empty.
      */
     public String getName();
+
+    /**
+     * Textual annotation of a field. Clients may use this as a label. Optional.
+     * @return may be <code>null</code> or empty.
+     */
+    public String getTitle();
     
     /**
      * The field type. This may include any of the input types specified in HTML5.

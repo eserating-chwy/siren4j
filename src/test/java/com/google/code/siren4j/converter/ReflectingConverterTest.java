@@ -23,22 +23,14 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Ignore;
 import org.junit.Test;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.code.siren4j.component.Action;
@@ -55,11 +47,19 @@ import com.google.code.siren4j.component.testpojos.EntityClassAndNamePojo;
 import com.google.code.siren4j.component.testpojos.ExtendedNormalPojo;
 import com.google.code.siren4j.component.testpojos.NoNamePojo;
 import com.google.code.siren4j.component.testpojos.OverriddenCollection;
+import com.google.code.siren4j.component.testpojos.ResourceA;
+import com.google.code.siren4j.component.testpojos.ResourceB;
 import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Video.Rating;
+import com.google.code.siren4j.error.Siren4JConversionException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.util.ComponentUtils;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ReflectingConverterTest {
 
@@ -320,6 +320,35 @@ public class ReflectingConverterTest {
     public void testUsingBothEntityClassAndName() throws Exception {
         EntityClassAndNamePojo pojo = new EntityClassAndNamePojo();        
         Entity ent = ReflectingConverter.newInstance().toEntity(pojo);        
+    }
+
+    @Test
+    public void testToObjectWithMissingProperties() throws Exception {
+
+        ResourceA resourceA = new ResourceA();
+        resourceA.setProp1("Foo");
+        resourceA.setProp2("Bar");
+        ReflectingConverter converter = (ReflectingConverter)ReflectingConverter.newInstance();
+        converter.setErrorOnMissingProperty(false);
+        Entity ent = converter.toEntity(resourceA);
+        System.out.println(ent.toString());
+        ResourceB resourceB = (ResourceB)converter.toObject(ent, ResourceB.class);
+        assertNotNull(resourceB);
+        assertEquals("Foo", resourceB.getProp1());
+
+    }
+
+    @Test(expected = Siren4JConversionException.class)
+    public void testToObjectWithMissingPropertiesShouldThrowException() throws Exception {
+
+        ResourceA resourceA = new ResourceA();
+        resourceA.setProp1("Foo");
+        resourceA.setProp2("Bar");
+        ReflectingConverter converter = (ReflectingConverter)ReflectingConverter.newInstance();
+        converter.setErrorOnMissingProperty(true);
+        Entity ent = converter.toEntity(resourceA);
+        System.out.println(ent.toString());
+        ResourceB resourceB = (ResourceB)converter.toObject(ent, ResourceB.class);
     }
 
     private Course getTestCourse() {

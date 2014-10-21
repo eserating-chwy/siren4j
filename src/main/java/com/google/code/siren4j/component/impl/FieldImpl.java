@@ -24,12 +24,11 @@
 package com.google.code.siren4j.component.impl;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Field;
@@ -67,6 +66,8 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
     private Integer step;
     
     private String placeholder;
+
+    private Map<String, String> metaData;
 
     /*
      * (non-Javadoc)
@@ -194,6 +195,14 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     public void setOptionsURL(String optionsURL) {
         this.optionsURL = optionsURL;
+    }
+
+    public Map<String, String> getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(Map<String, String> metaData) {
+        this.metaData = metaData;
     }
 
     @Override

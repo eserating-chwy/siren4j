@@ -52,6 +52,7 @@ import java.lang.annotation.Target;
  * of an input field (e.g. a sample value or a short description of the expected format).</td></tr>
             <tr><td>options</td><td>no</td><td>One or more {@link Siren4JFieldOption} annotation</td></tr>
  *          <tr><td>optionsURL</td><td>no</td><td>URL that points to web resource that return options.</td></tr>
+ *          <tr><td>metaData</td><td>no</td><td>One or more {@link Siren4JMetaData} annotation</td></tr>
  *       </tbody>
  *     </table>
  *     
@@ -96,4 +97,6 @@ public @interface Siren4JActionField {
     Siren4JFieldOption[] options() default {};
 
     String optionsURL() default "";
+
+    Siren4JMetaData[] metaData() default {};
 }

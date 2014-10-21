@@ -24,6 +24,7 @@
 package com.google.code.siren4j.component;
 
 import java.util.List;
+import java.util.Map;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.code.siren4j.component.impl.FieldImpl;
 import com.google.code.siren4j.meta.FieldOption;
@@ -127,5 +128,11 @@ public interface Field extends Component {
      * @return  may be <code>null</code> or empty.
      */
     public String getOptionsURL();
+
+    /**
+     * Extra meta data for the field. Helps with possible customizations.
+     * @return
+     */
+    public Map<String, String> getMetaData();
 
 }

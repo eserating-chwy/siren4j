@@ -46,6 +46,7 @@ import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
+import com.google.code.siren4j.annotations.Siren4JMetaData;
 import com.google.code.siren4j.annotations.Siren4JOptionData;
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
@@ -798,6 +799,9 @@ public class ReflectingConverter implements ResourceConverter {
         if (ArrayUtils.isNotEmpty(fieldAnno.fieldClass())) {
             builder.setComponentClass(fieldAnno.fieldClass());
         }
+        if(StringUtils.isNotBlank(fieldAnno.title())) {
+            builder.setTitle(fieldAnno.title());
+        }
         if (fieldAnno.max() > -1) {
             builder.setMax(fieldAnno.max());
         }
@@ -845,6 +849,13 @@ public class ReflectingConverter implements ResourceConverter {
         }
         if (StringUtils.isNotBlank(fieldAnno.placeHolder())) {
             builder.setPlaceholder(fieldAnno.placeHolder());
+        }
+        if(ArrayUtils.isNotEmpty(fieldAnno.metaData())) {
+            Map<String, String> metaData = new HashMap();
+            for(Siren4JMetaData mdAnno : fieldAnno.metaData()) {
+                metaData.put(mdAnno.key(), mdAnno.value());
+            }
+            builder.setMetaData(metaData);
         }
         return builder.build();
     }

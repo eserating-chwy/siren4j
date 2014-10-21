@@ -15,6 +15,7 @@ import com.google.code.siren4j.annotations.Siren4JFieldOption;
 import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
 import com.google.code.siren4j.annotations.Siren4JLink;
+import com.google.code.siren4j.annotations.Siren4JMetaData;
 import com.google.code.siren4j.annotations.Siren4JOptionData;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
@@ -25,7 +26,12 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
        href = "/courseReviews/course/{courseid}", 
        condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD), 
        fields = {
-        @Siren4JActionField(name = "userid", type = "text", required = true),
+        @Siren4JActionField(name = "userid", type = "text", required = true,
+                fieldClass = {"classifyMe", "classifyMeAgain"},
+                metaData = {
+                        @Siren4JMetaData(key = "extraStuff1", value = "hello"),
+                        @Siren4JMetaData(key = "extraStuff2", value = "more stuff")
+                }),
         @Siren4JActionField(name = "hasoptions", type = "checkbox", required = true,
                 options = {
                         @Siren4JFieldOption(title = "option1", value = "foo"),

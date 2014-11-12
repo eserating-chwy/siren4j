@@ -238,7 +238,8 @@ public class ReflectionUtils {
                     if (index.containsKey(fieldname)) {
                         Field f = index.get(fieldname);
                         if (ArrayUtils.contains(propertyTypes, f.getType())) {
-                            str = str.replaceAll("\\{" + key + "\\}", "" + f.get(obj));
+                            Object theObject = f.get(obj);
+                            str = str.replaceAll("\\{" + key + "\\}", "" + (theObject == null ? "" : theObject.toString()));
                         }
                     }
                 }
@@ -541,6 +542,7 @@ public class ReflectionUtils {
      * @param it
      * @return
      */
+    @SuppressWarnings("rawtypes")
     private static Object findFirstNonNull(Iterator it) {
         Object result = null;
         while(it.hasNext()) {

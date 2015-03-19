@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import com.google.code.siren4j.annotations.Siren4JProperty;
@@ -239,7 +241,8 @@ public class ReflectionUtils {
                         Field f = index.get(fieldname);
                         if (ArrayUtils.contains(propertyTypes, f.getType())) {
                             Object theObject = f.get(obj);
-                            str = str.replaceAll("\\{" + key + "\\}", "" + (theObject == null ? "" : theObject.toString()));
+                            str = str.replaceAll("\\{" + key + "\\}", 
+                                Matcher.quoteReplacement("" + (theObject == null ? "" : theObject.toString())));
                         }
                     }
                 }

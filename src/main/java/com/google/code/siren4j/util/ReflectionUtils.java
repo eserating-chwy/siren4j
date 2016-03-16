@@ -239,10 +239,16 @@ public class ReflectionUtils {
                     String fieldname = key.startsWith("parent.") ? key.substring(7) : key;
                     if (index.containsKey(fieldname)) {
                         Field f = index.get(fieldname);
-                        if (ArrayUtils.contains(propertyTypes, f.getType())) {
+                        if (f.getType().isEnum() || ArrayUtils.contains(propertyTypes, f.getType())) {
+                            String replacement = "";
                             Object theObject = f.get(obj);
-                            str = str.replaceAll("\\{" + key + "\\}", 
-                                Matcher.quoteReplacement("" + (theObject == null ? "" : theObject.toString())));
+                            if(f.getType().isEnum()) {
+                                replacement = theObject == null ? "" : ((Enum)theObject).name();
+                            } else {
+                                replacement = theObject == null ? "" : theObject.toString();
+                            }
+                            str = str.replaceAll("\\{" + key + "\\}",
+                                Matcher.quoteReplacement("" + replacement));
                         }
                     }
                 }

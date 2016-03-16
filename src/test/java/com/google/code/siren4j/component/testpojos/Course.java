@@ -42,7 +42,7 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
                            }
                         )
                 }),
-        @Siren4JActionField(name = "body", type = "text", required = true, maxLength = 250) }) })
+        @Siren4JActionField(name = "body", type = "text", required = true, value="{myenum}", maxLength = 250) }) })
 public class Course extends BasePojo {
 
     public Course() {
@@ -54,6 +54,7 @@ public class Course extends BasePojo {
     private String description;
     private String type;
     private BigDecimal cost;
+    private MYENUM myenum = MYENUM.ENUM_VALUE2;
 
     @Siren4JSubEntity(rel = "lastComment")
     private Comment lastComment;
@@ -201,9 +202,19 @@ public class Course extends BasePojo {
     public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
-    
-    
-    
+
+    public MYENUM getMyenum() {
+        return myenum;
+    }
+
+    public void setMyenum(MYENUM myenum) {
+        this.myenum = myenum;
+    }
+
+    public enum MYENUM {
+        ENUM_VALUE1,
+        ENUM_VALUE2
+    }
     
 
 }

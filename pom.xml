@@ -29,9 +29,9 @@
     </license>
   </licenses>
   <scm>
-    <url>https://code.google.com/p/siren4j/</url>
-    <connection>scm:hg:https://code.google.com/p/siren4j/</connection>
-    <developerConnection>scm:hg:https://code.google.com/p/siren4j/</developerConnection>
+    <url>https://github.com/eserating/siren4j.git</url>
+    <connection>scm:git:https://github.com/eserating/siren4j.git</connection>
+    <developerConnection>scm:git:https://github.com/eserating/siren4j.git</developerConnection>
     <tag>siren4j-1.0.12</tag>
   </scm>
   <developers>
@@ -44,16 +44,11 @@
   </developers>
   
   <issueManagement>
-    <url>https://code.google.com/p/siren4j/issues/list</url>
-    <system>Googlecode</system>
+    <url>https://github.com/eserating/siren4j/issues</url>
+    <system>Github</system>
   </issueManagement>  
   
   <dependencies>
-   <!-- <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <version>1.17.1</version>
-    </dependency>-->
       <dependency>
           <groupId>javax.ws.rs</groupId>
           <artifactId>javax.ws.rs-api</artifactId>

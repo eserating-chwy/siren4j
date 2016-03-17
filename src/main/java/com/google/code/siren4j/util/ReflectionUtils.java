@@ -537,7 +537,7 @@ public class ReflectionUtils {
                 Object firstKey = findFirstNonNull(((Map) obj).keySet().iterator());
                 Object firstVal = findFirstNonNull(((Map) obj).entrySet().iterator());
                 if ((firstKey == null || ArrayUtils.contains(propertyTypes, firstKey.getClass()))
-                        && (firstVal == null || ArrayUtils.contains(propertyTypes, firstVal.getClass()))) {
+                        && (firstVal == null || ArrayUtils.contains(propertyTypes, ((HashMap.Entry)firstVal).getValue().getClass()))) {
                     isProp = true;
                 }
             }

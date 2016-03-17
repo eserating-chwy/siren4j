@@ -84,7 +84,7 @@ public class Course extends BasePojo {
     private String[] allowedTypes = new String[]{"Online", "Classroom", "External"};
     
     private Collection<Integer> basicCollection;
-    
+
     private Map<String, Boolean> boolMap;
 
     public Map<String, Boolean> getBoolMap() {

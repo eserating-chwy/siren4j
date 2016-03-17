@@ -1,15 +1,14 @@
 package com.google.code.siren4j.jackson;
 
-import java.text.SimpleDateFormat;
-
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.ext.Provider;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.jaxrs.cfg.Annotations;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.code.siren4j.Siren4J;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.ext.Provider;
+import java.text.SimpleDateFormat;
 
 @Provider
 public class MessageBodyWriterJSON extends JacksonJsonProvider {

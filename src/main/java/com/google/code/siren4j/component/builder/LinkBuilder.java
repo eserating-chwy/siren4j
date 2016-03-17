@@ -23,13 +23,13 @@
  *********************************************************************************************/
 package com.google.code.siren4j.component.builder;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.component.Link;
 import com.google.code.siren4j.component.impl.LinkImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 import com.google.code.siren4j.util.ComponentUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class LinkBuilder extends BaseBuilder<Link> {
 

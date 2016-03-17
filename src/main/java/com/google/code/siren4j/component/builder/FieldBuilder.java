@@ -24,13 +24,13 @@
 package com.google.code.siren4j.component.builder;
 
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.component.Field;
 import com.google.code.siren4j.component.impl.FieldImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
 import com.google.code.siren4j.meta.FieldOption;
 import com.google.code.siren4j.meta.FieldType;
+import org.apache.commons.lang3.StringUtils;
 
 public class FieldBuilder extends BaseBuilder<Field> {
 

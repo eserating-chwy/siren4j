@@ -37,8 +37,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
@@ -47,6 +45,8 @@ import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class ReflectionUtils {
 

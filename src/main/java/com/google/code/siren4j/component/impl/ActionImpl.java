@@ -25,13 +25,13 @@ package com.google.code.siren4j.component.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Field;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 @JsonInclude(Include.NON_NULL)
 public class ActionImpl extends Siren4JBaseComponent implements Action {

@@ -21,11 +21,11 @@ package com.google.code.siren4j.condition;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.util.ComponentUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class EmptyCondition implements Condition {
 

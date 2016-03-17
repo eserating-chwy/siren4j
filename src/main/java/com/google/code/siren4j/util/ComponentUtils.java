@@ -25,12 +25,12 @@ package com.google.code.siren4j.util;
 
 import java.util.List;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Various utility and helper methods to work with Siren4J components.

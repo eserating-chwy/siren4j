@@ -30,8 +30,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
@@ -41,6 +39,8 @@ import com.google.code.siren4j.component.impl.EmbeddedEntityImpl;
 import com.google.code.siren4j.component.impl.EntityImpl;
 import com.google.code.siren4j.component.impl.LinkImpl;
 import com.google.code.siren4j.error.Siren4JBuilderValidationException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The EntityBuilder allows the construction of an Entity object via a fluent

@@ -28,10 +28,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.util.ReflectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * All Siren4J components should be derived from the <code>BaseBuilder</code> class. This

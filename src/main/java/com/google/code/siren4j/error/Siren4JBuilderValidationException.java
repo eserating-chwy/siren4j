@@ -23,7 +23,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.error;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Siren4JBuilderValidationException extends Siren4JRuntimeException {
 

@@ -1,4 +1,4 @@
-*Current Release is [https://code.google.com/p/siren4j/wiki/CurrentRelease Siren4J-1.1.3]*
+
 
 This is a java library to help with the creation and use of    
 Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more detail on the specification.

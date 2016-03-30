@@ -4,7 +4,7 @@ This is a java library to help with the creation and use of
 Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more detail on the specification.
 
 It contains classes to that represent the Siren components (Entity, Link, Action, Field).
-See: https://code.google.com/p/siren4j/wiki/Siren4JComponents
+See: https://github.com/eserating/siren4j/wiki/Siren4J-Components
 
 These can be easily built with a fluent builder API.
 ```java
@@ -25,7 +25,7 @@ EXAMPLE BUILDER:
        .build();
 ``` 
 
-See: https://code.google.com/p/siren4j/wiki/FluentBuilderAPI
+See: https://github.com/eserating/siren4j/wiki/Fluent-Builder-API
 
 There is also a resource API that simplifies entity creation and management using reflection and annotations.
 
@@ -104,7 +104,7 @@ AND WILL RESULT IN SIREN JSON THAT LOOKS LIKE THIS:
 ```    
 
 
-See: https://code.google.com/p/siren4j/wiki/Siren4JResourceAPI
+See: https://github.com/eserating/siren4j/wiki/Siren4J-Resource-API
 
 [http://wiki.siren4j.googlecode.com/hg/javadoc/index.html JavaDoc]
 

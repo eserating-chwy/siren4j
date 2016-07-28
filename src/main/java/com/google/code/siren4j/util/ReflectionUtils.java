@@ -519,9 +519,7 @@ public class ReflectionUtils {
             isProp = true;
         } else if (ArrayUtils.contains(propertyTypes, type)) {
             isProp = true;
-        } else if (obj != null && (Collection.class.equals(type)
-                || ArrayUtils.contains(type.getInterfaces(),
-                Collection.class))) {
+        } else if (obj != null && Collection.class.isAssignableFrom(type)) {
             //Try to determine value type
             if (!((Collection) obj).isEmpty()) {
                 Object first = findFirstNonNull(((Collection) obj).iterator());
@@ -529,9 +527,7 @@ public class ReflectionUtils {
                     isProp = true;
                 }
             }
-        } else if (obj != null && (Map.class.equals(type)
-                || ArrayUtils.contains(type.getInterfaces(),
-                Map.class))) {
+        } else if (obj != null && Map.class.isAssignableFrom(type)) {
             //Try to determine value types of key and value
             if (!((Map) obj).isEmpty()) {
                 Object firstKey = findFirstNonNull(((Map) obj).keySet().iterator());

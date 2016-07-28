@@ -15,9 +15,18 @@ public class Siren4J {
     
     /**
      * Default date format string used for date serialization.
-     * ISO8601 compliant. <code>yyyy-MM-dd'T'HH:mm:ssZ</code>
+     * <code>yyyy-MM-dd'T'HH:mm:ssZ</code>
+     * 
+     * This is deprecated because it is not strictly ISO compliant, use
+     * {@link Siren4J#ISO8601_DATE_FORMAT} instead. 
      */
+    @Deprecated
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+
+    /**
+     * Correct ISO 8601 date format used for date serialization.
+     */
+    public static final String ISO8601_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
     
     /**
      * Constant for the reserved property that contains the entity class.

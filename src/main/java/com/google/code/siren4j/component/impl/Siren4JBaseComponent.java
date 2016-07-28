@@ -32,7 +32,7 @@ public abstract class Siren4JBaseComponent {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            mapper.setDateFormat(new SimpleDateFormat(Siren4J.DEFAULT_DATE_FORMAT));
+            mapper.setDateFormat(new SimpleDateFormat(Siren4J.ISO8601_DATE_FORMAT));
             out = mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);

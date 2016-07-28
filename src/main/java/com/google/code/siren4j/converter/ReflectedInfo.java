@@ -21,6 +21,8 @@ package com.google.code.siren4j.converter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class ReflectedInfo {
     private Field field;
     private Method getter;
@@ -76,5 +78,10 @@ public class ReflectedInfo {
         return field.equals(obj);
     }
     
-    
+    @Override
+    public String toString() {
+    	return new ToStringBuilder(this)
+    			.append(effectiveName)
+    			.toString();
+    }
 }

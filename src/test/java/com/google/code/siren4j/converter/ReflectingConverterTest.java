@@ -29,6 +29,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
+import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,10 +59,7 @@ import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.util.ComponentUtils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ReflectingConverterTest {
 
@@ -311,11 +311,17 @@ public class ReflectingConverterTest {
         Course course = getTestCourse();
         course.setBaseUri("http://myhost:8080/rest/");
         course.setFullyQualifiedLinks(true);
+        course.setEntityLinks(ImmutableList.of(linkWithCustomUri()));
         Entity ent = ReflectingConverter.newInstance().toEntity(course);
+        assertThat(ComponentUtils.getLinkByRel(ent, "custom-link").getHref(), Matchers.startsWith("custom-scheme://example"));
         System.out.println("testBaseUri: ");
         System.out.println(ent.toString());
     }
-    
+
+    private Link linkWithCustomUri() {
+        return LinkBuilder.createLinkBuilder().setHref("custom-scheme://example.org/resource").setRelationship("custom-link").build();
+    }
+
     @Test(expected = Siren4JRuntimeException.class)
     public void testUsingBothEntityClassAndName() throws Exception {
         EntityClassAndNamePojo pojo = new EntityClassAndNamePojo();        

@@ -30,6 +30,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -72,6 +75,8 @@ import com.google.code.siren4j.util.ReflectionUtils;
 public class ReflectingConverter implements ResourceConverter {
 
     private static Logger LOG = LoggerFactory.getLogger(ReflectingConverter.class);
+
+    private static final Pattern schemePattern = Pattern.compile("\\w[\\w\\d\\+\\-\\.]*:");
 
     private ResourceRegistry registry;
 
@@ -512,13 +517,18 @@ public class ReflectingConverter implements ResourceConverter {
         resolvedUri = handleTokenReplacement(resolvedUri, context);
 
         if (fullyQualified && StringUtils.isNotBlank(baseUri)
-                && !(resolvedUri.startsWith("http://") || (resolvedUri.startsWith("https://")))) {
+                && !isAbsoluteUri(resolvedUri)) {
             StringBuffer sb = new StringBuffer();
             sb.append(baseUri.endsWith("/") ? baseUri.substring(0, baseUri.length() - 1) : baseUri);
             sb.append(resolvedUri.startsWith("/") ? resolvedUri : "/" + resolvedUri);
             resolvedUri = sb.toString();
         }
         return resolvedUri;
+    }
+
+    private boolean isAbsoluteUri(String resolvedUri) {
+        Matcher matcher = schemePattern.matcher(resolvedUri);
+        return matcher.find() && matcher.start() == 0;
     }
 
     /**

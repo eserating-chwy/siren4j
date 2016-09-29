@@ -18,18 +18,21 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
+import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class ReflectedInfo {
-    private Field field;
-    private Method getter;
-    private Method setter;
-    private String effectiveName;
+
+    private final Field field;
+    private final Method getter;
+    private final Method setter;
+    private final String effectiveName;
 
     public ReflectedInfo(Field field, Method getter, Method setter, String effectiveName) {
+        Preconditions.checkNotNull(field);
         this.field = field;
         this.getter = getter;
         this.setter = setter;
@@ -40,32 +43,16 @@ public class ReflectedInfo {
         return field;
     }
 
-    public void setField(Field field) {
-        this.field = field;
-    }
-
     public Method getGetter() {
         return getter;
-    }
-
-    public void setGetter(Method getter) {
-        this.getter = getter;
     }
 
     public Method getSetter() {
         return setter;
     }
 
-    public void setSetter(Method setter) {
-        this.setter = setter;
-    }    
-
     public String getEffectiveName() {
         return effectiveName;
-    }
-
-    public void setEffectiveName(String effectiveName) {
-        this.effectiveName = effectiveName;
     }
 
     @Override

@@ -18,25 +18,6 @@
  *********************************************************************************************/
 package com.google.code.siren4j.util;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
@@ -47,6 +28,17 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
 
 public class ReflectionUtils {
 
@@ -138,16 +130,7 @@ public class ReflectionUtils {
                         if (ReflectionUtils.isGetter(m) && !isIgnored(m)) {
                             Field f = getGetterField(m);
                             if (f != null && !isIgnored(f)) {
-                                f.setAccessible(true);
-                                Siren4JProperty propAnno = f.getAnnotation(Siren4JProperty.class);
-                                String effectiveName = propAnno != null
-                                        ? StringUtils.defaultIfEmpty(propAnno.name(), f.getName())
-                                        : f.getName();
-                                Siren4JSubEntity subAnno = f.getAnnotation(Siren4JSubEntity.class);
-                                if (subAnno != null && !ArrayUtils.isEmpty(subAnno.rel())) {
-                                    effectiveName = subAnno.rel().length == 1 ? subAnno.rel()[0] : ArrayUtils
-                                            .toString(subAnno.rel());
-                                }
+                                String effectiveName = extractEffectiveName(f, f.getName());
                                 exposed.add(
                                         new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName));
                             }
@@ -164,6 +147,20 @@ public class ReflectionUtils {
 
     }
 
+    private static String extractEffectiveName(AccessibleObject accessibleObject, String defaultValue) {
+        accessibleObject.setAccessible(true);
+        Siren4JProperty propAnno = accessibleObject.getAnnotation(Siren4JProperty.class);
+        String effectiveName = propAnno != null
+                ? StringUtils.defaultIfEmpty(propAnno.name(), defaultValue)
+                : defaultValue;
+        Siren4JSubEntity subAnno = accessibleObject.getAnnotation(Siren4JSubEntity.class);
+        if (subAnno != null && !ArrayUtils.isEmpty(subAnno.rel())) {
+            effectiveName = subAnno.rel().length == 1 ? subAnno.rel()[0] : ArrayUtils
+                    .toString(subAnno.rel());
+        }
+        return effectiveName;
+    }
+
     /**
      * Retrieve the setter for the specified class/field if it exists.
      *
@@ -174,8 +171,8 @@ public class ReflectionUtils {
     public static Method getSetter(Class<?> clazz, Field f) {
         Method setter = null;
         for (Method m : clazz.getMethods()) {
-            if (ReflectionUtils.isSetter(m) && m.getName()
-                                                .equals(SETTER_PREFIX + StringUtils.capitalize(f.getName()))) {
+            if (ReflectionUtils.isSetter(m) &&
+                    m.getName().equals(SETTER_PREFIX + StringUtils.capitalize(f.getName()))) {
                 setter = m;
                 break;
             }

@@ -22,6 +22,7 @@ import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.converter.ReflectedInfo;
+import com.google.code.siren4j.converter.ReflectedInfoBuilder;
 import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.common.cache.Cache;
@@ -127,18 +128,43 @@ public class ReflectionUtils {
                 public List<ReflectedInfo> call() throws Exception {
                     List<ReflectedInfo> exposed = new ArrayList<ReflectedInfo>();
                     for (Method m : clazz.getMethods()) {
-                        if (ReflectionUtils.isGetter(m) && !isIgnored(m)) {
+                        if(isIgnored(m)) {
+                            continue;
+                        }
+                        boolean methodIsSirenProperty = m.getAnnotation(Siren4JProperty.class) != null;
+                        String methodAnnotationName = extractEffectiveName(m, null);
+                        if (ReflectionUtils.isGetter(m)) {
                             Field f = getGetterField(m);
-                            if (f != null && !isIgnored(f)) {
-                                String effectiveName = extractEffectiveName(f, f.getName());
-                                exposed.add(
-                                        new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName));
+                            if(f != null && isIgnored(f)) {
+                                continue;
                             }
+                            if (f != null) {
+                                String fieldAnnotationName = extractEffectiveName(f, null);
+                                String effectiveName = (String)findFirstNonNull(
+                                    Arrays.asList(fieldAnnotationName, methodAnnotationName, f.getName()).iterator()
+                                );
+                                exposed.add(
+                                    new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName)
+                                );
+                            } else if(methodIsSirenProperty) {// looks like we have getter not backed by field
+                                exposed.add(
+                                    ReflectedInfoBuilder.aReflectedInfo().
+                                            withGetter(m).
+                                            withEffectiveName(extractEffectiveName(m, stripGetterPrefix(m.getName()))).
+                                                build()
+                                );
+                            }
+                        } else if(methodIsSirenProperty) {
+                            exposed.add(
+                                ReflectedInfoBuilder.aReflectedInfo().
+                                        withGetter(m).
+                                        withEffectiveName(extractEffectiveName(m, m.getName())).
+                                            build()
+                            );
                         }
                     }
                     return exposed;
                 }
-
             });
         } catch (ExecutionException e) {
             throw new Siren4JRuntimeException(e);

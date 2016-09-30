@@ -18,7 +18,7 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Objects;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.lang.reflect.Field;
@@ -32,7 +32,6 @@ public class ReflectedInfo {
     private final String effectiveName;
 
     public ReflectedInfo(Field field, Method getter, Method setter, String effectiveName) {
-        Preconditions.checkNotNull(field);
         this.field = field;
         this.getter = getter;
         this.setter = setter;
@@ -56,15 +55,21 @@ public class ReflectedInfo {
     }
 
     @Override
-    public int hashCode() {
-        return field.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReflectedInfo)) return false;
+        ReflectedInfo that = (ReflectedInfo) o;
+        return Objects.equal(field, that.field) &&
+                Objects.equal(getter, that.getter) &&
+                Objects.equal(setter, that.setter) &&
+                Objects.equal(effectiveName, that.effectiveName);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return field.equals(obj);
+    public int hashCode() {
+        return Objects.hashCode(field, getter, setter, effectiveName);
     }
-    
+
     @Override
     public String toString() {
     	return new ToStringBuilder(this)

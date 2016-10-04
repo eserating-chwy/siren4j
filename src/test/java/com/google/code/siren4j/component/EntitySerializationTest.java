@@ -23,14 +23,16 @@ import com.google.code.siren4j.component.builder.EntityBuilder;
 import com.google.code.siren4j.component.builder.FieldBuilder;
 import com.google.code.siren4j.component.builder.LinkBuilder;
 import com.google.code.siren4j.component.impl.ActionImpl.Method;
+import com.google.code.siren4j.component.testpojos.MethodNotBackedByProperty;
+import com.google.code.siren4j.component.testpojos.MethodNotBackedByPropertyWithOverride;
 import com.google.code.siren4j.component.testpojos.Review;
-import com.google.code.siren4j.component.testpojos.Summary;
 import com.google.code.siren4j.component.testpojos.Video;
 import com.google.code.siren4j.component.testpojos.Video.Rating;
 import com.google.code.siren4j.converter.ReflectingConverter;
 import com.google.code.siren4j.converter.ResourceConverter;
 import com.google.code.siren4j.meta.FieldType;
 import com.google.code.siren4j.resource.CollectionResource;
+import com.google.code.siren4j.util.TestUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -39,8 +41,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import uk.co.datumedge.hamcrest.json.SameJSONAs;
 
 import java.util.*;
+
+import static org.junit.Assert.assertThat;
 
 public class EntitySerializationTest {
 
@@ -58,12 +63,24 @@ public class EntitySerializationTest {
 
     @Test
     public void testCanSerializeFieldNotBackedByProperty() throws Exception {
-        Summary summary = new Summary();
+        MethodNotBackedByProperty summary = new MethodNotBackedByProperty();
 
         ResourceConverter converter = ReflectingConverter.newInstance();
-        Entity videoEntity = converter.toEntity(summary);
-        System.out.println(videoEntity.toString());
+        Entity entity = converter.toEntity(summary);
 
+        assertThat(entity.toString(),
+                SameJSONAs.sameJSONAs(TestUtil.loadResource("/serialization/method-not-backed-by-property.json")));
+    }
+
+    @Test
+    public void testCanSerializeFieldNotBackedByPropertyWithOverride() throws Exception {
+        MethodNotBackedByPropertyWithOverride summary = new MethodNotBackedByPropertyWithOverride();
+
+        ResourceConverter converter = ReflectingConverter.newInstance();
+        Entity entity = converter.toEntity(summary);
+
+        assertThat(entity.toString(),
+                SameJSONAs.sameJSONAs(TestUtil.loadResource("/serialization/method-not-backed-by-property-with-override.json")));
     }
 
     @Test

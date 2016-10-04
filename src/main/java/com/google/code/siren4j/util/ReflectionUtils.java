@@ -30,10 +30,7 @@ import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -353,6 +350,29 @@ public class ReflectionUtils {
         } catch (IllegalArgumentException e) {
             throw new Siren4JRuntimeException(e);
         } catch (IllegalAccessException e) {
+            throw new Siren4JRuntimeException(e);
+        }
+    }
+
+    /**
+     * Convenience method to retrieve the method value for the specified object wrapped to
+     * catch exceptions and re throw as <code>Siren4JRuntimeException</code>.
+     *
+     * @param method cannot be <code>null</code>.
+     * @param obj may be <code>null</code>.
+     * @return the value, may be <code>null</code>.
+     */
+    public static Object getMethodValue(Method method, Object obj) {
+        if (method == null) {
+            throw new IllegalArgumentException("method cannot be null.");
+        }
+        try {
+            return method.invoke(obj);
+        } catch (IllegalArgumentException e) {
+            throw new Siren4JRuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new Siren4JRuntimeException(e);
+        } catch (InvocationTargetException e) {
             throw new Siren4JRuntimeException(e);
         }
     }

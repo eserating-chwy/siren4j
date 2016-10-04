@@ -379,7 +379,7 @@ public class ReflectingConverter implements ResourceConverter {
                 if(currentField != null) {
                     handleField(obj, builder, fieldInfo, currentField);
                 } else {
-                    throw new UnsupportedOperationException("Not supported!");
+                    handleMethod(obj, builder, info);
                 }
 
             }
@@ -401,13 +401,13 @@ public class ReflectingConverter implements ResourceConverter {
         return builder.build();
     }
 
+    private void handleMethod(Object obj, EntityBuilder builder, ReflectedInfo fieldInfo) {
+        Object value = ReflectionUtils.getMethodValue(fieldInfo.getGetter(), obj);
+        handleAddProperty(builder, fieldInfo.getEffectiveName(), value);
+    }
+
     private void handleField(Object obj, EntityBuilder builder, List<ReflectedInfo> fieldInfo, Field currentField) throws Siren4JException {
-        Object fieldVal = null;
-        try {
-            fieldVal = currentField.get(obj);
-        } catch (Exception e) {
-            throw new Siren4JConversionException(e);
-        }
+        Object fieldVal = ReflectionUtils.getFieldValue(currentField, obj);
         if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal, currentField)) {
             // Property
             if (!skipProperty(obj, currentField)) {
@@ -452,6 +452,10 @@ public class ReflectingConverter implements ResourceConverter {
      */
     protected void handleAddProperty(EntityBuilder builder, String propName, Field currentField, Object obj) {
         builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));
+    }
+
+    protected void handleAddProperty(EntityBuilder builder, String propName, Object propValue) {
+        builder.addProperty(propName, propValue);
     }
 
     /**

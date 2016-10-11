@@ -106,7 +106,7 @@ public class EntitySerializationTest {
 
         Object obj = converter.toObject(videoEntity);
         Entity entityRestored = converter.toEntity(obj);
-        assertThat(entityRestored.toString(), sameJSONAs(loadResource("/serialization/video.json")));
+        assertThat(entityRestored.toString(), sameJSONAs(loadResource("/serialization/video-restored.json")));
 
         reviews.setOverrideUri("/override");
         Entity revEnt = converter.toEntity(reviews);

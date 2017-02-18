@@ -18,16 +18,18 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
+import com.google.common.base.Objects;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 public class ReflectedInfo {
-    private Field field;
-    private Method getter;
-    private Method setter;
-    private String effectiveName;
+
+    private final Field field;
+    private final Method getter;
+    private final Method setter;
+    private final String effectiveName;
 
     public ReflectedInfo(Field field, Method getter, Method setter, String effectiveName) {
         this.field = field;
@@ -40,44 +42,34 @@ public class ReflectedInfo {
         return field;
     }
 
-    public void setField(Field field) {
-        this.field = field;
-    }
-
     public Method getGetter() {
         return getter;
-    }
-
-    public void setGetter(Method getter) {
-        this.getter = getter;
     }
 
     public Method getSetter() {
         return setter;
     }
 
-    public void setSetter(Method setter) {
-        this.setter = setter;
-    }    
-
     public String getEffectiveName() {
         return effectiveName;
     }
 
-    public void setEffectiveName(String effectiveName) {
-        this.effectiveName = effectiveName;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ReflectedInfo)) return false;
+        ReflectedInfo that = (ReflectedInfo) o;
+        return Objects.equal(field, that.field) &&
+                Objects.equal(getter, that.getter) &&
+                Objects.equal(setter, that.setter) &&
+                Objects.equal(effectiveName, that.effectiveName);
     }
 
     @Override
     public int hashCode() {
-        return field.hashCode();
+        return Objects.hashCode(field, getter, setter, effectiveName);
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return field.equals(obj);
-    }
-    
     @Override
     public String toString() {
     	return new ToStringBuilder(this)

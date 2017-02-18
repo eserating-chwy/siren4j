@@ -23,33 +23,10 @@
  *********************************************************************************************/
 package com.google.code.siren4j.converter;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.google.code.siren4j.Siren4J;
-import com.google.code.siren4j.annotations.Siren4JAction;
-import com.google.code.siren4j.annotations.Siren4JActionField;
-import com.google.code.siren4j.annotations.Siren4JCondition;
+import com.google.code.siren4j.annotations.*;
 import com.google.code.siren4j.annotations.Siren4JCondition.Type;
-import com.google.code.siren4j.annotations.Siren4JEntity;
-import com.google.code.siren4j.annotations.Siren4JFieldOption;
-import com.google.code.siren4j.annotations.Siren4JInclude;
 import com.google.code.siren4j.annotations.Siren4JInclude.Include;
-import com.google.code.siren4j.annotations.Siren4JLink;
-import com.google.code.siren4j.annotations.Siren4JMetaData;
-import com.google.code.siren4j.annotations.Siren4JOptionData;
-import com.google.code.siren4j.annotations.Siren4JProperty;
-import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.component.Action;
 import com.google.code.siren4j.component.Entity;
 import com.google.code.siren4j.component.Link;
@@ -68,6 +45,16 @@ import com.google.code.siren4j.resource.CollectionResource;
 import com.google.code.siren4j.resource.Resource;
 import com.google.code.siren4j.util.ComponentUtils;
 import com.google.code.siren4j.util.ReflectionUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class ReflectingConverter implements ResourceConverter {
 
@@ -389,30 +376,12 @@ public class ReflectingConverter implements ResourceConverter {
         } else {
             for (ReflectedInfo info : fieldInfo) {
                 Field currentField = info.getField();
-                Object fieldVal = null;
-                try {
-                    fieldVal = currentField.get(obj);
-                } catch (Exception e) {
-                    throw new Siren4JConversionException(e);
-                }
-                if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal, currentField)) {
-                    // Property
-                    if (!skipProperty(obj, currentField)) {
-                        String propName = currentField.getName();
-                        Siren4JProperty propAnno = currentField.getAnnotation(Siren4JProperty.class);
-
-                        if (propAnno != null && StringUtils.isNotBlank(propAnno.name())) {
-                            // Override field name from annotation
-                            propName = propAnno.name();
-                        }
-                        handleAddProperty(builder, propName, currentField, obj);
-                    }
+                if(currentField != null) {
+                    handleField(obj, builder, fieldInfo, currentField);
                 } else {
-                    // Sub Entity
-                    if (!skipProperty(obj, currentField)) {
-                        handleSubEntity(builder, obj, currentField, fieldInfo);
-                    }
+                    handleMethod(obj, builder, info);
                 }
+
             }
             if (obj instanceof Collection) {
                 builder.addProperty("size", ((Collection<?>) obj).size());
@@ -430,6 +399,33 @@ public class ReflectingConverter implements ResourceConverter {
             handleEntityActions(builder, context);
         }
         return builder.build();
+    }
+
+    private void handleMethod(Object obj, EntityBuilder builder, ReflectedInfo fieldInfo) {
+        Object value = ReflectionUtils.getMethodValue(fieldInfo.getGetter(), obj);
+        handleAddProperty(builder, fieldInfo.getEffectiveName(), value);
+    }
+
+    private void handleField(Object obj, EntityBuilder builder, List<ReflectedInfo> fieldInfo, Field currentField) throws Siren4JException {
+        Object fieldVal = ReflectionUtils.getFieldValue(currentField, obj);
+        if (ReflectionUtils.isSirenProperty(currentField.getType(), fieldVal, currentField)) {
+            // Property
+            if (!skipProperty(obj, currentField)) {
+                String propName = currentField.getName();
+                Siren4JProperty propAnno = currentField.getAnnotation(Siren4JProperty.class);
+
+                if (propAnno != null && StringUtils.isNotBlank(propAnno.name())) {
+                    // Override field name from annotation
+                    propName = propAnno.name();
+                }
+                handleAddProperty(builder, propName, currentField, obj);
+            }
+        } else {
+            // Sub Entity
+            if (!skipProperty(obj, currentField)) {
+                handleSubEntity(builder, obj, currentField, fieldInfo);
+            }
+        }
     }
 
     private void propagateBaseUriAndQualifiedSetting(Object obj, Object parentObj) {
@@ -456,6 +452,10 @@ public class ReflectingConverter implements ResourceConverter {
      */
     protected void handleAddProperty(EntityBuilder builder, String propName, Field currentField, Object obj) {
         builder.addProperty(propName, ReflectionUtils.getFieldValue(currentField, obj));
+    }
+
+    protected void handleAddProperty(EntityBuilder builder, String propName, Object propValue) {
+        builder.addProperty(propName, propValue);
     }
 
     /**

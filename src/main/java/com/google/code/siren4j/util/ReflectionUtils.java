@@ -18,35 +18,25 @@
  *********************************************************************************************/
 package com.google.code.siren4j.util;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Matcher;
-
 import com.google.code.siren4j.annotations.Siren4JProperty;
 import com.google.code.siren4j.annotations.Siren4JPropertyIgnore;
 import com.google.code.siren4j.annotations.Siren4JSubEntity;
 import com.google.code.siren4j.converter.ReflectedInfo;
+import com.google.code.siren4j.converter.ReflectedInfoBuilder;
 import com.google.code.siren4j.error.Siren4JException;
 import com.google.code.siren4j.error.Siren4JRuntimeException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
 
 public class ReflectionUtils {
 
@@ -135,33 +125,63 @@ public class ReflectionUtils {
                 public List<ReflectedInfo> call() throws Exception {
                     List<ReflectedInfo> exposed = new ArrayList<ReflectedInfo>();
                     for (Method m : clazz.getMethods()) {
-                        if (ReflectionUtils.isGetter(m) && !isIgnored(m)) {
+                        if(isIgnored(m)) {
+                            continue;
+                        }
+                        boolean methodIsSirenProperty = m.getAnnotation(Siren4JProperty.class) != null;
+                        String methodAnnotationName = extractEffectiveName(m, null);
+                        if (ReflectionUtils.isGetter(m)) {
                             Field f = getGetterField(m);
-                            if (f != null && !isIgnored(f)) {
-                                f.setAccessible(true);
-                                Siren4JProperty propAnno = f.getAnnotation(Siren4JProperty.class);
-                                String effectiveName = propAnno != null
-                                        ? StringUtils.defaultIfEmpty(propAnno.name(), f.getName())
-                                        : f.getName();
-                                Siren4JSubEntity subAnno = f.getAnnotation(Siren4JSubEntity.class);
-                                if (subAnno != null && !ArrayUtils.isEmpty(subAnno.rel())) {
-                                    effectiveName = subAnno.rel().length == 1 ? subAnno.rel()[0] : ArrayUtils
-                                            .toString(subAnno.rel());
-                                }
-                                exposed.add(
-                                        new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName));
+                            if(f != null && isIgnored(f)) {
+                                continue;
                             }
+                            if (f != null) {
+                                String fieldAnnotationName = extractEffectiveName(f, null);
+                                String effectiveName = (String)findFirstNonNull(
+                                    Arrays.asList(fieldAnnotationName, methodAnnotationName, f.getName()).iterator()
+                                );
+                                exposed.add(
+                                    new ReflectedInfo(f, m, ReflectionUtils.getSetter(clazz, f), effectiveName)
+                                );
+                            } else if(methodIsSirenProperty) {// looks like we have getter not backed by field
+                                exposed.add(
+                                    ReflectedInfoBuilder.aReflectedInfo().
+                                            withGetter(m).
+                                            withEffectiveName(extractEffectiveName(m, stripGetterPrefix(m.getName()))).
+                                                build()
+                                );
+                            }
+                        } else if(methodIsSirenProperty) {
+                            exposed.add(
+                                ReflectedInfoBuilder.aReflectedInfo().
+                                        withGetter(m).
+                                        withEffectiveName(extractEffectiveName(m, m.getName())).
+                                            build()
+                            );
                         }
                     }
                     return exposed;
                 }
-
             });
         } catch (ExecutionException e) {
             throw new Siren4JRuntimeException(e);
         }
         return results;
 
+    }
+
+    private static String extractEffectiveName(AccessibleObject accessibleObject, String defaultValue) {
+        accessibleObject.setAccessible(true);
+        Siren4JProperty propAnno = accessibleObject.getAnnotation(Siren4JProperty.class);
+        String effectiveName = propAnno != null
+                ? StringUtils.defaultIfEmpty(propAnno.name(), defaultValue)
+                : defaultValue;
+        Siren4JSubEntity subAnno = accessibleObject.getAnnotation(Siren4JSubEntity.class);
+        if (subAnno != null && !ArrayUtils.isEmpty(subAnno.rel())) {
+            effectiveName = subAnno.rel().length == 1 ? subAnno.rel()[0] : ArrayUtils
+                    .toString(subAnno.rel());
+        }
+        return effectiveName;
     }
 
     /**
@@ -174,8 +194,8 @@ public class ReflectionUtils {
     public static Method getSetter(Class<?> clazz, Field f) {
         Method setter = null;
         for (Method m : clazz.getMethods()) {
-            if (ReflectionUtils.isSetter(m) && m.getName()
-                                                .equals(SETTER_PREFIX + StringUtils.capitalize(f.getName()))) {
+            if (ReflectionUtils.isSetter(m) &&
+                    m.getName().equals(SETTER_PREFIX + StringUtils.capitalize(f.getName()))) {
                 setter = m;
                 break;
             }
@@ -330,6 +350,29 @@ public class ReflectionUtils {
         } catch (IllegalArgumentException e) {
             throw new Siren4JRuntimeException(e);
         } catch (IllegalAccessException e) {
+            throw new Siren4JRuntimeException(e);
+        }
+    }
+
+    /**
+     * Convenience method to retrieve the method value for the specified object wrapped to
+     * catch exceptions and re throw as <code>Siren4JRuntimeException</code>.
+     *
+     * @param method cannot be <code>null</code>.
+     * @param obj may be <code>null</code>.
+     * @return the value, may be <code>null</code>.
+     */
+    public static Object getMethodValue(Method method, Object obj) {
+        if (method == null) {
+            throw new IllegalArgumentException("method cannot be null.");
+        }
+        try {
+            return method.invoke(obj);
+        } catch (IllegalArgumentException e) {
+            throw new Siren4JRuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new Siren4JRuntimeException(e);
+        } catch (InvocationTargetException e) {
             throw new Siren4JRuntimeException(e);
         }
     }

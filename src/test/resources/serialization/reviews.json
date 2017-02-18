@@ -1,0 +1,68 @@
+{
+  "class": [
+    "siren4J.collectionResource",
+    "collection"
+  ],
+  "properties": {
+    "$siren4j.class": "com.google.code.siren4j.resource.CollectionResource",
+    "offset": 0,
+    "limit": 0,
+    "size": 2
+  },
+  "entities": [
+    {
+      "class": [
+        "review"
+      ],
+      "rel": [
+        "item"
+      ],
+      "properties": {
+        "$siren4j.class": "com.google.code.siren4j.component.testpojos.Review",
+        "id": "1",
+        "reviewer": "Fred",
+        "reviewText": "I loved it!!",
+        "reviewdate": "2016-10-11T19:53:32+03:00"
+      },
+      "links": [
+        {
+          "rel": [
+            "self"
+          ],
+          "href": "/reviews/1"
+        }
+      ]
+    },
+    {
+      "class": [
+        "review"
+      ],
+      "rel": [
+        "item"
+      ],
+      "properties": {
+        "$siren4j.class": "com.google.code.siren4j.component.testpojos.Review",
+        "id": "1",
+        "reviewer": "John",
+        "reviewText": "Overwelmed!!!!",
+        "reviewdate": "2016-10-11T19:53:32+03:00"
+      },
+      "links": [
+        {
+          "rel": [
+            "self"
+          ],
+          "href": "/reviews/1"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "/override"
+    }
+  ]
+}

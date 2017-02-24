@@ -33,11 +33,13 @@ import com.google.code.siren4j.converter.ReflectingConverter;
 import com.google.code.siren4j.converter.ResourceConverter;
 import com.google.code.siren4j.meta.FieldType;
 import com.google.code.siren4j.resource.CollectionResource;
+import com.google.code.siren4j.util.TimezoneSaver;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
@@ -52,6 +54,9 @@ import static uk.co.datumedge.hamcrest.json.SameJSONAs.sameJSONAs;
 public class EntitySerializationTest {
 
     private Date testDate;
+
+    @ClassRule
+    public static final TimezoneSaver TIMEZONE_SAVER = new TimezoneSaver("GMT+3:00");
 
     @Before
     public void setUp() throws Exception {

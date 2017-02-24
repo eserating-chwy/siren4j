@@ -1,0 +1,21 @@
+{
+  "class": [
+    "video"
+  ],
+  "properties": {
+    "$siren4j.class": "com.google.code.siren4j.component.testpojos.Video",
+    "name": "Star Wars",
+    "id": "z1977",
+    "description": "An epic science fiction space opera",
+    "genre": "scifi",
+    "rating": "PG"
+  },
+  "links": [
+    {
+      "rel": [
+        "self"
+      ],
+      "href": "/videos/z1977"
+    }
+  ]
+}

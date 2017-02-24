@@ -1,0 +1,9 @@
+{
+  "class": [
+    "SummaryInfoOverride"
+  ],
+  "properties": {
+    "$siren4j.class": "com.google.code.siren4j.component.testpojos.MethodNotBackedByPropertyWithOverride",
+    "summaryInformation": "SummaryInfo"
+  }
+}

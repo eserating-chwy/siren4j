@@ -121,22 +121,22 @@ public class FieldBuilder extends BaseBuilder<Field> {
     }
 
     public FieldBuilder setMax(int max) {
-        addStep("setMax", new Object[] { max }, new Class[] { int.class });
+        addStep("setMax", new Object[] { max }, new Class[] { Integer.class });
         return this;
     }
 
     public FieldBuilder setMin(int min) {
-        addStep("setMin", new Object[] { min }, new Class[] { int.class });
+        addStep("setMin", new Object[] { min }, new Class[] { Integer.class });
         return this;
     }
 
     public FieldBuilder setMaxLength(int maxLength) {
-        addStep("setMaxLength", new Object[] { maxLength }, new Class[] { int.class });
+        addStep("setMaxLength", new Object[] { maxLength }, new Class[] { Integer.class });
         return this;
     }
 
-    public FieldBuilder setStep(Integer step) {
-        addStep("setStep", new Object[] { step }, new Class[] { Integer.class });
+    public FieldBuilder setStep(String step) {
+        addStep("setStep", new Object[] { step }, new Class[] { String.class });
         return this;
     }
     

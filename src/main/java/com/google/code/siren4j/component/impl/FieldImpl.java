@@ -54,16 +54,13 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
 
     private String optionsURL;
 
-    @JsonInclude(Include.NON_DEFAULT)
-    private int max = -1;
+    private Integer max;
 
-    @JsonInclude(Include.NON_DEFAULT)
-    private int min = -1;
+    private Integer min;
 
-    @JsonInclude(Include.NON_DEFAULT)
-    private int maxLength = -1;
+    private Integer maxLength;
 
-    private Integer step;
+    private String step;
     
     private String placeholder;
 
@@ -124,36 +121,40 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
         this.pattern = pattern;
     }
 
-    public int getMax() {
+    public Integer getMax() {
         return max;
     }
 
-    public void setMax(int max) {
+    public void setMax(Integer max) {
         this.max = max;
     }
 
-    public int getMin() {
+    public Integer getMin() {
         return min;
     }
 
-    public void setMin(int min) {
+    public void setMin(Integer min) {
         this.min = min;
     }
 
-    public int getMaxLength() {
+    public Integer getMaxLength() {
         return maxLength;
     }
 
-    public void setMaxLength(int maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
-    public Integer getStep() {
+    public String getStep() {
         return step;
     }
 
-    public void setStep(Integer step) {
-        this.step = step;
+    public void setStep(String step) {
+        if(step == null || "any".equalsIgnoreCase(step) || step.matches("^-?\\d+$")) {
+            this.step = step;
+        } else {
+            throw new IllegalArgumentException("The passed in value must be an integer, 'any' or null");
+        }
     }
     
     public String getPlaceholder() {
@@ -204,6 +205,8 @@ public class FieldImpl extends Siren4JBaseComponent implements Field {
     public void setMetaData(Map<String, String> metaData) {
         this.metaData = metaData;
     }
+
+
 
     @Override
     public int hashCode() {

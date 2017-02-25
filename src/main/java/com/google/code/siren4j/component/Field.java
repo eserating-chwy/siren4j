@@ -76,33 +76,34 @@ public interface Field extends Component {
     /**
      * Specifies the minimum value for the following field types:
      * number, range, date, datetime, datetime-local, month, time and week.
-     * @return -1 is considered as a not set state.
+     * @return may be <code>null</code> if not set.
      */
-    public int getMin();
+    public Integer getMin();
      
     /**
      * Specifies the maximum value for the following field types:
      * number, range, date, datetime, datetime-local, month, time and week.
-     * @return -1 is considered as a not set state.
+     * @return may be <code>null</code> if not set.
      */
-    public int getMax();
+    public Integer getMax();
     
     /**
      * The maxlength attribute limits the number of characters that text field can accept.
      * @return -1 is considered as a not set state and means no limit on length.
      */
-    public int getMaxLength();
+    public Integer getMaxLength();
     
     /**
      * The step attribute specifies the legal number intervals for an <input> element.
      *
      * Example: if step="3", legal numbers could be -3, 0, 3, 6, etc.
+     * To allow any float value, include the value of any on the step attribute, with step="any"
      * 
      * Used for the following field types:
      * number, range, date, datetime, datetime-local, month, time and week.
      * @return may be <code>null</code> if not set.
      */
-    public Integer getStep();
+    public String getStep();
     
     /**
      * The placeholder attribute specifies a short hint that describes the expected value

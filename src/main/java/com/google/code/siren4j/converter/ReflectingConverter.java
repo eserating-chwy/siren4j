@@ -821,7 +821,7 @@ public class ReflectingConverter implements ResourceConverter {
         if (fieldAnno.maxLength() > -1) {
             builder.setMaxLength(fieldAnno.maxLength());
         }
-        if (fieldAnno.step() > -1) {
+        if (StringUtils.isNotBlank(fieldAnno.step())) {
             builder.setStep(fieldAnno.step());
         }
         if (fieldAnno.required()) {

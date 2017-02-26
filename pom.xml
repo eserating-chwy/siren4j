@@ -6,7 +6,7 @@
   <groupId>com.googlecode.siren4j</groupId>
   <artifactId>siren4j</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.0</version>
+  <version>2.0.1-SNAPHOT</version>
 
   <name>Siren4J</name>
   <description>This is a java library to help with the creation and use of Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more detail on the specification.</description>

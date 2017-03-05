@@ -25,6 +25,7 @@ package com.google.code.siren4j.component.builder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -39,6 +40,8 @@ import org.apache.commons.lang3.StringUtils;
 public class ActionBuilder extends BaseBuilder<Action> {
 
     private List<Field> fields = new ArrayList<Field>();
+    private List<Field> urlParams = new ArrayList<Field>();
+    private List<Field> headers = new ArrayList<Field>();
 
     private ActionBuilder() {
 
@@ -125,11 +128,54 @@ public class ActionBuilder extends BaseBuilder<Action> {
         fields.add(field);
     }
 
+    public ActionBuilder addUrlParam(Field param) {
+        addStep("_addUrlParam", new Object[] { param }, true);
+        return this;
+    }
+
+    public ActionBuilder addUrlParams(List<Field> params) {
+        for (Field f : params) {
+            addUrlParam(f);
+        }
+        return this;
+    }
+
+    protected void _addUrlParam(FieldImpl param) {
+        urlParams.add(param);
+    }
+
+    public ActionBuilder addHeader(Field header) {
+        addStep("_addHeader", new Object[] { header }, true);
+        return this;
+    }
+
+    public ActionBuilder addHeaders(List<Field> headers) {
+        for (Field f : headers) {
+            addHeader(f);
+        }
+        return this;
+    }
+
+    protected void _addHeader(FieldImpl header) {
+        headers.add(header);
+    }
+
+    public ActionBuilder setMetaData(Map<String, String> metaData) {
+        addStep("setMetaData", new Object[] {metaData}, new Class[] {Map.class});
+        return this;
+    }
+
     @Override
     protected void postProcess(Action obj) {
         ActionImpl action = (ActionImpl) obj;
         if (!CollectionUtils.isEmpty(fields)) {
             action.setFields(fields);
+        }
+        if (!CollectionUtils.isEmpty(urlParams)) {
+            action.setUrlParams(urlParams);
+        }
+        if (!CollectionUtils.isEmpty(headers)) {
+            action.setHeaders(headers);
         }
     }
 

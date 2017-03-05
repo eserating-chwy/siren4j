@@ -792,6 +792,23 @@ public class ReflectingConverter implements ResourceConverter {
                 builder.addField(annotationToField(f, context));
             }
         }
+        if (ArrayUtils.isNotEmpty(actionAnno.urlParams())) {
+            for (Siren4JActionField f : actionAnno.urlParams()) {
+                builder.addUrlParam(annotationToField(f, context));
+            }
+        }
+        if (ArrayUtils.isNotEmpty(actionAnno.headers())) {
+            for (Siren4JActionField f : actionAnno.headers()) {
+                builder.addHeader(annotationToField(f, context));
+            }
+        }
+        if(ArrayUtils.isNotEmpty(actionAnno.metaData())) {
+            Map<String, String> metaData = new HashMap();
+            for(Siren4JMetaData mdAnno : actionAnno.metaData()) {
+                metaData.put(mdAnno.key(), handleTokenReplacement(mdAnno.value(), context));
+            }
+            builder.setMetaData(metaData);
+        }
         return builder.build();
     }
 
@@ -863,7 +880,7 @@ public class ReflectingConverter implements ResourceConverter {
         if(ArrayUtils.isNotEmpty(fieldAnno.metaData())) {
             Map<String, String> metaData = new HashMap();
             for(Siren4JMetaData mdAnno : fieldAnno.metaData()) {
-                metaData.put(mdAnno.key(), mdAnno.value());
+                metaData.put(mdAnno.key(), handleTokenReplacement(mdAnno.value(), context));
             }
             builder.setMetaData(metaData);
         }

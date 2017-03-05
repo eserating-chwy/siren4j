@@ -24,6 +24,7 @@
 package com.google.code.siren4j.component;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.code.siren4j.component.impl.ActionImpl;
@@ -74,12 +75,32 @@ public interface Action extends Component{
      * @return never <code>null</code> or empty.
      */
     public String getType();
-    
+
     /**
-     * A collection of fields, expressed as an array of objects in JSON Siren such 
+     * A collection of fields, expressed as an array of objects in JSON Siren such
      * as { "fields" : [{ ... }] }. See Fields. (Optional).
      * @return
      */
     public List<Field> getFields();
+
+    /**
+     * A collection of fields representing url parameters, expressed as an array of objects in JSON Siren such
+     * as { "urlParams" : [{ ... }] }.
+     * @return
+     */
+    public List<Field> getUrlParams();
+
+    /**
+     * A collection of fields representing headers, expressed as an array of objects in JSON Siren such
+     * as { "headers" : [{ ... }] }.
+     * @return
+     */
+    public List<Field> getHeaders();
+
+    /**
+     * Extra meta data for the action. Helps with possible customizations.
+     * @return
+     */
+    public Map<String, String> getMetaData();
 
 }

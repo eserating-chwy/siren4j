@@ -54,7 +54,10 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
  *          <tr><td>actionClass</td><td>no</td><td>Array of string to classify the action.</td></tr>
  *          <tr><td>title</td><td>no</td><td>Display title for the action.</td></tr>
  *          <tr><td>fields</td><td>no</td><td>One or more {@link Siren4JActionField} annotation</td></tr>
+ *          <tr><td>urlParams</td><td>no</td><td>One or more {@link Siren4JActionField} annotation</td></tr>
+ *          <tr><td>headers</td><td>no</td><td>One or more {@link Siren4JActionField} annotation</td></tr>
  *          <tr><td>condition</td><td>no</td><td>A condition must evaluate to <code>true</code> for the action to be rendered.</td></tr>
+ *          <tr><td>metaData</td><td>no</td><td>One or more {@link Siren4JMetaData} annotation</td></tr>
  *       </tbody>
  *     </table>
  *      
@@ -81,6 +84,12 @@ public @interface Siren4JAction {
     String type() default "";
 
     Siren4JActionField[] fields() default {};
+
+    Siren4JActionField[] urlParams() default {};
+
+    Siren4JActionField[] headers() default {};
     
     Siren4JCondition condition() default @Siren4JCondition(name="null");
+
+    Siren4JMetaData[] metaData() default {};
 }

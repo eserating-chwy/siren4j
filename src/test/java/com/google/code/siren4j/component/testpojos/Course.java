@@ -25,7 +25,7 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
 @Siren4JEntity(entityClass = {"course", "test"}, uri = "/courses/{courseid}", links = { @Siren4JLink(rel = "reviews",
     href = "/courseReviews/course/{courseid}") }, actions = { @Siren4JAction(name = "addReview", method = Method.POST,
        href = "/courseReviews/course/{courseid}", 
-       condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD), 
+       condition = @Siren4JCondition(name = "getDescription", logic = Is.NOTEMPTY, type = Type.METHOD),
        fields = {
         @Siren4JActionField(name = "userid", type = "text", required = true,
                 fieldClass = {"classifyMe", "classifyMeAgain"},
@@ -43,7 +43,17 @@ import com.google.code.siren4j.component.impl.ActionImpl.Method;
                            }
                         )
                 }),
-        @Siren4JActionField(name = "body", type = "text", required = true, value="{myenum}", maxLength = 250) }) })
+        @Siren4JActionField(name = "body", type = "text", required = true, value="{myenum}", maxLength = 250)
+
+        },
+        urlParams = {@Siren4JActionField(name = "filter-by", type = "text", required = false)},
+        headers = {@Siren4JActionField(name = "X-subjectId", type = "text", required = false)},
+        metaData = {
+                @Siren4JMetaData(key = "actionExtraStuff1", value = "hello"),
+                @Siren4JMetaData(key = "actionExtraStuff2", value = "more stuff")
+        })
+
+})
 public class Course extends BasePojo {
 
     public Course() {

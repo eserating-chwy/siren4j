@@ -24,6 +24,7 @@
 package com.google.code.siren4j.component.impl;
 
 import java.util.List;
+import java.util.Map;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -47,6 +48,12 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
     private String type = "application/x-www-form-urlencoded";
 
     private List<Field> fields;
+
+    private List<Field> urlParams;
+
+    private List<Field> headers;
+
+    private Map<String, String> metaData;
 
     /*
      * (non-Javadoc)
@@ -124,6 +131,30 @@ public class ActionImpl extends Siren4JBaseComponent implements Action {
 
     public void setFields(List<Field> fields) {
         this.fields = fields;
+    }
+
+    public List<Field> getUrlParams() {
+        return urlParams;
+    }
+
+    public void setUrlParams(List<Field> urlParams) {
+        this.urlParams = urlParams;
+    }
+
+    public List<Field> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(List<Field> headers) {
+        this.headers = headers;
+    }
+
+    public Map<String, String> getMetaData() {
+        return metaData;
+    }
+
+    public void setMetaData(Map<String, String> metaData) {
+        this.metaData = metaData;
     }
 
     public enum Method {

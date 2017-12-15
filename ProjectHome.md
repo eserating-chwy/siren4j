@@ -1,9 +1,9 @@
 **Current Release is [Siren4J-1.1.3](https://code.google.com/p/siren4j/wiki/CurrentRelease)**
 
 This is a java library to help with the creation and use of
-Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more detail on the specification.
+Hypermedia entities as specified by the Siren hypermedia specification. See https://github.com/kevinswiber/siren for more details on the specification.
 
-It contains classes to that represent the Siren components (Entity, Link, Action, Field).
+It contains classes that represent the Siren components (Entity, Link, Action, Field).
 See: https://code.google.com/p/siren4j/wiki/Siren4JComponents
 
 These can be easily built with a fluent builder API.
@@ -104,6 +104,6 @@ See: https://code.google.com/p/siren4j/wiki/Siren4JResourceAPI
 
 [JavaDoc](http://wiki.siren4j.googlecode.com/hg/javadoc/index.html)
 
-**Note:** This projects documentation is a work in progress and is no way near complete at this time. This will improve over the coming weeks.
+**Note:** This project's documentation is a work in progress and is no way near complete at this time. This will improve over the coming weeks.
 
 

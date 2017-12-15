@@ -21,7 +21,7 @@ Annotation to define an entity. Every resource class should have one of these an
 | **Property** | **Required** | **Description** |
 |:-------------|:-------------|:----------------|
 | entityClass  | no           | Array of strings to classify the entity. |
-| name         | no           | Unique name for the entity. Defaults to class name. Deprecated use enityClass. |
+| name         | no           | Unique name for the entity. Defaults to class name. Deprecated, use entityClass instead. |
 | suppressClassProperty | no           | If true, will suppress the $class property which is used for deserialization. |
 | uri          | no           | URI pattern to self |
 | links        | no           | One or more {@link Siren4JLink} annotations. |
@@ -30,14 +30,14 @@ Annotation to define an entity. Every resource class should have one of these an
 **Target:** Type
 
 ### @Siren4JSubEntity ###
-Annotation to define a sub-entity. Typically used on a resource collection field, but can also be on a single type entity field. Values set in this annotation override values set by the entities own @Siren4JEnity annotation.
+Annotation to define a sub-entity. Typically used on a resource collection field, but can also be on a single type entity field. Values set in this annotation override values set by the entity's own @Siren4JEntity annotation.
 ```
     @Siren4JSubEntity(rel = "authors", uri = "/authors?courseid={parent.courseid}")
 ```
 
 | **Property** | **Required** | **Description** |
 |:-------------|:-------------|:----------------|
-| rel          | no           | Array of strings that indicate the subentites relationship with its parent. |
+| rel          | no           | Array of strings that indicate the subentity's relationship to its parent. |
 | uri          | no           | URI pattern to self |
 | type         | no           | Defines media type of the linked resource, per Web Linking (RFC5899) |
 | links        | no           | One or more @Siren4JLink annotations. |
@@ -47,7 +47,7 @@ Annotation to define a sub-entity. Typically used on a resource collection field
 **Target:** Field
 
 ### @Siren4JLink ###
-Annotation to for adding links to entities.
+Annotation for adding links to entities.
 
 ```
     @Siren4JLink(rel = "user", href = "/users/{userid}")
@@ -58,7 +58,7 @@ Annotation to for adding links to entities.
 | href         | yes          | The link's URI pattern. |
 | type         | no           | Defines media type of the linked resource, per Web Linking (RFC5899) |
 | title        | no           | Display text for the link |
-| linkClass    | no           | Array of string to classify the link. |
+| linkClass    | no           | Array of strings to classify the link. |
 | condition    | no           | A condition must evaluate to true for the action to be rendered. |
 
 **Target:** Annotation
@@ -86,7 +86,7 @@ This annotation is used within @Siren4JEntity or @Siren4JSubEntity.
 | name         | yes          | Unique name for the action. |
 | href         | yes          | URI of the action. |
 | method       | no           | Method for the action Method, defaults to Method.GET |
-| actionClass  | no           | Array of string to classify the action. |
+| actionClass  | no           | Array of strings to classify the action. |
 | title        | no           | Display title for the action. |
 | fields       | no           | One or more @Siren4JActionField annotation |
 | condition    | no           | A condition must evaluate to true for the action to be rendered. |
@@ -104,7 +104,7 @@ Annotation to define a field for an action.
 |:-------------|:-------------|:----------------|
 | name         | yes          | Unique name for the field. |
 | title        | no           | Display title for the action field. |
-| fieldClass   | no           | Array of string to classify the field.|
+| fieldClass   | no           | Array of strings to classify the field.|
 | type         | no           | HTML5 form field type, see below for allowed types. |
 | value        | no           | Default value for the field. |
 | pattern      | no           | HTML5 validation pattern. |
@@ -113,9 +113,9 @@ Annotation to define a field for an action.
 | max          | no           | Validation for maximum numerical value. Type must equal 'number' |
 | maxLength    | no           | Validation for maximum string length. |
 | step         | no           | The step attribute indicates the granularity that is expected (and required) of the value, by limiting the allowed values. Type must equal 'number' |
-| placeHolder  | no           | The placeholder attribute specifies a short hint that describes the expected valueof an input field (e.g. a sample value or a short description of the expected format).|
-| options      | no           | One or more @Siren4JFieldOption annotation |
-| optionsURL   | no           | URL that points to web resource that return options. |
+| placeHolder  | no           | The placeholder attribute specifies a short hint that describes the expected value of an input field (e.g. a sample value or a short description of the expected format).|
+| options      | no           | One or more @Siren4JFieldOption annotations |
+| optionsURL   | no           | URL that points to web resource that returns options. |
 
 **Target:** Annotation
 
@@ -127,7 +127,7 @@ Annotation to add options for fields.
 ```
 | **Property** | **Required** | **Description** |
 |:-------------|:-------------|:----------------|
-| title        | no           |The display name for the option |
+| title        | no           | The display name for the option |
 | value        | no           | The options value |
 | optionDefault | no           | Flag to indicate this is the default option, defaults to false. |
 | data         | no           | One or more @Siren4JOptionData annotation |
@@ -136,7 +136,7 @@ Annotation to add options for fields.
 **Target:** Annotation
 
 ### @Siren4JOptionData ###
-Annotation to for adding option data elements. This is for transporting some extra meta data that is useful for field options.
+Annotation to add option data elements. This is for transporting some extra meta data that is useful for field options.
 
 ```
     condition = @Siren4JOptionData(key = "someKey", value = "someValue")
@@ -150,7 +150,7 @@ Annotation to for adding option data elements. This is for transporting some ext
 **Target:** Annotation
 
 ### @Siren4JProperty ###
-Annotation to add meta to a field and change serialization behavior.
+Annotation to add metadata to a field and change serialization behavior.
 Right now it is used to modify the property name.
 
 ```
@@ -164,7 +164,7 @@ Right now it is used to modify the property name.
 **Target:** Field
 
 ### @Siren4JPropertyIgnore ###
-A flag that mark the property to not be included when serialized.
+A flag that marks the property to not be included when serialized.
 
 ```
     @Siren4JPropertyIgnore
@@ -184,7 +184,7 @@ Indicates property the inclusion policy.
 Possible includes policies:
   * ALWAYS - indicates that property is to be always included, independent of value of the property. (Default)
   * NON\_NULL - indicates that only properties with non-null values are to be included.
-  * NON\_EMPTY - indicates that only properties that have values that values that are null or what is considered empty are not to be included.
+  * NON\_EMPTY - indicates that only properties that have values that are null or what is considered empty are not to be included.
 
 ### @Siren4JCondition ###
 Used with Siren4JAction and Siren4JLink to allow logic to include/exclude an action or link based on the value in a field or returned from a method. Only no argument methods can be called.
@@ -194,7 +194,7 @@ Used with Siren4JAction and Siren4JLink to allow logic to include/exclude an act
 ```
 | **Property** | **Required** | **Description** |
 |:-------------|:-------------|:----------------|
-| name         | yes          |Name of the field or method to be eveluated. |
+| name         | yes          | Name of the field or method to be evaluated. |
 | logic        | no           | The logic type see Siren4JCondition.Is, defaults to Is.TRUE |
 | type         | no           | The condition type see Siren4JCondition.Type, defaults to Type.FIELD |
 

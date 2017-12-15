@@ -13,7 +13,7 @@ Let's say we have a video catalog REST service that allows reviews. The resource
   * Video
   * Review
 
-Now you could simply represents these in Java as Siren Entity objects and things would be fine, but there is probably going to be a lot more work to do to get from the actual object representation of these types in your application to a Siren Entity and vise versa. Entity's need to all have links to point to themselves, other links and actions to describe what things can be done next. How do you get those links set? More code, more work.
+Now you could simply represents these in Java as Siren Entity objects and things would be fine, but there is probably going to be a lot more work to do to get from the actual object representation of these types in your application to a Siren Entity and vice versa. Entity's need to all have links to point to themselves, other links and actions to describe what things can be done next. How do you get those links set? More code, more work.
 
 Here is where the Resource API comes in.
 
@@ -58,7 +58,7 @@ public class Video extends BaseResource {
 
 }
 ```
-Here is the initial video resource class. A simple bean with just an siren entity annotation set that defines a unique name. It also extends `com.google.code.siren4j.resource.BaseResource` which implements the `Resource` interface. As it is, an instance of this class would successfully convert to an Entity object, but would not be HATEAOS compliant as there would be no 'self' link. We can rectify this by adding a 'uri' value to the siren entity annotation.
+Here is the initial video resource class. A simple bean with just a siren entity annotation set that defines a unique name. It also extends `com.google.code.siren4j.resource.BaseResource` which implements the `Resource` interface. As it is, an instance of this class would successfully convert to an Entity object, but would not be HATEOAS compliant as there would be no 'self' link. We can rectify this by adding a 'uri' value to the siren entity annotation.
 ```
    @Siren4JEntity(name = "video", uri = "/videos/{id}")
 ```
@@ -127,7 +127,7 @@ public class Review extends BaseResource {
 ```
 Notice the `@Siren4JProperty` annotation, it is telling the converter to use the name 'reviewText' instead of the field name for the 'body' property.
 ## Collection Sub Entity ##
-Now we will revist the `Video` class and add 'reviews' as a new field which will be a collection of `Review` objects.
+Now we will revisit the `Video` class and add 'reviews' as a new field which will be a collection of `Review` objects.
 ```
     @Siren4JSubEntity(uri = "/video/{parent.id}/reviews")
     private CollectionResource<Review> reviews;
@@ -194,7 +194,7 @@ I'll add a couple reviews (off screen) and run the converter again.
           "properties":{
             "id":"1",
             "reviewer":"John",
-            "reviewText":"Overwelmed!!!!",
+            "reviewText":"Overwhelmed!!!!",
             "reviewdate":"2013-04-17T23:06:08.828+0000"
           },
           "links":[
@@ -271,7 +271,7 @@ Which results in:
 ```
 
 ## Adding Links to an Entity ##
-Links can be added  to an entity using annotations or can be dynamically  added or overridden programatically at run time.
+Links can be added to an entity using annotations or can be dynamically  added or overridden programmatically at run time.
 
 So let's add a "next" link via an annotation:
 ```
@@ -294,7 +294,7 @@ Or we could add dynamically at run time like so:
 Links set dynamically at run time always have precedence and will overwrite links set by annotation with the same relationship defined.
 
 ## Adding Actions to Entities ##
-Similar to links, actions can also be added via annotations or programatically at run time.
+Similar to links, actions can also be added via annotations or programmatically at run time.
 
 So once again let's add it via annotations:
 ```
@@ -334,17 +334,12 @@ The same precedence rules as links apply for actions.
 
 ## URI/HREF Token Resolving ##
 You probably noticed above that most of the uris and hrefs have tokens in them.
-Tokens will be resolved by the converter at conversion time.  The key in the the token refers to a field name
-on the object converted. So a token like so **`{description}`** would map to the objects 'description' field and would be
-replaced with the actual value in the instance.
+Tokens will be resolved by the converter at conversion time. The key in the token refers to a field name on the object converted. So a token like so **`{description}`** would map to the object's 'description' field and would be replaced with the actual value in the instance.
 
 ### Scope ###
-So things get a little more tricky with a sub entity, a @Siren4JSubEntity annotation applies its values to the sub entity object
-of the object being converted. So in the case of **`{description}`**, this would end up being the 'description' value in the
-sub entity object instance. But what if we actually want to use the parents 'description' object value in the sub entities uri?
-Simple just add the parent prefix like so **`{parent.description}`** and like magic the parent value will be used.
+So things get a little more tricky with a sub entity, a @Siren4JSubEntity annotation applies its values to the sub entity object of the object being converted. So in the case of **`{description}`**, this would end up being the 'description' value in the sub entity object instance. But what if we actually want to use the parents 'description' object value in the sub entities uri?
+Simply just add the parent prefix like so **`{parent.description}`** and like magic the parent value will be used.
 
 ### Keeping The Token a Token ###
-Sometimes you don't want to have the token resolve, but instead remain a token that stays in the uri so that the client can use it on
-its end to fill in the token value. This can be done by putting square brackets around the tokens key like so: **`{[description]}`**.
+Sometimes you don't want to have the token resolved, but instead remain a token that stays in the uri so that the client can use it on its end to fill in the token value. This can be done by putting square brackets around the tokens key like so: **`{[description]}`**.
 When it is serialized to an Entity the uri token will be **`{description}`**, no square brackets ready for use by the client.

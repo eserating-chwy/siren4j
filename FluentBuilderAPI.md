@@ -1,7 +1,7 @@
 # Fluent Builder API #
 
 Using the fluent builder API allows the easy creation of Siren components.
-A builder is used by first creating a new builder instance then calling the various methods which will affect the final outputted component when the build method is called. Builders can also validate the component being built to make sure they are Siren specification compliant.
+A builder is used by first creating a new builder instance then calling the various methods which will affect the final outputted component when the build method is called. Builders can also validate the components being built to make sure they are Siren specification compliant.
 
 
 ## Example Usage ##

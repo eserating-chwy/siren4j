@@ -8,8 +8,7 @@ Siren4J has four component types that represent the pieces of the Siren specific
   * Field (https://github.com/kevinswiber/siren#fields-1)
 
 
-All components match the properties and rules of the Siren specification except for the Field component which extends the specification slightly to allow for some
-HTML5 style validation attributes as was suggested in https://groups.google.com/forum/#!topic/siren-hypermedia/U1Enrwq9za0
+All components match the properties and rules of the Siren specification except for the Field component which extends the specification slightly to allow for some HTML5 style validation attributes as was suggested in https://groups.google.com/forum/#!topic/siren-hypermedia/U1Enrwq9za0
 
 So fields support the following extra and optional properties:
 

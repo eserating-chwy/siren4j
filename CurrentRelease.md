@@ -29,7 +29,7 @@ https://code.google.com/p/siren4j/issues/detail?id=16
 
 **Release Notes (1.1.0)**
 
-This release puts Siren4J inline with Siren 0.6.1.
+This release puts Siren4J in line with Siren 0.6.1.
 
 _Highlights:_
 
